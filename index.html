@@ -1,0 +1,1913 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RRHH Concordia — Consultora de Recursos Humanos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+
+/* ─── RESET & BASE ──────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --blue:      #4260C0;
+  --blue-dk:   #2e479a;
+  --blue-lt:   #edf0fa;
+  --blue-mid:  rgba(66,96,192,0.08);
+  --orange:    #FC9738;
+  --red:       #FF5E57;
+  --green:     #39A05A;
+  --bg:        #f7f6f3;
+  --bg2:       #ffffff;
+  --bg3:       #f2f1ee;
+  --text:      #16161f;
+  --text2:     #54546a;
+  --text3:     #9595a8;
+  --border:    rgba(22,22,31,0.07);
+  --border-md: rgba(22,22,31,0.11);
+  --radius:    16px;
+  --radius-sm: 10px;
+  --nav-h:     64px;
+  --font-display: 'Plus Jakarta Sans', sans-serif;
+  --font-body:    'Inter', sans-serif;
+  --ease:      cubic-bezier(.22,1,.36,1);
+  --ease-out:  cubic-bezier(.0,0,.2,1);
+
+  /* Refined shadow system */
+  --shadow-xs: 0 1px 2px rgba(22,22,31,0.04);
+  --shadow-sm: 0 2px 8px rgba(22,22,31,0.05), 0 1px 2px rgba(22,22,31,0.04);
+  --shadow-md: 0 4px 16px rgba(22,22,31,0.07), 0 1px 4px rgba(22,22,31,0.04);
+  --shadow-lg: 0 12px 40px rgba(22,22,31,0.09), 0 2px 8px rgba(22,22,31,0.05);
+  --shadow-blue: 0 4px 20px rgba(66,96,192,0.18), 0 1px 4px rgba(66,96,192,0.10);
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--text);
+  font-size: 15px;
+  line-height: 1.65;
+  letter-spacing: -0.006em;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+/* ─── UTILITIES ─────────────────────────────────────────────── */
+.container {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 0 32px;
+}
+
+.sr-only {
+  position: absolute; width: 1px; height: 1px;
+  padding: 0; margin: -1px; overflow: hidden;
+  clip: rect(0,0,0,0); white-space: nowrap; border-width: 0;
+}
+
+/* ─── NAVBAR ────────────────────────────────────────────────── */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: var(--nav-h);
+  z-index: 100;
+  background: transparent;
+  border-bottom: 1px solid transparent;
+  transition: background 0.4s var(--ease), border-color 0.4s, backdrop-filter 0.4s;
+}
+
+nav.scrolled {
+  background: rgba(247,246,243,0.88);
+  backdrop-filter: saturate(180%) blur(20px);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  border-bottom-color: var(--border);
+}
+
+/* Cuando el navbar está sobre el hero (no scrolled), texto en blanco */
+nav:not(.scrolled) .nav-links a { color: rgba(240,240,248,0.7); }
+nav:not(.scrolled) .nav-links a:hover { color: #fff; }
+nav:not(.scrolled) .nav-links a::after { background: #fff; }
+nav:not(.scrolled) .hamburger span { background: #fff; }
+
+
+
+nav .container {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.nav-logo {
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  transition: opacity 0.22s;
+  flex-shrink: 0;
+  line-height: 0;
+  position: relative;
+}
+
+.nav-logo:hover { opacity: 0.82; }
+
+.nav-logo-svg {
+  height: 28px;
+  width: auto;
+  display: block;
+  transition: opacity 0.4s var(--ease);
+}
+
+/* Alternamos visibilidad según estado del nav */
+.nav-logo-light { display: none; }
+
+nav:not(.scrolled) .nav-logo-dark { display: none; }
+nav:not(.scrolled) .nav-logo-light { display: block; }
+
+.nav-logo-dot { display: none; }
+
+.nav-links {
+  display: flex;
+  gap: 28px;
+  list-style: none;
+}
+
+.nav-links a {
+  font-size: 13.5px;
+  color: var(--text2);
+  text-decoration: none;
+  font-weight: 400;
+  letter-spacing: -0.003em;
+  transition: color 0.18s;
+  padding: 4px 0;
+  position: relative;
+}
+
+.nav-links a::after {
+  content: '';
+  position: absolute;
+  bottom: -1px; left: 0; right: 0;
+  height: 1px;
+  background: var(--text);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.25s var(--ease);
+}
+
+.nav-links a:hover { color: var(--text); }
+.nav-links a:hover::after { transform: scaleX(1); }
+
+.btn-nav {
+  font-family: var(--font-body);
+  font-size: 13.5px;
+  font-weight: 500;
+  background: var(--blue);
+  color: #fff;
+  border: none;
+  padding: 9px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  text-decoration: none;
+  letter-spacing: -0.003em;
+  box-shadow: var(--shadow-blue);
+  transition: background 0.2s, transform 0.18s var(--ease), box-shadow 0.2s;
+  display: inline-block;
+}
+
+.btn-nav:hover {
+  background: var(--blue-dk);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 24px rgba(66,96,192,0.25), 0 2px 6px rgba(66,96,192,0.12);
+}
+
+.btn-nav:active { transform: translateY(0); }
+
+.hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 4.5px;
+  cursor: pointer;
+  padding: 6px;
+  background: none;
+  border: none;
+  border-radius: 6px;
+  transition: background 0.15s;
+}
+
+.hamburger:hover { background: var(--bg3); }
+
+.hamburger span {
+  display: block;
+  width: 20px; height: 1.5px;
+  background: var(--text);
+  border-radius: 2px;
+  transition: all 0.3s var(--ease);
+}
+
+/* Mobile nav overlay */
+.mobile-menu {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: var(--bg2);
+  z-index: 99;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 28px;
+  padding: 24px;
+}
+
+.mobile-menu.open { display: flex; }
+
+.mobile-menu a {
+  font-family: var(--font-display);
+  font-size: 26px;
+  font-weight: 500;
+  color: var(--text);
+  text-decoration: none;
+  letter-spacing: -0.02em;
+  transition: color 0.15s;
+}
+
+.mobile-menu a:hover { color: var(--blue); }
+
+/* ─── HERO ──────────────────────────────────────────────────── */
+.hero {
+  min-height: 100svh;
+  background: #0c1119;
+  position: relative;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  padding-top: var(--nav-h);
+}
+
+/* Noise texture */
+.hero-noise {
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+  opacity: 0.025;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Grid pattern */
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(66,96,192,0.038) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(66,96,192,0.038) 1px, transparent 1px);
+  background-size: 80px 80px;
+  filter: blur(0.3px);
+  pointer-events: none;
+  mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 30%, transparent 100%);
+  -webkit-mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 30%, transparent 100%);
+}
+
+/* Orb */
+.hero::after {
+  content: '';
+  position: absolute;
+  top: -15%; right: -8%;
+  width: 680px; height: 680px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(66,96,192,0.14) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+/* Second orb — bottom left, orange tint */
+.hero-orb2 {
+  position: absolute;
+  bottom: -20%; left: -12%;
+  width: 500px; height: 500px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(252,151,56,0.07) 0%, transparent 65%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.hero-inner {
+  position: relative;
+  z-index: 3;
+  padding: 88px 0 108px;
+}
+
+.hero-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: rgba(252,151,56,0.8);
+  margin-bottom: 36px;
+}
+
+.hero-eyebrow-line {
+  display: inline-block;
+  width: 20px; height: 1px;
+  background: rgba(252,151,56,0.6);
+  flex-shrink: 0;
+}
+
+.hero-title {
+  font-family: var(--font-display);
+  font-size: clamp(32px, 4.6vw, 60px);
+  font-weight: 600;
+  line-height: 1.1;
+  letter-spacing: -0.028em;
+  color: #f0f0f8;
+  margin-bottom: 28px;
+  max-width: 700px;
+}
+
+.hero-title em {
+  font-style: normal;
+  color: var(--orange);
+}
+
+.hero-sub {
+  font-size: clamp(14.5px, 1.4vw, 16.5px);
+  color: rgba(240,240,248,0.44);
+  max-width: 440px;
+  line-height: 1.75;
+  margin-bottom: 52px;
+  font-weight: 300;
+  letter-spacing: 0.003em;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.btn-primary {
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 500;
+  background: var(--orange);
+  color: #fff;
+  border: none;
+  padding: 13px 28px;
+  border-radius: 9px;
+  cursor: pointer;
+  text-decoration: none;
+  letter-spacing: -0.003em;
+  box-shadow: 0 4px 16px rgba(252,151,56,0.30), 0 1px 4px rgba(252,151,56,0.15);
+  transition: background 0.2s, transform 0.2s var(--ease), box-shadow 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-primary:hover {
+  background: #f08820;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 28px rgba(252,151,56,0.36), 0 2px 6px rgba(252,151,56,0.18);
+}
+
+.btn-primary:active { transform: translateY(0); }
+
+.btn-primary svg { transition: transform 0.2s var(--ease); }
+.btn-primary:hover svg { transform: translateX(3px); }
+
+.btn-ghost {
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 400;
+  color: rgba(240,240,248,0.55);
+  border: 1px solid rgba(240,240,248,0.12);
+  background: transparent;
+  padding: 13px 28px;
+  border-radius: 9px;
+  cursor: pointer;
+  text-decoration: none;
+  letter-spacing: -0.003em;
+  transition: color 0.2s, border-color 0.2s, background 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-ghost:hover {
+  color: rgba(240,240,248,0.88);
+  border-color: rgba(240,240,248,0.22);
+  background: rgba(240,240,248,0.04);
+}
+
+/* Hero scroll indicator */
+.hero-scroll {
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 7px;
+  color: rgba(240,240,248,0.22);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  z-index: 3;
+  animation: bounce 3s ease-in-out infinite;
+}
+
+.hero-scroll-line {
+  width: 1px;
+  height: 32px;
+  background: linear-gradient(to bottom, rgba(240,240,248,0.25), transparent);
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateX(-50%) translateY(0); opacity: 0.7; }
+  50% { transform: translateX(-50%) translateY(7px); opacity: 0.4; }
+}
+
+/* ─── TRUST SIGNALS ─────────────────────────────────────────── */
+.trust {
+  background: var(--bg2);
+  padding: 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.trust-inner {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+}
+
+.trust-item {
+  padding: 44px 32px;
+  border-right: 1px solid var(--border);
+  position: relative;
+  transition: background 0.2s;
+}
+
+.trust-item:hover { background: var(--bg); }
+.trust-item:last-child { border-right: none; }
+
+.trust-number {
+  font-family: var(--font-display);
+  font-size: 36px;
+  font-weight: 600;
+  line-height: 1;
+  color: var(--blue);
+  margin-bottom: 8px;
+  letter-spacing: -0.03em;
+}
+
+.trust-label {
+  font-size: 13px;
+  color: var(--text2);
+  font-weight: 400;
+  line-height: 1.45;
+  letter-spacing: -0.002em;
+}
+
+/* ─── SECTION COMMONS ───────────────────────────────────────── */
+.section {
+  padding: 112px 0;
+}
+
+.section-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  color: var(--blue);
+  margin-bottom: 20px;
+}
+
+.section-tag::before {
+  content: '';
+  display: inline-block;
+  width: 14px; height: 1.5px;
+  background: currentColor;
+  flex-shrink: 0;
+}
+
+.section-title {
+  font-family: var(--font-display);
+  font-size: clamp(24px, 2.8vw, 38px);
+  font-weight: 600;
+  line-height: 1.14;
+  letter-spacing: -0.022em;
+  color: var(--text);
+  margin-bottom: 16px;
+}
+
+.section-sub {
+  font-size: 15px;
+  color: var(--text2);
+  max-width: 460px;
+  line-height: 1.7;
+  font-weight: 300;
+  letter-spacing: -0.003em;
+}
+
+/* ─── SERVICIOS ─────────────────────────────────────────────── */
+.servicios { background: var(--bg); }
+
+.servicios-header { margin-bottom: 56px; }
+
+.servicios-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.servicio-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 32px 28px 30px;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.3s var(--ease), box-shadow 0.3s var(--ease), border-color 0.25s;
+  cursor: default;
+}
+
+.servicio-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--blue), rgba(66,96,192,0.4));
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.4s var(--ease);
+}
+
+.servicio-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-lg);
+  border-color: rgba(66,96,192,0.12);
+}
+
+.servicio-card:hover::before { transform: scaleX(1); }
+
+.servicio-icon {
+  width: 40px; height: 40px;
+  border-radius: var(--radius-sm);
+  background: var(--blue-lt);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 22px;
+  transition: background 0.25s, transform 0.3s var(--ease);
+}
+
+.servicio-card:hover .servicio-icon {
+  background: var(--blue-mid);
+  transform: scale(1.05);
+}
+
+.servicio-icon svg {
+  width: 18px; height: 18px;
+  stroke: var(--blue);
+  stroke-width: 1.5;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.servicio-title {
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--text);
+  margin-bottom: 9px;
+  letter-spacing: -0.012em;
+}
+
+.servicio-desc {
+  font-size: 13.5px;
+  color: var(--text2);
+  line-height: 1.68;
+  font-weight: 300;
+  letter-spacing: -0.003em;
+}
+
+/* ─── VACANTES ──────────────────────────────────────────────── */
+.vacantes { background: var(--bg2); }
+
+.vacantes-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 40px;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.vacantes-header-text { max-width: 460px; }
+
+.link-all {
+  font-family: var(--font-body);
+  font-size: 13.5px;
+  color: var(--blue);
+  text-decoration: none;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  white-space: nowrap;
+  letter-spacing: -0.003em;
+  transition: gap 0.22s var(--ease), opacity 0.15s;
+}
+
+.link-all:hover { gap: 9px; opacity: 0.8; }
+
+.vacantes-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow-xs);
+}
+
+.vacante-row {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  align-items: center;
+  gap: 20px;
+  padding: 20px 26px;
+  background: var(--bg2);
+  border-bottom: 1px solid var(--border);
+  transition: background 0.18s;
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+}
+
+.vacante-row:last-child { border-bottom: none; }
+.vacante-row:hover { background: var(--bg); }
+
+.vacante-puesto {
+  font-family: var(--font-display);
+  font-size: 14.5px;
+  font-weight: 500;
+  color: var(--text);
+  margin-bottom: 3px;
+  letter-spacing: -0.012em;
+}
+
+.vacante-empresa {
+  font-size: 12.5px;
+  color: var(--text3);
+  font-weight: 400;
+  letter-spacing: -0.002em;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 500;
+  padding: 4px 10px;
+  border-radius: 20px;
+  white-space: nowrap;
+  letter-spacing: 0.01em;
+}
+
+.badge-green { background: rgba(57,160,90,0.09); color: #2d8549; }
+.badge-orange { background: rgba(252,151,56,0.11); color: #c4701c; }
+.badge-dot { width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
+
+.vacante-arrow {
+  color: var(--text3);
+  flex-shrink: 0;
+  transition: color 0.18s, transform 0.22s var(--ease);
+}
+
+.vacante-row:hover .vacante-arrow {
+  color: var(--blue);
+  transform: translateX(4px);
+}
+
+.vacantes-empty {
+  padding: 72px 28px;
+  text-align: center;
+  color: var(--text3);
+  font-size: 14px;
+}
+
+/* ─── CV ESPONTÁNEO ─────────────────────────────────────────── */
+.cv-section {
+  background: #0c1119;
+  padding: 112px 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.cv-section::before {
+  content: '';
+  position: absolute;
+  bottom: -25%; left: -15%;
+  width: 600px; height: 600px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(252,151,56,0.09) 0%, transparent 65%);
+  pointer-events: none;
+}
+
+.cv-section::after {
+  content: '';
+  position: absolute;
+  top: -20%; right: -10%;
+  width: 500px; height: 500px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(66,96,192,0.12) 0%, transparent 65%);
+  pointer-events: none;
+}
+
+.cv-inner {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 88px;
+  align-items: center;
+  position: relative;
+  z-index: 1;
+}
+
+.cv-text .section-tag { color: rgba(252,151,56,0.75); }
+.cv-text .section-tag::before { background: rgba(252,151,56,0.6); }
+.cv-text .section-title { color: #f0f0f8; }
+.cv-text .section-sub { color: rgba(240,240,248,0.42); font-weight: 300; }
+
+.cv-form-wrap {
+  background: rgba(255,255,255,0.035);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: var(--radius);
+  padding: 36px;
+  backdrop-filter: blur(8px);
+}
+
+.form-group { margin-bottom: 16px; }
+
+.form-label {
+  display: block;
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.38);
+  margin-bottom: 7px;
+}
+
+.form-input {
+  width: 100%;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.09);
+  border-radius: var(--radius-sm);
+  padding: 11px 14px;
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: rgba(255,255,255,0.88);
+  outline: none;
+  letter-spacing: -0.003em;
+  transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+}
+
+.form-input::placeholder { color: rgba(255,255,255,0.18); }
+
+.form-input:focus {
+  border-color: rgba(66,96,192,0.55);
+  background: rgba(66,96,192,0.07);
+  box-shadow: 0 0 0 3px rgba(66,96,192,0.10);
+}
+
+.form-select {
+  width: 100%;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.09);
+  border-radius: var(--radius-sm);
+  padding: 11px 14px;
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: rgba(255,255,255,0.6);
+  outline: none;
+  cursor: pointer;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='rgba(255,255,255,0.28)' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+}
+
+.form-select:focus {
+  border-color: rgba(66,96,192,0.55);
+  box-shadow: 0 0 0 3px rgba(66,96,192,0.10);
+}
+
+.form-select option { background: #1a1a2a; color: #fff; }
+
+.upload-area {
+  border: 1.5px dashed rgba(255,255,255,0.11);
+  border-radius: var(--radius-sm);
+  padding: 22px 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.22s, background 0.22s;
+  position: relative;
+}
+
+.upload-area:hover {
+  border-color: rgba(66,96,192,0.38);
+  background: rgba(66,96,192,0.04);
+}
+
+.upload-area input[type="file"] {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.upload-icon {
+  width: 34px; height: 34px;
+  border-radius: 8px;
+  background: rgba(255,255,255,0.05);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 9px;
+}
+
+.upload-icon svg {
+  width: 16px; height: 16px;
+  stroke: rgba(255,255,255,0.35);
+  stroke-width: 1.5;
+  fill: none;
+}
+
+.upload-text {
+  font-size: 12.5px;
+  color: rgba(255,255,255,0.35);
+  line-height: 1.55;
+  letter-spacing: -0.002em;
+}
+
+.upload-text strong { color: rgba(255,255,255,0.62); font-weight: 500; }
+
+.btn-submit {
+  width: 100%;
+  background: var(--blue);
+  color: #fff;
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 500;
+  border: none;
+  padding: 13px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  margin-top: 6px;
+  letter-spacing: -0.003em;
+  box-shadow: var(--shadow-blue);
+  transition: background 0.2s, transform 0.18s var(--ease), box-shadow 0.2s;
+}
+
+.btn-submit:hover {
+  background: var(--blue-dk);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 24px rgba(66,96,192,0.28), 0 2px 6px rgba(66,96,192,0.14);
+}
+
+.btn-submit:active { transform: translateY(0); }
+
+.form-success {
+  display: none;
+  text-align: center;
+  padding: 20px 0;
+}
+
+.form-success-icon {
+  width: 48px; height: 48px;
+  border-radius: 50%;
+  background: rgba(57,160,90,0.13);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 14px;
+}
+
+.form-success-icon svg {
+  width: 22px; height: 22px;
+  stroke: var(--green);
+  stroke-width: 2;
+  fill: none;
+}
+
+.form-success p { color: rgba(255,255,255,0.5); font-size: 13.5px; line-height: 1.6; }
+.form-success h3 { font-family: var(--font-display); font-size: 17px; font-weight: 600; color: #f0f0f8; margin-bottom: 6px; }
+
+/* ─── NOSOTROS ──────────────────────────────────────────────── */
+.nosotros { background: var(--bg); }
+
+.nosotros-inner {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: center;
+}
+
+.nosotros-visual { position: relative; }
+
+.nosotros-card-main {
+  background: var(--blue);
+  border-radius: 20px;
+  padding: 40px;
+  color: #fff;
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--shadow-blue);
+}
+
+.nosotros-card-main::before {
+  content: '';
+  position: absolute;
+  top: -40px; right: -40px;
+  width: 200px; height: 200px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.05);
+}
+
+.nosotros-card-main-year {
+  font-family: var(--font-display);
+  font-size: 52px;
+  font-weight: 700;
+  color: rgba(255,255,255,0.08);
+  letter-spacing: -0.045em;
+  line-height: 1;
+  margin-bottom: 4px;
+  user-select: none;
+}
+
+.nosotros-card-main-text {
+  font-size: 15px;
+  color: rgba(255,255,255,0.65);
+  font-weight: 300;
+  line-height: 1.55;
+  max-width: 240px;
+  letter-spacing: -0.003em;
+}
+
+.nosotros-card-main-text strong { color: rgba(255,255,255,0.92); font-weight: 500; }
+
+.nosotros-card-float {
+  position: absolute;
+  bottom: -18px;
+  right: -18px;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px 18px;
+  box-shadow: var(--shadow-md);
+}
+
+.nosotros-card-float-val {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--orange);
+  letter-spacing: -0.018em;
+  line-height: 1;
+}
+
+.nosotros-card-float-lbl {
+  font-size: 12px;
+  color: var(--text3);
+  margin-top: 3px;
+  letter-spacing: -0.002em;
+}
+
+.nosotros-text .section-sub { margin-bottom: 28px; }
+
+.nosotros-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 13px;
+  margin-top: 4px;
+}
+
+.nosotros-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 11px;
+  font-size: 13.5px;
+  color: var(--text2);
+  line-height: 1.55;
+  letter-spacing: -0.003em;
+}
+
+.nosotros-list-dot {
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: var(--orange);
+  margin-top: 7px;
+  flex-shrink: 0;
+}
+
+/* ─── CONTACTO ──────────────────────────────────────────────── */
+.contacto {
+  background: var(--bg2);
+  border-top: 1px solid var(--border);
+}
+
+.contacto-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 112px 0;
+}
+
+.contacto-inner .section-tag { justify-content: center; }
+.contacto-inner .section-title { text-align: center; max-width: 520px; }
+
+.contacto-items {
+  display: flex;
+  gap: 48px;
+  margin-top: 56px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.contacto-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 11px;
+}
+
+.contacto-icon {
+  width: 46px; height: 46px;
+  border-radius: 12px;
+  background: var(--blue-lt);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s, transform 0.25s var(--ease);
+}
+
+.contacto-item:hover .contacto-icon {
+  background: var(--blue-mid);
+  transform: translateY(-2px);
+}
+
+.contacto-icon svg {
+  width: 18px; height: 18px;
+  stroke: var(--blue);
+  stroke-width: 1.5;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.contacto-label {
+  font-family: var(--font-body);
+  font-size: 10.5px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text3);
+}
+
+.contacto-value {
+  font-size: 14px;
+  color: var(--text);
+  font-weight: 400;
+  text-decoration: none;
+  letter-spacing: -0.003em;
+  transition: color 0.18s;
+}
+
+a.contacto-value:hover { color: var(--blue); }
+
+/* ─── FOOTER ────────────────────────────────────────────────── */
+footer {
+  background: #0c1119;
+  padding: 28px 0;
+  border-top: 1px solid rgba(255,255,255,0.05);
+}
+
+.footer-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.footer-logo {
+  display: flex;
+  align-items: center;
+  line-height: 0;
+}
+
+.footer-logo-svg {
+  height: 22px;
+  width: auto;
+  display: block;
+  opacity: 0.42;
+  transition: opacity 0.25s;
+}
+
+.footer-logo:hover .footer-logo-svg { opacity: 0.6; }
+
+.footer-copy {
+  font-size: 12px;
+  color: rgba(255,255,255,0.2);
+  letter-spacing: -0.002em;
+}
+
+/* ─── WHATSAPP FLOAT ────────────────────────────────────────── */
+.wa-btn {
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  width: 50px; height: 50px;
+  border-radius: 50%;
+  background: #25D366;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  box-shadow: 0 4px 16px rgba(37,211,102,0.32), 0 1px 4px rgba(37,211,102,0.16);
+  z-index: 50;
+  transition: transform 0.22s var(--ease), box-shadow 0.22s;
+}
+
+.wa-btn:hover {
+  transform: scale(1.08) translateY(-2px);
+  box-shadow: 0 8px 28px rgba(37,211,102,0.42), 0 2px 6px rgba(37,211,102,0.2);
+}
+
+.wa-btn svg { width: 26px; height: 26px; fill: #fff; }
+
+/* ─── MODAL VACANTE ─────────────────────────────────────────── */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(12,17,25,0.55);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s;
+}
+
+.modal-overlay.open { opacity: 1; pointer-events: all; }
+
+.modal {
+  background: var(--bg2);
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-lg);
+  width: 100%;
+  max-width: 500px;
+  max-height: 90vh;
+  overflow-y: auto;
+  padding: 40px;
+  transform: translateY(14px) scale(0.99);
+  transition: transform 0.3s var(--ease);
+  position: relative;
+}
+
+.modal-overlay.open .modal { transform: translateY(0) scale(1); }
+
+.modal-close {
+  position: absolute;
+  top: 16px; right: 16px;
+  width: 30px; height: 30px;
+  border-radius: 50%;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text3);
+  font-size: 17px;
+  line-height: 1;
+  transition: background 0.18s, color 0.18s;
+}
+
+.modal-close:hover { background: var(--bg3); color: var(--text); }
+
+.modal-eyebrow {
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text3);
+  margin-bottom: 7px;
+}
+
+.modal-title {
+  font-family: var(--font-display);
+  font-size: 21px;
+  font-weight: 600;
+  color: var(--text);
+  letter-spacing: -0.02em;
+  margin-bottom: 28px;
+  line-height: 1.2;
+}
+
+.modal .form-group { margin-bottom: 14px; }
+
+.modal .form-label {
+  color: var(--text3);
+  letter-spacing: 0.07em;
+}
+
+.modal .form-input {
+  background: var(--bg);
+  border-color: var(--border);
+  color: var(--text);
+  font-size: 14px;
+  padding: 10px 13px;
+  border-radius: var(--radius-sm);
+}
+
+.modal .form-input::placeholder { color: var(--text3); }
+
+.modal .form-input:focus {
+  border-color: rgba(66,96,192,0.35);
+  background: var(--bg2);
+  box-shadow: 0 0 0 3px rgba(66,96,192,0.08);
+}
+
+.modal .upload-area {
+  border-color: var(--border);
+  background: var(--bg);
+}
+
+.modal .upload-area:hover {
+  border-color: rgba(66,96,192,0.28);
+  background: var(--blue-lt);
+}
+
+.modal .upload-icon { background: var(--bg3); }
+.modal .upload-icon svg { stroke: var(--text3); }
+.modal .upload-text { color: var(--text3); }
+.modal .upload-text strong { color: var(--text2); }
+
+.modal .btn-submit { margin-top: 10px; }
+
+/* ─── ENTRY ANIMATIONS ──────────────────────────────────────── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.anim { opacity: 0; transform: translateY(20px); }
+.anim.in { animation: fadeUp 0.6s var(--ease) forwards; }
+
+.anim-d1 { animation-delay: 0.05s; }
+.anim-d2 { animation-delay: 0.13s; }
+.anim-d3 { animation-delay: 0.21s; }
+.anim-d4 { animation-delay: 0.29s; }
+
+.hero-eyebrow  { animation: fadeUp 0.65s var(--ease) 0.1s both; }
+.hero-title    { animation: fadeUp 0.75s var(--ease) 0.22s both; }
+.hero-sub      { animation: fadeUp 0.75s var(--ease) 0.38s both; }
+.hero-actions  { animation: fadeUp 0.75s var(--ease) 0.52s both; }
+
+/* ─── RESPONSIVE ────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .container { padding: 0 20px; }
+  .nav-links, .btn-nav { display: none; }
+  .hamburger { display: flex; }
+
+  .trust-inner {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .trust-item:nth-child(2) { border-right: none; }
+  .trust-item:nth-child(3) { border-top: 1px solid var(--border); }
+  .trust-item:nth-child(4) { border-top: 1px solid var(--border); border-right: none; }
+
+  .servicios-grid { grid-template-columns: 1fr; gap: 12px; }
+  .cv-inner { grid-template-columns: 1fr; gap: 48px; }
+  .nosotros-inner { grid-template-columns: 1fr; gap: 56px; }
+
+  .nosotros-card-float {
+    position: static;
+    display: inline-block;
+    margin-top: 16px;
+  }
+
+  .vacante-row {
+    grid-template-columns: 1fr auto;
+    padding: 16px 20px;
+    gap: 12px;
+  }
+  .vacante-row .badge { display: none; }
+
+  .modal { padding: 28px 24px; }
+  .section { padding: 80px 0; }
+  .contacto-items { gap: 28px; }
+  .footer-inner { justify-content: center; text-align: center; }
+  .cv-form-wrap { padding: 28px 22px; }
+}
+
+@media (max-width: 480px) {
+  :root { --nav-h: 58px; }
+  .hero-inner { padding: 64px 0 88px; }
+  .section { padding: 72px 0; }
+  .trust-item { padding: 36px 20px; }
+  .trust-inner { grid-template-columns: repeat(2, 1fr); }
+}
+
+</style>
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+  <link rel="apple-touch-icon" sizes="192x192" href="/assets/favicon-192.png">
+</head>
+<body>
+
+<!-- ─── NAVBAR ─────────────────────────────────────────────── -->
+<nav id="navbar" role="navigation" aria-label="Navegación principal">
+  <div class="container">
+    <a href="#" class="nav-logo" aria-label="RRHH Concordia - Inicio"><svg class="nav-logo-svg nav-logo-dark" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" zoomAndPan="magnify" viewBox="40 148 1097 393" preserveAspectRatio="xMidYMid meet" version="1.0"><defs><g/><clipPath id="c7c725d30d"><path d="M 66.960938 172.789062 L 204 172.789062 L 204 344 L 66.960938 344 Z M 66.960938 172.789062 " clip-rule="nonzero"/></clipPath><clipPath id="b09cb06645"><path d="M 220 222 L 390.210938 222 L 390.210938 358.789062 L 220 358.789062 Z M 220 222 " clip-rule="nonzero"/></clipPath><clipPath id="8ec5b49331"><path d="M 26.542969 0 L 100 0 L 100 73.636719 L 26.542969 73.636719 Z M 26.542969 0 " clip-rule="nonzero"/></clipPath><clipPath id="4a16b515d8"><path d="M 1 73.574219 L 125.347656 73.574219 L 125.347656 134.351562 L 1 134.351562 Z M 1 73.574219 " clip-rule="nonzero"/></clipPath><clipPath id="a91371e48e"><rect x="0" width="126" y="0" height="135"/></clipPath><clipPath id="d81f1cb520"><path d="M 26.261719 0 L 99.902344 0 L 99.902344 73.636719 L 26.261719 73.636719 Z M 26.261719 0 " clip-rule="nonzero"/></clipPath><clipPath id="901a368752"><path d="M 0.582031 73.574219 L 125.039062 73.574219 L 125.039062 134.351562 L 0.582031 134.351562 Z M 0.582031 73.574219 " clip-rule="nonzero"/></clipPath><clipPath id="8ec5385c98"><rect x="0" width="126" y="0" height="135"/></clipPath><clipPath id="4fea750218"><rect x="0" width="686" y="0" height="337"/></clipPath></defs><g clip-path="url(#c7c725d30d)"><path fill="#4260c0" d="M 190.308594 254.050781 C 195.28125 254.050781 199.683594 255.789062 203.386719 258.683594 L 203.386719 207.058594 L 151.609375 207.058594 C 154.496094 203.015625 156.230469 198.761719 156.226562 193.796875 C 156.226562 182.226562 146.847656 172.773438 135.28125 172.773438 C 123.710938 172.773438 114.332031 182.261719 114.332031 193.832031 C 114.332031 198.796875 116.0625 203.015625 118.949219 207.058594 L 66.96875 207.058594 L 66.96875 343.476562 L 203.386719 343.476562 L 203.386719 291.316406 C 199.683594 294.210938 195.28125 295.949219 190.308594 295.949219 C 178.738281 295.949219 169.359375 286.570312 169.359375 275 C 169.359375 263.429688 178.738281 254.050781 190.308594 254.050781 Z M 190.308594 254.050781 " fill-opacity="1" fill-rule="nonzero"/></g><g clip-path="url(#b09cb06645)"><path fill="#fc9738" d="M 338.679688 222.550781 C 341.574219 225.921875 343.3125 230.601562 343.3125 235.578125 C 343.3125 247.144531 333.933594 256.46875 322.363281 256.46875 C 310.792969 256.46875 301.414062 247.171875 301.414062 235.605469 C 301.414062 230.628906 303.152344 225.921875 306.046875 222.550781 L 253.914062 222.550781 L 253.914062 274.25 C 250.546875 271.34375 245.867188 269.601562 240.886719 269.601562 C 229.316406 269.601562 220 278.980469 220 290.550781 C 220 302.121094 229.285156 311.5 240.855469 311.5 C 245.835938 311.5 250.546875 309.757812 253.914062 306.851562 L 253.914062 358.972656 L 390.332031 358.972656 L 390.332031 222.550781 Z M 338.679688 222.550781 " fill-opacity="1" fill-rule="nonzero"/></g><g transform="matrix(1, 0, 0, 1, 265, 384)"><g clip-path="url(#a91371e48e)"><g clip-path="url(#8ec5b49331)"><path fill="#ffd699" d="M 63.226562 0 C 42.957031 0 26.542969 16.414062 26.542969 36.683594 C 26.542969 56.949219 42.957031 73.363281 63.226562 73.363281 C 83.492188 73.363281 99.90625 56.949219 99.90625 36.683594 C 99.90625 16.414062 83.492188 0 63.226562 0 Z M 63.226562 0 " fill-opacity="1" fill-rule="nonzero"/></g><g clip-path="url(#4a16b515d8)"><path fill="#ff3131" d="M 1.132812 134.351562 C 1.71875 100.578125 29.285156 73.394531 63.234375 73.394531 C 97.144531 73.394531 124.710938 100.578125 125.296875 134.351562 Z M 1.132812 134.351562 " fill-opacity="1" fill-rule="nonzero"/></g></g></g><g transform="matrix(1, 0, 0, 1, 78, 384)"><g clip-path="url(#8ec5385c98)"><g clip-path="url(#d81f1cb520)"><path fill="#ffd699" d="M 62.945312 0 C 42.679688 0 26.261719 16.414062 26.261719 36.683594 C 26.261719 56.949219 42.679688 73.363281 62.945312 73.363281 C 83.210938 73.363281 99.628906 56.949219 99.628906 36.683594 C 99.628906 16.414062 83.210938 0 62.945312 0 Z M 62.945312 0 " fill-opacity="1" fill-rule="nonzero"/></g><g clip-path="url(#901a368752)"><path fill="#39a05a" d="M 0.851562 134.351562 C 1.441406 100.578125 29.007812 73.394531 62.953125 73.394531 C 96.863281 73.394531 124.429688 100.578125 125.015625 134.351562 Z M 0.851562 134.351562 " fill-opacity="1" fill-rule="nonzero"/></g></g></g><g transform="matrix(1, 0, 0, 1, 429, 191)"><g clip-path="url(#4fea750218)"><g fill="#1A1F2D" fill-opacity="1"><g transform="translate(0.749895, 117.783084)"><g><path d="M 8.109375 -92.78125 L 46.9375 -92.78125 C 56.039062 -92.78125 63.046875 -90.34375 67.953125 -85.46875 C 72.867188 -80.601562 75.328125 -74.203125 75.328125 -66.265625 C 75.328125 -60.679688 73.953125 -55.8125 71.203125 -51.65625 C 68.453125 -47.507812 64.644531 -44.445312 59.78125 -42.46875 L 77.640625 0 L 58.828125 0 L 43.421875 -38.6875 L 25.421875 -38.6875 L 25.421875 0 L 8.109375 0 Z M 44.5 -53.96875 C 48.550781 -53.96875 51.59375 -55.023438 53.625 -57.140625 C 55.65625 -59.265625 56.671875 -62.304688 56.671875 -66.265625 C 56.671875 -69.785156 55.722656 -72.515625 53.828125 -74.453125 C 51.929688 -76.390625 49.046875 -77.359375 45.171875 -77.359375 L 25.421875 -77.359375 L 25.421875 -53.96875 Z M 44.5 -53.96875 "/></g></g></g><g fill="#1A1F2D" fill-opacity="1"><g transform="translate(80.812327, 117.783084)"><g><path d="M 8.109375 -92.78125 L 46.9375 -92.78125 C 56.039062 -92.78125 63.046875 -90.34375 67.953125 -85.46875 C 72.867188 -80.601562 75.328125 -74.203125 75.328125 -66.265625 C 75.328125 -60.679688 73.953125 -55.8125 71.203125 -51.65625 C 68.453125 -47.507812 64.644531 -44.445312 59.78125 -42.46875 L 77.640625 0 L 58.828125 0 L 43.421875 -38.6875 L 25.421875 -38.6875 L 25.421875 0 L 8.109375 0 Z M 44.5 -53.96875 C 48.550781 -53.96875 51.59375 -55.023438 53.625 -57.140625 C 55.65625 -59.265625 56.671875 -62.304688 56.671875 -66.265625 C 56.671875 -69.785156 55.722656 -72.515625 53.828125 -74.453125 C 51.929688 -76.390625 49.046875 -77.359375 45.171875 -77.359375 L 25.421875 -77.359375 L 25.421875 -53.96875 Z M 44.5 -53.96875 "/></g></g></g><g fill="#1A1F2D" fill-opacity="1"><g transform="translate(160.874758, 117.783084)"><g><path d="M 6.09375 -18.53125 L 24.75 -18.53125 L 24.75 0 L 6.09375 0 Z M 6.09375 -18.53125 "/></g></g></g><g fill="#1A1F2D" fill-opacity="1"><g transform="translate(191.709611, 117.783084)"><g><path d="M 8.109375 -92.78125 L 25.421875 -92.78125 L 25.421875 -55.1875 L 54.640625 -55.1875 L 54.640625 -92.78125 L 71.953125 -92.78125 L 71.953125 0 L 54.640625 0 L 54.640625 -39.765625 L 25.421875 -39.765625 L 25.421875 0 L 8.109375 0 Z M 8.109375 -92.78125 "/></g></g></g><g fill="#1A1F2D" fill-opacity="1"><g transform="translate(271.772042, 117.783084)"><g><path d="M 8.109375 -92.78125 L 25.421875 -92.78125 L 25.421875 -55.1875 L 54.640625 -55.1875 L 54.640625 -92.78125 L 71.953125 -92.78125 L 71.953125 0 L 54.640625 0 L 54.640625 -39.765625 L 25.421875 -39.765625 L 25.421875 0 L 8.109375 0 Z M 8.109375 -92.78125 "/></g></g></g><g fill="#1A1F2D" fill-opacity="1"><g transform="translate(351.834474, 117.783084)"><g><path d="M 6.09375 -18.53125 L 24.75 -18.53125 L 24.75 0 L 6.09375 0 Z M 6.09375 -18.53125 "/></g></g></g><g fill="#1A1F2D" fill-opacity="1"><g transform="translate(382.670378, 117.783084)"><g/></g></g><g fill="#1A1F2D" fill-opacity="1"><g transform="translate(0.749895, 306.916248)"><g><path d="M 41.515625 1.625 C 29.617188 1.625 20.488281 -2.363281 14.125 -10.34375 C 7.769531 -18.320312 4.59375 -30.335938 4.59375 -46.390625 C 4.59375 -62.441406 7.769531 -74.457031 14.125 -82.4375 C 20.488281 -90.414062 29.617188 -94.40625 41.515625 -94.40625 C 51.710938 -94.40625 59.941406 -91.382812 66.203125 -85.34375 C 72.472656 -79.300781 75.609375 -70.285156 75.609375 -58.296875 L 57.890625 -58.296875 C 57.890625 -65.234375 56.421875 -70.503906 53.484375 -74.109375 C 50.554688 -77.722656 46.566406 -79.53125 41.515625 -79.53125 C 35.203125 -79.53125 30.445312 -76.9375 27.25 -71.75 C 24.050781 -66.5625 22.453125 -59.234375 22.453125 -49.765625 L 22.453125 -43.015625 C 22.453125 -33.546875 24.097656 -26.21875 27.390625 -21.03125 C 30.679688 -15.84375 35.570312 -13.25 42.0625 -13.25 C 47.195312 -13.25 51.253906 -15.03125 54.234375 -18.59375 C 57.210938 -22.15625 58.703125 -27.410156 58.703125 -34.359375 L 75.609375 -34.359375 C 75.609375 -22.628906 72.492188 -13.695312 66.265625 -7.5625 C 60.046875 -1.4375 51.796875 1.625 41.515625 1.625 Z M 41.515625 1.625 "/></g></g></g><g fill="#1A1F2D" fill-opacity="1"><g transform="translate(80.812327, 306.916248)"><g><path d="M 43.140625 1.625 C 30.878906 1.625 21.390625 -2.363281 14.671875 -10.34375 C 7.953125 -18.320312 4.59375 -30.335938 4.59375 -46.390625 C 4.59375 -62.441406 7.953125 -74.457031 14.671875 -82.4375 C 21.390625 -90.414062 30.878906 -94.40625 43.140625 -94.40625 C 55.398438 -94.40625 64.890625 -90.414062 71.609375 -82.4375 C 78.328125 -74.457031 81.6875 -62.441406 81.6875 -46.390625 C 81.6875 -30.335938 78.328125 -18.320312 71.609375 -10.34375 C 64.890625 -2.363281 55.398438 1.625 43.140625 1.625 Z M 43.140625 -13.25 C 49.898438 -13.25 55.039062 -15.84375 58.5625 -21.03125 C 62.082031 -26.21875 63.84375 -33.546875 63.84375 -43.015625 L 63.84375 -49.765625 C 63.84375 -59.234375 62.082031 -66.5625 58.5625 -71.75 C 55.039062 -76.9375 49.898438 -79.53125 43.140625 -79.53125 C 36.378906 -79.53125 31.238281 -76.9375 27.71875 -71.75 C 24.207031 -66.5625 22.453125 -59.234375 22.453125 -49.765625 L 22.453125 -43.015625 C 22.453125 -33.546875 24.207031 -26.21875 27.71875 -21.03125 C 31.238281 -15.84375 36.378906 -13.25 43.140625 -13.25 Z M 43.140625 -13.25 "/></g></g></g><g fill="#1A1F2D" fill-opacity="1"><g transform="translate(167.095833, 306.916248)"><g><path d="M 8.109375 -92.78125 L 23.390625 -92.78125 L 52.078125 -41.65625 C 52.703125 -40.664062 53.488281 -39.15625 54.4375 -37.125 C 55.382812 -35.09375 55.992188 -33.71875 56.265625 -33 L 56.671875 -33.40625 L 56.53125 -41.109375 L 56.53125 -92.78125 L 71.953125 -92.78125 L 71.953125 0 L 56.53125 0 L 27.859375 -51.125 C 27.140625 -52.5625 26.347656 -54.179688 25.484375 -55.984375 C 24.628906 -57.796875 24.023438 -59.0625 23.671875 -59.78125 L 23.125 -59.375 C 23.125 -58.832031 23.164062 -57.796875 23.25 -56.265625 C 23.34375 -54.734375 23.390625 -53.203125 23.390625 -51.671875 L 23.390625 0 L 8.109375 0 Z M 8.109375 -92.78125 "/></g></g></g><g fill="#1A1F2D" fill-opacity="1"><g transform="translate(247.158276, 306.916248)"><g><path d="M 41.515625 1.625 C 29.617188 1.625 20.488281 -2.363281 14.125 -10.34375 C 7.769531 -18.320312 4.59375 -30.335938 4.59375 -46.390625 C 4.59375 -62.441406 7.769531 -74.457031 14.125 -82.4375 C 20.488281 -90.414062 29.617188 -94.40625 41.515625 -94.40625 C 51.710938 -94.40625 59.941406 -91.382812 66.203125 -85.34375 C 72.472656 -79.300781 75.609375 -70.285156 75.609375 -58.296875 L 57.890625 -58.296875 C 57.890625 -65.234375 56.421875 -70.503906 53.484375 -74.109375 C 50.554688 -77.722656 46.566406 -79.53125 41.515625 -79.53125 C 35.203125 -79.53125 30.445312 -76.9375 27.25 -71.75 C 24.050781 -66.5625 22.453125 -59.234375 22.453125 -49.765625 L 22.453125 -43.015625 C 22.453125 -33.546875 24.097656 -26.21875 27.390625 -21.03125 C 30.679688 -15.84375 35.570312 -13.25 42.0625 -13.25 C 47.195312 -13.25 51.253906 -15.03125 54.234375 -18.59375 C 57.210938 -22.15625 58.703125 -27.410156 58.703125 -34.359375 L 75.609375 -34.359375 C 75.609375 -22.628906 72.492188 -13.695312 66.265625 -7.5625 C 60.046875 -1.4375 51.796875 1.625 41.515625 1.625 Z M 41.515625 1.625 "/></g></g></g><g fill="#1A1F2D" fill-opacity="1"><g transform="translate(327.220707, 306.916248)"><g><path d="M 43.140625 1.625 C 30.878906 1.625 21.390625 -2.363281 14.671875 -10.34375 C 7.953125 -18.320312 4.59375 -30.335938 4.59375 -46.390625 C 4.59375 -62.441406 7.953125 -74.457031 14.671875 -82.4375 C 21.390625 -90.414062 30.878906 -94.40625 43.140625 -94.40625 C 55.398438 -94.40625 64.890625 -90.414062 71.609375 -82.4375 C 78.328125 -74.457031 81.6875 -62.441406 81.6875 -46.390625 C 81.6875 -30.335938 78.328125 -18.320312 71.609375 -10.34375 C 64.890625 -2.363281 55.398438 1.625 43.140625 1.625 Z M 43.140625 -13.25 C 49.898438 -13.25 55.039062 -15.84375 58.5625 -21.03125 C 62.082031 -26.21875 63.84375 -33.546875 63.84375 -43.015625 L 63.84375 -49.765625 C 63.84375 -59.234375 62.082031 -66.5625 58.5625 -71.75 C 55.039062 -76.9375 49.898438 -79.53125 43.140625 -79.53125 C 36.378906 -79.53125 31.238281 -76.9375 27.71875 -71.75 C 24.207031 -66.5625 22.453125 -59.234375 22.453125 -49.765625 L 22.453125 -43.015625 C 22.453125 -33.546875 24.207031 -26.21875 27.71875 -21.03125 C 31.238281 -15.84375 36.378906 -13.25 43.140625 -13.25 Z M 43.140625 -13.25 "/></g></g></g><g fill="#1A1F2D" fill-opacity="1"><g transform="translate(413.504226, 306.916248)"><g><path d="M 8.109375 -92.78125 L 46.9375 -92.78125 C 56.039062 -92.78125 63.046875 -90.34375 67.953125 -85.46875 C 72.867188 -80.601562 75.328125 -74.203125 75.328125 -66.265625 C 75.328125 -60.679688 73.953125 -55.8125 71.203125 -51.65625 C 68.453125 -47.507812 64.644531 -44.445312 59.78125 -42.46875 L 77.640625 0 L 58.828125 0 L 43.421875 -38.6875 L 25.421875 -38.6875 L 25.421875 0 L 8.109375 0 Z M 44.5 -53.96875 C 48.550781 -53.96875 51.59375 -55.023438 53.625 -57.140625 C 55.65625 -59.265625 56.671875 -62.304688 56.671875 -66.265625 C 56.671875 -69.785156 55.722656 -72.515625 53.828125 -74.453125 C 51.929688 -76.390625 49.046875 -77.359375 45.171875 -77.359375 L 25.421875 -77.359375 L 25.421875 -53.96875 Z M 44.5 -53.96875 "/></g></g></g><g fill="#1A1F2D" fill-opacity="1"><g transform="translate(493.566657, 306.916248)"><g><path d="M 8.109375 -92.78125 L 38.28125 -92.78125 C 50 -92.78125 59.125 -88.945312 65.65625 -81.28125 C 72.195312 -73.613281 75.46875 -62.4375 75.46875 -47.75 C 75.46875 -32.144531 72.222656 -20.285156 65.734375 -12.171875 C 59.242188 -4.054688 50.09375 0 38.28125 0 L 8.109375 0 Z M 36.65625 -15.421875 C 43.238281 -15.421875 48.375 -17.875 52.0625 -22.78125 C 55.757812 -27.695312 57.609375 -34.890625 57.609375 -44.359375 L 57.609375 -51.125 C 57.609375 -59.6875 55.757812 -66.195312 52.0625 -70.65625 C 48.375 -75.125 43.238281 -77.359375 36.65625 -77.359375 L 25.421875 -77.359375 L 25.421875 -15.421875 Z M 36.65625 -15.421875 "/></g></g></g><g fill="#1A1F2D" fill-opacity="1"><g transform="translate(573.629089, 306.916248)"><g><path d="M 6.765625 -92.78125 L 24.078125 -92.78125 L 24.078125 0 L 6.765625 0 Z M 6.765625 -92.78125 "/></g></g></g><g fill="#1A1F2D" fill-opacity="1"><g transform="translate(604.463893, 306.916248)"><g><path d="M 29.890625 -92.78125 L 50.046875 -92.78125 L 79.9375 0 L 62.21875 0 L 56.53125 -18.265625 L 22.3125 -18.265625 L 16.765625 0 L 0 0 Z M 51.796875 -33.671875 L 42.46875 -64.65625 C 41.832031 -66.632812 41.242188 -69.019531 40.703125 -71.8125 C 40.171875 -74.613281 39.859375 -76.421875 39.765625 -77.234375 L 39.21875 -77.234375 C 39.039062 -76.328125 38.679688 -74.453125 38.140625 -71.609375 C 37.597656 -68.773438 37.054688 -66.457031 36.515625 -64.65625 L 27.046875 -33.671875 Z M 51.796875 -33.671875 "/></g></g></g></g></g></svg><svg class="nav-logo-svg nav-logo-light" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" zoomAndPan="magnify" viewBox="40 148 1097 393" preserveAspectRatio="xMidYMid meet" version="1.0"><defs><g/><clipPath id="c7c725d30d"><path d="M 66.960938 172.789062 L 204 172.789062 L 204 344 L 66.960938 344 Z M 66.960938 172.789062 " clip-rule="nonzero"/></clipPath><clipPath id="b09cb06645"><path d="M 220 222 L 390.210938 222 L 390.210938 358.789062 L 220 358.789062 Z M 220 222 " clip-rule="nonzero"/></clipPath><clipPath id="8ec5b49331"><path d="M 26.542969 0 L 100 0 L 100 73.636719 L 26.542969 73.636719 Z M 26.542969 0 " clip-rule="nonzero"/></clipPath><clipPath id="4a16b515d8"><path d="M 1 73.574219 L 125.347656 73.574219 L 125.347656 134.351562 L 1 134.351562 Z M 1 73.574219 " clip-rule="nonzero"/></clipPath><clipPath id="a91371e48e"><rect x="0" width="126" y="0" height="135"/></clipPath><clipPath id="d81f1cb520"><path d="M 26.261719 0 L 99.902344 0 L 99.902344 73.636719 L 26.261719 73.636719 Z M 26.261719 0 " clip-rule="nonzero"/></clipPath><clipPath id="901a368752"><path d="M 0.582031 73.574219 L 125.039062 73.574219 L 125.039062 134.351562 L 0.582031 134.351562 Z M 0.582031 73.574219 " clip-rule="nonzero"/></clipPath><clipPath id="8ec5385c98"><rect x="0" width="126" y="0" height="135"/></clipPath><clipPath id="4fea750218"><rect x="0" width="686" y="0" height="337"/></clipPath></defs><g clip-path="url(#c7c725d30d)"><path fill="#4260c0" d="M 190.308594 254.050781 C 195.28125 254.050781 199.683594 255.789062 203.386719 258.683594 L 203.386719 207.058594 L 151.609375 207.058594 C 154.496094 203.015625 156.230469 198.761719 156.226562 193.796875 C 156.226562 182.226562 146.847656 172.773438 135.28125 172.773438 C 123.710938 172.773438 114.332031 182.261719 114.332031 193.832031 C 114.332031 198.796875 116.0625 203.015625 118.949219 207.058594 L 66.96875 207.058594 L 66.96875 343.476562 L 203.386719 343.476562 L 203.386719 291.316406 C 199.683594 294.210938 195.28125 295.949219 190.308594 295.949219 C 178.738281 295.949219 169.359375 286.570312 169.359375 275 C 169.359375 263.429688 178.738281 254.050781 190.308594 254.050781 Z M 190.308594 254.050781 " fill-opacity="1" fill-rule="nonzero"/></g><g clip-path="url(#b09cb06645)"><path fill="#fc9738" d="M 338.679688 222.550781 C 341.574219 225.921875 343.3125 230.601562 343.3125 235.578125 C 343.3125 247.144531 333.933594 256.46875 322.363281 256.46875 C 310.792969 256.46875 301.414062 247.171875 301.414062 235.605469 C 301.414062 230.628906 303.152344 225.921875 306.046875 222.550781 L 253.914062 222.550781 L 253.914062 274.25 C 250.546875 271.34375 245.867188 269.601562 240.886719 269.601562 C 229.316406 269.601562 220 278.980469 220 290.550781 C 220 302.121094 229.285156 311.5 240.855469 311.5 C 245.835938 311.5 250.546875 309.757812 253.914062 306.851562 L 253.914062 358.972656 L 390.332031 358.972656 L 390.332031 222.550781 Z M 338.679688 222.550781 " fill-opacity="1" fill-rule="nonzero"/></g><g transform="matrix(1, 0, 0, 1, 265, 384)"><g clip-path="url(#a91371e48e)"><g clip-path="url(#8ec5b49331)"><path fill="#ffd699" d="M 63.226562 0 C 42.957031 0 26.542969 16.414062 26.542969 36.683594 C 26.542969 56.949219 42.957031 73.363281 63.226562 73.363281 C 83.492188 73.363281 99.90625 56.949219 99.90625 36.683594 C 99.90625 16.414062 83.492188 0 63.226562 0 Z M 63.226562 0 " fill-opacity="1" fill-rule="nonzero"/></g><g clip-path="url(#4a16b515d8)"><path fill="#ff3131" d="M 1.132812 134.351562 C 1.71875 100.578125 29.285156 73.394531 63.234375 73.394531 C 97.144531 73.394531 124.710938 100.578125 125.296875 134.351562 Z M 1.132812 134.351562 " fill-opacity="1" fill-rule="nonzero"/></g></g></g><g transform="matrix(1, 0, 0, 1, 78, 384)"><g clip-path="url(#8ec5385c98)"><g clip-path="url(#d81f1cb520)"><path fill="#ffd699" d="M 62.945312 0 C 42.679688 0 26.261719 16.414062 26.261719 36.683594 C 26.261719 56.949219 42.679688 73.363281 62.945312 73.363281 C 83.210938 73.363281 99.628906 56.949219 99.628906 36.683594 C 99.628906 16.414062 83.210938 0 62.945312 0 Z M 62.945312 0 " fill-opacity="1" fill-rule="nonzero"/></g><g clip-path="url(#901a368752)"><path fill="#39a05a" d="M 0.851562 134.351562 C 1.441406 100.578125 29.007812 73.394531 62.953125 73.394531 C 96.863281 73.394531 124.429688 100.578125 125.015625 134.351562 Z M 0.851562 134.351562 " fill-opacity="1" fill-rule="nonzero"/></g></g></g><g transform="matrix(1, 0, 0, 1, 429, 191)"><g clip-path="url(#4fea750218)"><g fill="#FFFFFF" fill-opacity="1"><g transform="translate(0.749895, 117.783084)"><g><path d="M 8.109375 -92.78125 L 46.9375 -92.78125 C 56.039062 -92.78125 63.046875 -90.34375 67.953125 -85.46875 C 72.867188 -80.601562 75.328125 -74.203125 75.328125 -66.265625 C 75.328125 -60.679688 73.953125 -55.8125 71.203125 -51.65625 C 68.453125 -47.507812 64.644531 -44.445312 59.78125 -42.46875 L 77.640625 0 L 58.828125 0 L 43.421875 -38.6875 L 25.421875 -38.6875 L 25.421875 0 L 8.109375 0 Z M 44.5 -53.96875 C 48.550781 -53.96875 51.59375 -55.023438 53.625 -57.140625 C 55.65625 -59.265625 56.671875 -62.304688 56.671875 -66.265625 C 56.671875 -69.785156 55.722656 -72.515625 53.828125 -74.453125 C 51.929688 -76.390625 49.046875 -77.359375 45.171875 -77.359375 L 25.421875 -77.359375 L 25.421875 -53.96875 Z M 44.5 -53.96875 "/></g></g></g><g fill="#FFFFFF" fill-opacity="1"><g transform="translate(80.812327, 117.783084)"><g><path d="M 8.109375 -92.78125 L 46.9375 -92.78125 C 56.039062 -92.78125 63.046875 -90.34375 67.953125 -85.46875 C 72.867188 -80.601562 75.328125 -74.203125 75.328125 -66.265625 C 75.328125 -60.679688 73.953125 -55.8125 71.203125 -51.65625 C 68.453125 -47.507812 64.644531 -44.445312 59.78125 -42.46875 L 77.640625 0 L 58.828125 0 L 43.421875 -38.6875 L 25.421875 -38.6875 L 25.421875 0 L 8.109375 0 Z M 44.5 -53.96875 C 48.550781 -53.96875 51.59375 -55.023438 53.625 -57.140625 C 55.65625 -59.265625 56.671875 -62.304688 56.671875 -66.265625 C 56.671875 -69.785156 55.722656 -72.515625 53.828125 -74.453125 C 51.929688 -76.390625 49.046875 -77.359375 45.171875 -77.359375 L 25.421875 -77.359375 L 25.421875 -53.96875 Z M 44.5 -53.96875 "/></g></g></g><g fill="#FFFFFF" fill-opacity="1"><g transform="translate(160.874758, 117.783084)"><g><path d="M 6.09375 -18.53125 L 24.75 -18.53125 L 24.75 0 L 6.09375 0 Z M 6.09375 -18.53125 "/></g></g></g><g fill="#FFFFFF" fill-opacity="1"><g transform="translate(191.709611, 117.783084)"><g><path d="M 8.109375 -92.78125 L 25.421875 -92.78125 L 25.421875 -55.1875 L 54.640625 -55.1875 L 54.640625 -92.78125 L 71.953125 -92.78125 L 71.953125 0 L 54.640625 0 L 54.640625 -39.765625 L 25.421875 -39.765625 L 25.421875 0 L 8.109375 0 Z M 8.109375 -92.78125 "/></g></g></g><g fill="#FFFFFF" fill-opacity="1"><g transform="translate(271.772042, 117.783084)"><g><path d="M 8.109375 -92.78125 L 25.421875 -92.78125 L 25.421875 -55.1875 L 54.640625 -55.1875 L 54.640625 -92.78125 L 71.953125 -92.78125 L 71.953125 0 L 54.640625 0 L 54.640625 -39.765625 L 25.421875 -39.765625 L 25.421875 0 L 8.109375 0 Z M 8.109375 -92.78125 "/></g></g></g><g fill="#FFFFFF" fill-opacity="1"><g transform="translate(351.834474, 117.783084)"><g><path d="M 6.09375 -18.53125 L 24.75 -18.53125 L 24.75 0 L 6.09375 0 Z M 6.09375 -18.53125 "/></g></g></g><g fill="#FFFFFF" fill-opacity="1"><g transform="translate(382.670378, 117.783084)"><g/></g></g><g fill="#FFFFFF" fill-opacity="1"><g transform="translate(0.749895, 306.916248)"><g><path d="M 41.515625 1.625 C 29.617188 1.625 20.488281 -2.363281 14.125 -10.34375 C 7.769531 -18.320312 4.59375 -30.335938 4.59375 -46.390625 C 4.59375 -62.441406 7.769531 -74.457031 14.125 -82.4375 C 20.488281 -90.414062 29.617188 -94.40625 41.515625 -94.40625 C 51.710938 -94.40625 59.941406 -91.382812 66.203125 -85.34375 C 72.472656 -79.300781 75.609375 -70.285156 75.609375 -58.296875 L 57.890625 -58.296875 C 57.890625 -65.234375 56.421875 -70.503906 53.484375 -74.109375 C 50.554688 -77.722656 46.566406 -79.53125 41.515625 -79.53125 C 35.203125 -79.53125 30.445312 -76.9375 27.25 -71.75 C 24.050781 -66.5625 22.453125 -59.234375 22.453125 -49.765625 L 22.453125 -43.015625 C 22.453125 -33.546875 24.097656 -26.21875 27.390625 -21.03125 C 30.679688 -15.84375 35.570312 -13.25 42.0625 -13.25 C 47.195312 -13.25 51.253906 -15.03125 54.234375 -18.59375 C 57.210938 -22.15625 58.703125 -27.410156 58.703125 -34.359375 L 75.609375 -34.359375 C 75.609375 -22.628906 72.492188 -13.695312 66.265625 -7.5625 C 60.046875 -1.4375 51.796875 1.625 41.515625 1.625 Z M 41.515625 1.625 "/></g></g></g><g fill="#FFFFFF" fill-opacity="1"><g transform="translate(80.812327, 306.916248)"><g><path d="M 43.140625 1.625 C 30.878906 1.625 21.390625 -2.363281 14.671875 -10.34375 C 7.953125 -18.320312 4.59375 -30.335938 4.59375 -46.390625 C 4.59375 -62.441406 7.953125 -74.457031 14.671875 -82.4375 C 21.390625 -90.414062 30.878906 -94.40625 43.140625 -94.40625 C 55.398438 -94.40625 64.890625 -90.414062 71.609375 -82.4375 C 78.328125 -74.457031 81.6875 -62.441406 81.6875 -46.390625 C 81.6875 -30.335938 78.328125 -18.320312 71.609375 -10.34375 C 64.890625 -2.363281 55.398438 1.625 43.140625 1.625 Z M 43.140625 -13.25 C 49.898438 -13.25 55.039062 -15.84375 58.5625 -21.03125 C 62.082031 -26.21875 63.84375 -33.546875 63.84375 -43.015625 L 63.84375 -49.765625 C 63.84375 -59.234375 62.082031 -66.5625 58.5625 -71.75 C 55.039062 -76.9375 49.898438 -79.53125 43.140625 -79.53125 C 36.378906 -79.53125 31.238281 -76.9375 27.71875 -71.75 C 24.207031 -66.5625 22.453125 -59.234375 22.453125 -49.765625 L 22.453125 -43.015625 C 22.453125 -33.546875 24.207031 -26.21875 27.71875 -21.03125 C 31.238281 -15.84375 36.378906 -13.25 43.140625 -13.25 Z M 43.140625 -13.25 "/></g></g></g><g fill="#FFFFFF" fill-opacity="1"><g transform="translate(167.095833, 306.916248)"><g><path d="M 8.109375 -92.78125 L 23.390625 -92.78125 L 52.078125 -41.65625 C 52.703125 -40.664062 53.488281 -39.15625 54.4375 -37.125 C 55.382812 -35.09375 55.992188 -33.71875 56.265625 -33 L 56.671875 -33.40625 L 56.53125 -41.109375 L 56.53125 -92.78125 L 71.953125 -92.78125 L 71.953125 0 L 56.53125 0 L 27.859375 -51.125 C 27.140625 -52.5625 26.347656 -54.179688 25.484375 -55.984375 C 24.628906 -57.796875 24.023438 -59.0625 23.671875 -59.78125 L 23.125 -59.375 C 23.125 -58.832031 23.164062 -57.796875 23.25 -56.265625 C 23.34375 -54.734375 23.390625 -53.203125 23.390625 -51.671875 L 23.390625 0 L 8.109375 0 Z M 8.109375 -92.78125 "/></g></g></g><g fill="#FFFFFF" fill-opacity="1"><g transform="translate(247.158276, 306.916248)"><g><path d="M 41.515625 1.625 C 29.617188 1.625 20.488281 -2.363281 14.125 -10.34375 C 7.769531 -18.320312 4.59375 -30.335938 4.59375 -46.390625 C 4.59375 -62.441406 7.769531 -74.457031 14.125 -82.4375 C 20.488281 -90.414062 29.617188 -94.40625 41.515625 -94.40625 C 51.710938 -94.40625 59.941406 -91.382812 66.203125 -85.34375 C 72.472656 -79.300781 75.609375 -70.285156 75.609375 -58.296875 L 57.890625 -58.296875 C 57.890625 -65.234375 56.421875 -70.503906 53.484375 -74.109375 C 50.554688 -77.722656 46.566406 -79.53125 41.515625 -79.53125 C 35.203125 -79.53125 30.445312 -76.9375 27.25 -71.75 C 24.050781 -66.5625 22.453125 -59.234375 22.453125 -49.765625 L 22.453125 -43.015625 C 22.453125 -33.546875 24.097656 -26.21875 27.390625 -21.03125 C 30.679688 -15.84375 35.570312 -13.25 42.0625 -13.25 C 47.195312 -13.25 51.253906 -15.03125 54.234375 -18.59375 C 57.210938 -22.15625 58.703125 -27.410156 58.703125 -34.359375 L 75.609375 -34.359375 C 75.609375 -22.628906 72.492188 -13.695312 66.265625 -7.5625 C 60.046875 -1.4375 51.796875 1.625 41.515625 1.625 Z M 41.515625 1.625 "/></g></g></g><g fill="#FFFFFF" fill-opacity="1"><g transform="translate(327.220707, 306.916248)"><g><path d="M 43.140625 1.625 C 30.878906 1.625 21.390625 -2.363281 14.671875 -10.34375 C 7.953125 -18.320312 4.59375 -30.335938 4.59375 -46.390625 C 4.59375 -62.441406 7.953125 -74.457031 14.671875 -82.4375 C 21.390625 -90.414062 30.878906 -94.40625 43.140625 -94.40625 C 55.398438 -94.40625 64.890625 -90.414062 71.609375 -82.4375 C 78.328125 -74.457031 81.6875 -62.441406 81.6875 -46.390625 C 81.6875 -30.335938 78.328125 -18.320312 71.609375 -10.34375 C 64.890625 -2.363281 55.398438 1.625 43.140625 1.625 Z M 43.140625 -13.25 C 49.898438 -13.25 55.039062 -15.84375 58.5625 -21.03125 C 62.082031 -26.21875 63.84375 -33.546875 63.84375 -43.015625 L 63.84375 -49.765625 C 63.84375 -59.234375 62.082031 -66.5625 58.5625 -71.75 C 55.039062 -76.9375 49.898438 -79.53125 43.140625 -79.53125 C 36.378906 -79.53125 31.238281 -76.9375 27.71875 -71.75 C 24.207031 -66.5625 22.453125 -59.234375 22.453125 -49.765625 L 22.453125 -43.015625 C 22.453125 -33.546875 24.207031 -26.21875 27.71875 -21.03125 C 31.238281 -15.84375 36.378906 -13.25 43.140625 -13.25 Z M 43.140625 -13.25 "/></g></g></g><g fill="#FFFFFF" fill-opacity="1"><g transform="translate(413.504226, 306.916248)"><g><path d="M 8.109375 -92.78125 L 46.9375 -92.78125 C 56.039062 -92.78125 63.046875 -90.34375 67.953125 -85.46875 C 72.867188 -80.601562 75.328125 -74.203125 75.328125 -66.265625 C 75.328125 -60.679688 73.953125 -55.8125 71.203125 -51.65625 C 68.453125 -47.507812 64.644531 -44.445312 59.78125 -42.46875 L 77.640625 0 L 58.828125 0 L 43.421875 -38.6875 L 25.421875 -38.6875 L 25.421875 0 L 8.109375 0 Z M 44.5 -53.96875 C 48.550781 -53.96875 51.59375 -55.023438 53.625 -57.140625 C 55.65625 -59.265625 56.671875 -62.304688 56.671875 -66.265625 C 56.671875 -69.785156 55.722656 -72.515625 53.828125 -74.453125 C 51.929688 -76.390625 49.046875 -77.359375 45.171875 -77.359375 L 25.421875 -77.359375 L 25.421875 -53.96875 Z M 44.5 -53.96875 "/></g></g></g><g fill="#FFFFFF" fill-opacity="1"><g transform="translate(493.566657, 306.916248)"><g><path d="M 8.109375 -92.78125 L 38.28125 -92.78125 C 50 -92.78125 59.125 -88.945312 65.65625 -81.28125 C 72.195312 -73.613281 75.46875 -62.4375 75.46875 -47.75 C 75.46875 -32.144531 72.222656 -20.285156 65.734375 -12.171875 C 59.242188 -4.054688 50.09375 0 38.28125 0 L 8.109375 0 Z M 36.65625 -15.421875 C 43.238281 -15.421875 48.375 -17.875 52.0625 -22.78125 C 55.757812 -27.695312 57.609375 -34.890625 57.609375 -44.359375 L 57.609375 -51.125 C 57.609375 -59.6875 55.757812 -66.195312 52.0625 -70.65625 C 48.375 -75.125 43.238281 -77.359375 36.65625 -77.359375 L 25.421875 -77.359375 L 25.421875 -15.421875 Z M 36.65625 -15.421875 "/></g></g></g><g fill="#FFFFFF" fill-opacity="1"><g transform="translate(573.629089, 306.916248)"><g><path d="M 6.765625 -92.78125 L 24.078125 -92.78125 L 24.078125 0 L 6.765625 0 Z M 6.765625 -92.78125 "/></g></g></g><g fill="#FFFFFF" fill-opacity="1"><g transform="translate(604.463893, 306.916248)"><g><path d="M 29.890625 -92.78125 L 50.046875 -92.78125 L 79.9375 0 L 62.21875 0 L 56.53125 -18.265625 L 22.3125 -18.265625 L 16.765625 0 L 0 0 Z M 51.796875 -33.671875 L 42.46875 -64.65625 C 41.832031 -66.632812 41.242188 -69.019531 40.703125 -71.8125 C 40.171875 -74.613281 39.859375 -76.421875 39.765625 -77.234375 L 39.21875 -77.234375 C 39.039062 -76.328125 38.679688 -74.453125 38.140625 -71.609375 C 37.597656 -68.773438 37.054688 -66.457031 36.515625 -64.65625 L 27.046875 -33.671875 Z M 51.796875 -33.671875 "/></g></g></g></g></g></svg></a>
+    <ul class="nav-links" role="list">
+      <li><a href="#nosotros">Nosotros</a></li>
+      <li><a href="#servicios">Servicios</a></li>
+      <li><a href="#vacantes">Vacantes</a></li>
+      <li><a href="#contacto">Contacto</a></li>
+    </ul>
+    <a href="#cv" class="btn-nav">Dejá tu CV</a>
+    <button class="hamburger" id="hamburger" aria-label="Abrir menú" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- Mobile menu -->
+<div class="mobile-menu" id="mobileMenu" role="dialog" aria-modal="true" aria-label="Menú de navegación">
+  <a href="#nosotros" class="mobile-menu-link">Nosotros</a>
+  <a href="#servicios" class="mobile-menu-link">Servicios</a>
+  <a href="#vacantes" class="mobile-menu-link">Vacantes</a>
+  <a href="#cv" class="mobile-menu-link">Dejá tu CV</a>
+  <a href="#contacto" class="mobile-menu-link">Contacto</a>
+</div>
+
+<!-- ─── HERO ───────────────────────────────────────────────── -->
+<header class="hero" role="banner">
+  <div class="hero-noise" aria-hidden="true"></div>
+  <div class="hero-orb2" aria-hidden="true"></div>
+  <div class="container">
+    <div class="hero-inner">
+      <div class="hero-eyebrow">
+        <span class="hero-eyebrow-line" aria-hidden="true"></span>
+        Concordia, Entre Ríos — Más de 30 años
+      </div>
+      <h1 class="hero-title">
+        Encontrá tu próxima<br>
+        <em>oportunidad</em><br>
+        profesional
+      </h1>
+      <p class="hero-sub">
+        La consultora de recursos humanos más consolidada de la región. Más de 30 años conectando talento con las mejores empresas de Concordia y la región.
+      </p>
+      <div class="hero-actions">
+        <a href="#vacantes" class="btn-primary">
+          Ver vacantes disponibles
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+        <a href="#cv" class="btn-ghost">
+          Dejar mi CV
+        </a>
+      </div>
+    </div>
+  </div>
+  <div class="hero-scroll" aria-hidden="true">
+    <div class="hero-scroll-line"></div>
+    <span>Scroll</span>
+  </div>
+</header>
+
+<!-- ─── TRUST SIGNALS ─────────────────────────────────────── -->
+<section class="trust" aria-label="Datos de trayectoria">
+  <div class="container">
+    <div class="trust-inner">
+      <div class="trust-item anim anim-d1">
+        <div class="trust-number">+30</div>
+        <div class="trust-label">Años de<br>experiencia</div>
+      </div>
+      <div class="trust-item anim anim-d2">
+        <div class="trust-number">100%</div>
+        <div class="trust-label">Local<br>y regional</div>
+      </div>
+      <div class="trust-item anim anim-d3">
+        <div class="trust-number">Ágil</div>
+        <div class="trust-label">Procesos<br>rápidos</div>
+      </div>
+      <div class="trust-item anim anim-d4">
+        <div class="trust-number">
+          <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        </div>
+        <div class="trust-label">Procesos<br>confidenciales</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── SERVICIOS ──────────────────────────────────────────── -->
+<section class="section servicios" id="servicios" aria-labelledby="servicios-title">
+  <div class="container">
+    <div class="servicios-header anim">
+      <span class="section-tag">Servicios</span>
+      <h2 class="section-title" id="servicios-title">Todo lo que tu empresa<br>necesita en RRHH</h2>
+      <p class="section-sub">Soluciones integrales para organizaciones que buscan crecer con las personas correctas.</p>
+    </div>
+    <div class="servicios-grid">
+
+      <article class="servicio-card anim anim-d1">
+        <div class="servicio-icon">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+        </div>
+        <h3 class="servicio-title">Selección y reclutamiento</h3>
+        <p class="servicio-desc">Búsqueda activa y pasiva de perfiles a medida. Evaluamos competencias técnicas y culturales para cada posición.</p>
+      </article>
+
+      <article class="servicio-card anim anim-d2">
+        <div class="servicio-icon">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 11l3 3 8-8"/><path d="M20 12v6a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h9"/></svg>
+        </div>
+        <h3 class="servicio-title">Evaluación de candidatos</h3>
+        <p class="servicio-desc">Entrevistas estructuradas, informes detallados por escrito y proceso de screening con criterios objetivos.</p>
+      </article>
+
+      <article class="servicio-card anim anim-d3">
+        <div class="servicio-icon">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/></svg>
+        </div>
+        <h3 class="servicio-title">Consultoría en RRHH</h3>
+        <p class="servicio-desc">Asesoramiento en legislación laboral argentina, gestión del capital humano y desarrollo organizacional.</p>
+      </article>
+
+      <article class="servicio-card anim anim-d1">
+        <div class="servicio-icon">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        </div>
+        <h3 class="servicio-title">Onboarding y contratación</h3>
+        <p class="servicio-desc">Acompañamos el proceso de incorporación para garantizar una integración exitosa desde el primer día.</p>
+      </article>
+
+      <article class="servicio-card anim anim-d2">
+        <div class="servicio-icon">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        </div>
+        <h3 class="servicio-title">Capacitación empresarial</h3>
+        <p class="servicio-desc">Programas de desarrollo profesional diseñados a medida para equipos y líderes de organizaciones locales.</p>
+      </article>
+
+      <article class="servicio-card anim anim-d3">
+        <div class="servicio-icon">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+        </div>
+        <h3 class="servicio-title">Headhunting y perfiles ejecutivos</h3>
+        <p class="servicio-desc">Búsqueda confidencial de mandos medios y gerenciales con metodología especializada para perfiles de alta responsabilidad.</p>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<!-- ─── VACANTES ───────────────────────────────────────────── -->
+<section class="section vacantes" id="vacantes" aria-labelledby="vacantes-title">
+  <div class="container">
+    <div class="vacantes-header">
+      <div class="vacantes-header-text anim">
+        <span class="section-tag">Oportunidades</span>
+        <h2 class="section-title" id="vacantes-title">Vacantes disponibles</h2>
+        <p class="section-sub">Postulaciones confidenciales. Te contactamos si tu perfil coincide.</p>
+      </div>
+      <a href="#cv" class="link-all anim">
+        No encontrás tu puesto, dejá tu CV
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+    </div>
+
+    <div class="vacantes-list anim" id="vacantes-list" role="list">
+      <!-- Se carga dinámicamente desde la API -->
+    </div>
+  </div>
+</section>
+
+<!-- ─── NOSOTROS ───────────────────────────────────────────── -->
+<section class="section nosotros" id="nosotros" aria-labelledby="nosotros-title">
+  <div class="container">
+    <div class="nosotros-inner">
+      <div class="nosotros-visual anim">
+        <div class="nosotros-card-main">
+          <div class="nosotros-card-main-year">+30</div>
+          <p class="nosotros-card-main-text">
+            <strong>Más de 30 años</strong> siendo el puente entre el talento y las mejores organizaciones de la región.
+          </p>
+        </div>
+        <div class="nosotros-card-float">
+          <div class="nosotros-card-float-val">Concordia</div>
+          <div class="nosotros-card-float-lbl">Entre Ríos, Argentina</div>
+        </div>
+      </div>
+      <div class="nosotros-text anim anim-d2">
+        <span class="section-tag">Quiénes somos</span>
+        <h2 class="section-title" id="nosotros-title">La consultora de RRHH de referencia en la región</h2>
+        <p class="section-sub">Somos una consultora especializada en recursos humanos radicada en Concordia, con profundo conocimiento del mercado laboral local y regional.</p>
+        <ul class="nosotros-list" role="list">
+          <li><span class="nosotros-list-dot" aria-hidden="true"></span>Reclutamiento y selección personalizada para cada perfil</li>
+          <li><span class="nosotros-list-dot" aria-hidden="true"></span>Procesos confidenciales garantizados</li>
+          <li><span class="nosotros-list-dot" aria-hidden="true"></span>Conocimiento profundo del mercado laboral de Concordia</li>
+          <li><span class="nosotros-list-dot" aria-hidden="true"></span>Acompañamiento en administración de beneficios y legislación laboral</li>
+          <li><span class="nosotros-list-dot" aria-hidden="true"></span>Evaluación objetiva del desempeño y potencial</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── CV ESPONTÁNEO ──────────────────────────────────────── -->
+<section class="cv-section" id="cv" aria-labelledby="cv-title">
+  <div class="container">
+    <div class="cv-inner">
+      <div class="cv-text anim">
+        <span class="section-tag">Sumá tu perfil</span>
+        <h2 class="section-title" id="cv-title">No hay una vacante hoy. Hay una oportunidad mañana.</h2>
+        <p class="section-sub">Dejá tu CV y te contactamos en cuanto aparezca una posición que se adapte a tu perfil. Sin compromiso.</p>
+      </div>
+      <div class="cv-form-wrap anim anim-d2">
+        <form id="cv-form" novalidate>
+          <div id="cv-form-fields">
+            <div class="form-group">
+              <label class="form-label" for="cv-nombre">Nombre completo</label>
+              <input class="form-input" type="text" id="cv-nombre" name="nombre" placeholder="Tu nombre y apellido" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="cv-email">Email</label>
+              <input class="form-input" type="email" id="cv-email" name="email" placeholder="tucorreo@email.com" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="cv-tel">Teléfono</label>
+              <input class="form-input" type="tel" id="cv-tel" name="telefono" placeholder="+54 345 0000000">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="cv-area">Área de interés</label>
+              <select class="form-select" id="cv-area" name="area">
+                <option value="">Seleccioná un área</option>
+                <option>Administración y contabilidad</option>
+                <option>Comercial y ventas</option>
+                <option>Logística y operaciones</option>
+                <option>Recursos humanos</option>
+                <option>Tecnología e informática</option>
+                <option>Producción e industria</option>
+                <option>Salud y educación</option>
+                <option>Otro</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">CV adjunto</label>
+              <div class="upload-area" id="cv-drop" role="button" tabindex="0" aria-label="Área para subir archivo de CV">
+                <input type="file" id="cv-file" name="archivo" accept=".pdf,.doc,.docx,.jpg,.png" aria-label="Seleccionar archivo de CV">
+                <div class="upload-icon">
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                </div>
+                <p class="upload-text"><strong>Hacé clic para adjuntar</strong><br>PDF, Word, JPG · Máx. 5MB</p>
+                <p id="cv-filename" style="font-size:12px; color: var(--orange); margin-top: 6px; display:none;"></p>
+              </div>
+            </div>
+            <button type="submit" class="btn-submit">Enviar mi CV</button>
+          </div>
+
+          <div class="form-success" id="cv-success" role="status" aria-live="polite">
+            <div class="form-success-icon">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+  <h3>¡CV recibido!</h3>
+            <p>Guardamos tu perfil en nuestra base de datos. Te contactaremos cuando surja una oportunidad que se adapte a vos.</p>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── CONTACTO ───────────────────────────────────────────── -->
+<section class="section contacto" id="contacto" aria-labelledby="contacto-title">
+  <div class="container">
+    <div class="contacto-inner">
+      <span class="section-tag">Contacto</span>
+      <h2 class="section-title" id="contacto-title">¿Sos empresa y buscás talento?<br>Hablemos.</h2>
+      <div class="contacto-items">
+        <div class="contacto-item anim anim-d1">
+          <div class="contacto-icon">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3-8.59A2 2 0 0 1 3.77 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 8.91a16 16 0 0 0 5.86 5.86l.9-.9a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+          </div>
+          <span class="contacto-label">Teléfono</span>
+          <a href="tel:+5434552836 88" class="contacto-value">+54 345 5283688</a>
+        </div>
+        <div class="contacto-item anim anim-d2">
+          <div class="contacto-icon">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          </div>
+          <span class="contacto-label">Email</span>
+          <a href="mailto:rrhhconcordia@hotmail.com" class="contacto-value">rrhhconcordia@hotmail.com</a>
+        </div>
+        <div class="contacto-item anim anim-d3">
+          <div class="contacto-icon">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          </div>
+          <span class="contacto-label">Ubicación</span>
+          <span class="contacto-value">Concordia, Entre Ríos</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── FOOTER ─────────────────────────────────────────────── -->
+<footer role="contentinfo">
+  <div class="container">
+    <div class="footer-inner">
+      <div class="footer-logo"><svg class="footer-logo-svg" aria-label="RRHH Concordia" role="img" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" zoomAndPan="magnify" viewBox="40 148 1097 393" preserveAspectRatio="xMidYMid meet" version="1.0"><defs><g/><clipPath id="c7c725d30d"><path d="M 66.960938 172.789062 L 204 172.789062 L 204 344 L 66.960938 344 Z M 66.960938 172.789062 " clip-rule="nonzero"/></clipPath><clipPath id="b09cb06645"><path d="M 220 222 L 390.210938 222 L 390.210938 358.789062 L 220 358.789062 Z M 220 222 " clip-rule="nonzero"/></clipPath><clipPath id="8ec5b49331"><path d="M 26.542969 0 L 100 0 L 100 73.636719 L 26.542969 73.636719 Z M 26.542969 0 " clip-rule="nonzero"/></clipPath><clipPath id="4a16b515d8"><path d="M 1 73.574219 L 125.347656 73.574219 L 125.347656 134.351562 L 1 134.351562 Z M 1 73.574219 " clip-rule="nonzero"/></clipPath><clipPath id="a91371e48e"><rect x="0" width="126" y="0" height="135"/></clipPath><clipPath id="d81f1cb520"><path d="M 26.261719 0 L 99.902344 0 L 99.902344 73.636719 L 26.261719 73.636719 Z M 26.261719 0 " clip-rule="nonzero"/></clipPath><clipPath id="901a368752"><path d="M 0.582031 73.574219 L 125.039062 73.574219 L 125.039062 134.351562 L 0.582031 134.351562 Z M 0.582031 73.574219 " clip-rule="nonzero"/></clipPath><clipPath id="8ec5385c98"><rect x="0" width="126" y="0" height="135"/></clipPath><clipPath id="4fea750218"><rect x="0" width="686" y="0" height="337"/></clipPath></defs><g clip-path="url(#c7c725d30d)"><path fill="#4260c0" d="M 190.308594 254.050781 C 195.28125 254.050781 199.683594 255.789062 203.386719 258.683594 L 203.386719 207.058594 L 151.609375 207.058594 C 154.496094 203.015625 156.230469 198.761719 156.226562 193.796875 C 156.226562 182.226562 146.847656 172.773438 135.28125 172.773438 C 123.710938 172.773438 114.332031 182.261719 114.332031 193.832031 C 114.332031 198.796875 116.0625 203.015625 118.949219 207.058594 L 66.96875 207.058594 L 66.96875 343.476562 L 203.386719 343.476562 L 203.386719 291.316406 C 199.683594 294.210938 195.28125 295.949219 190.308594 295.949219 C 178.738281 295.949219 169.359375 286.570312 169.359375 275 C 169.359375 263.429688 178.738281 254.050781 190.308594 254.050781 Z M 190.308594 254.050781 " fill-opacity="1" fill-rule="nonzero"/></g><g clip-path="url(#b09cb06645)"><path fill="#fc9738" d="M 338.679688 222.550781 C 341.574219 225.921875 343.3125 230.601562 343.3125 235.578125 C 343.3125 247.144531 333.933594 256.46875 322.363281 256.46875 C 310.792969 256.46875 301.414062 247.171875 301.414062 235.605469 C 301.414062 230.628906 303.152344 225.921875 306.046875 222.550781 L 253.914062 222.550781 L 253.914062 274.25 C 250.546875 271.34375 245.867188 269.601562 240.886719 269.601562 C 229.316406 269.601562 220 278.980469 220 290.550781 C 220 302.121094 229.285156 311.5 240.855469 311.5 C 245.835938 311.5 250.546875 309.757812 253.914062 306.851562 L 253.914062 358.972656 L 390.332031 358.972656 L 390.332031 222.550781 Z M 338.679688 222.550781 " fill-opacity="1" fill-rule="nonzero"/></g><g transform="matrix(1, 0, 0, 1, 265, 384)"><g clip-path="url(#a91371e48e)"><g clip-path="url(#8ec5b49331)"><path fill="#ffd699" d="M 63.226562 0 C 42.957031 0 26.542969 16.414062 26.542969 36.683594 C 26.542969 56.949219 42.957031 73.363281 63.226562 73.363281 C 83.492188 73.363281 99.90625 56.949219 99.90625 36.683594 C 99.90625 16.414062 83.492188 0 63.226562 0 Z M 63.226562 0 " fill-opacity="1" fill-rule="nonzero"/></g><g clip-path="url(#4a16b515d8)"><path fill="#ff3131" d="M 1.132812 134.351562 C 1.71875 100.578125 29.285156 73.394531 63.234375 73.394531 C 97.144531 73.394531 124.710938 100.578125 125.296875 134.351562 Z M 1.132812 134.351562 " fill-opacity="1" fill-rule="nonzero"/></g></g></g><g transform="matrix(1, 0, 0, 1, 78, 384)"><g clip-path="url(#8ec5385c98)"><g clip-path="url(#d81f1cb520)"><path fill="#ffd699" d="M 62.945312 0 C 42.679688 0 26.261719 16.414062 26.261719 36.683594 C 26.261719 56.949219 42.679688 73.363281 62.945312 73.363281 C 83.210938 73.363281 99.628906 56.949219 99.628906 36.683594 C 99.628906 16.414062 83.210938 0 62.945312 0 Z M 62.945312 0 " fill-opacity="1" fill-rule="nonzero"/></g><g clip-path="url(#901a368752)"><path fill="#39a05a" d="M 0.851562 134.351562 C 1.441406 100.578125 29.007812 73.394531 62.953125 73.394531 C 96.863281 73.394531 124.429688 100.578125 125.015625 134.351562 Z M 0.851562 134.351562 " fill-opacity="1" fill-rule="nonzero"/></g></g></g><g transform="matrix(1, 0, 0, 1, 429, 191)"><g clip-path="url(#4fea750218)"><g fill="#FFFFFF" fill-opacity="1"><g transform="translate(0.749895, 117.783084)"><g><path d="M 8.109375 -92.78125 L 46.9375 -92.78125 C 56.039062 -92.78125 63.046875 -90.34375 67.953125 -85.46875 C 72.867188 -80.601562 75.328125 -74.203125 75.328125 -66.265625 C 75.328125 -60.679688 73.953125 -55.8125 71.203125 -51.65625 C 68.453125 -47.507812 64.644531 -44.445312 59.78125 -42.46875 L 77.640625 0 L 58.828125 0 L 43.421875 -38.6875 L 25.421875 -38.6875 L 25.421875 0 L 8.109375 0 Z M 44.5 -53.96875 C 48.550781 -53.96875 51.59375 -55.023438 53.625 -57.140625 C 55.65625 -59.265625 56.671875 -62.304688 56.671875 -66.265625 C 56.671875 -69.785156 55.722656 -72.515625 53.828125 -74.453125 C 51.929688 -76.390625 49.046875 -77.359375 45.171875 -77.359375 L 25.421875 -77.359375 L 25.421875 -53.96875 Z M 44.5 -53.96875 "/></g></g></g><g fill="#FFFFFF" fill-opacity="1"><g transform="translate(80.812327, 117.783084)"><g><path d="M 8.109375 -92.78125 L 46.9375 -92.78125 C 56.039062 -92.78125 63.046875 -90.34375 67.953125 -85.46875 C 72.867188 -80.601562 75.328125 -74.203125 75.328125 -66.265625 C 75.328125 -60.679688 73.953125 -55.8125 71.203125 -51.65625 C 68.453125 -47.507812 64.644531 -44.445312 59.78125 -42.46875 L 77.640625 0 L 58.828125 0 L 43.421875 -38.6875 L 25.421875 -38.6875 L 25.421875 0 L 8.109375 0 Z M 44.5 -53.96875 C 48.550781 -53.96875 51.59375 -55.023438 53.625 -57.140625 C 55.65625 -59.265625 56.671875 -62.304688 56.671875 -66.265625 C 56.671875 -69.785156 55.722656 -72.515625 53.828125 -74.453125 C 51.929688 -76.390625 49.046875 -77.359375 45.171875 -77.359375 L 25.421875 -77.359375 L 25.421875 -53.96875 Z M 44.5 -53.96875 "/></g></g></g><g fill="#FFFFFF" fill-opacity="1"><g transform="translate(160.874758, 117.783084)"><g><path d="M 6.09375 -18.53125 L 24.75 -18.53125 L 24.75 0 L 6.09375 0 Z M 6.09375 -18.53125 "/></g></g></g><g fill="#FFFFFF" fill-opacity="1"><g transform="translate(191.709611, 117.783084)"><g><path d="M 8.109375 -92.78125 L 25.421875 -92.78125 L 25.421875 -55.1875 L 54.640625 -55.1875 L 54.640625 -92.78125 L 71.953125 -92.78125 L 71.953125 0 L 54.640625 0 L 54.640625 -39.765625 L 25.421875 -39.765625 L 25.421875 0 L 8.109375 0 Z M 8.109375 -92.78125 "/></g></g></g><g fill="#FFFFFF" fill-opacity="1"><g transform="translate(271.772042, 117.783084)"><g><path d="M 8.109375 -92.78125 L 25.421875 -92.78125 L 25.421875 -55.1875 L 54.640625 -55.1875 L 54.640625 -92.78125 L 71.953125 -92.78125 L 71.953125 0 L 54.640625 0 L 54.640625 -39.765625 L 25.421875 -39.765625 L 25.421875 0 L 8.109375 0 Z M 8.109375 -92.78125 "/></g></g></g><g fill="#FFFFFF" fill-opacity="1"><g transform="translate(351.834474, 117.783084)"><g><path d="M 6.09375 -18.53125 L 24.75 -18.53125 L 24.75 0 L 6.09375 0 Z M 6.09375 -18.53125 "/></g></g></g><g fill="#FFFFFF" fill-opacity="1"><g transform="translate(382.670378, 117.783084)"><g/></g></g><g fill="#FFFFFF" fill-opacity="1"><g transform="translate(0.749895, 306.916248)"><g><path d="M 41.515625 1.625 C 29.617188 1.625 20.488281 -2.363281 14.125 -10.34375 C 7.769531 -18.320312 4.59375 -30.335938 4.59375 -46.390625 C 4.59375 -62.441406 7.769531 -74.457031 14.125 -82.4375 C 20.488281 -90.414062 29.617188 -94.40625 41.515625 -94.40625 C 51.710938 -94.40625 59.941406 -91.382812 66.203125 -85.34375 C 72.472656 -79.300781 75.609375 -70.285156 75.609375 -58.296875 L 57.890625 -58.296875 C 57.890625 -65.234375 56.421875 -70.503906 53.484375 -74.109375 C 50.554688 -77.722656 46.566406 -79.53125 41.515625 -79.53125 C 35.203125 -79.53125 30.445312 -76.9375 27.25 -71.75 C 24.050781 -66.5625 22.453125 -59.234375 22.453125 -49.765625 L 22.453125 -43.015625 C 22.453125 -33.546875 24.097656 -26.21875 27.390625 -21.03125 C 30.679688 -15.84375 35.570312 -13.25 42.0625 -13.25 C 47.195312 -13.25 51.253906 -15.03125 54.234375 -18.59375 C 57.210938 -22.15625 58.703125 -27.410156 58.703125 -34.359375 L 75.609375 -34.359375 C 75.609375 -22.628906 72.492188 -13.695312 66.265625 -7.5625 C 60.046875 -1.4375 51.796875 1.625 41.515625 1.625 Z M 41.515625 1.625 "/></g></g></g><g fill="#FFFFFF" fill-opacity="1"><g transform="translate(80.812327, 306.916248)"><g><path d="M 43.140625 1.625 C 30.878906 1.625 21.390625 -2.363281 14.671875 -10.34375 C 7.953125 -18.320312 4.59375 -30.335938 4.59375 -46.390625 C 4.59375 -62.441406 7.953125 -74.457031 14.671875 -82.4375 C 21.390625 -90.414062 30.878906 -94.40625 43.140625 -94.40625 C 55.398438 -94.40625 64.890625 -90.414062 71.609375 -82.4375 C 78.328125 -74.457031 81.6875 -62.441406 81.6875 -46.390625 C 81.6875 -30.335938 78.328125 -18.320312 71.609375 -10.34375 C 64.890625 -2.363281 55.398438 1.625 43.140625 1.625 Z M 43.140625 -13.25 C 49.898438 -13.25 55.039062 -15.84375 58.5625 -21.03125 C 62.082031 -26.21875 63.84375 -33.546875 63.84375 -43.015625 L 63.84375 -49.765625 C 63.84375 -59.234375 62.082031 -66.5625 58.5625 -71.75 C 55.039062 -76.9375 49.898438 -79.53125 43.140625 -79.53125 C 36.378906 -79.53125 31.238281 -76.9375 27.71875 -71.75 C 24.207031 -66.5625 22.453125 -59.234375 22.453125 -49.765625 L 22.453125 -43.015625 C 22.453125 -33.546875 24.207031 -26.21875 27.71875 -21.03125 C 31.238281 -15.84375 36.378906 -13.25 43.140625 -13.25 Z M 43.140625 -13.25 "/></g></g></g><g fill="#FFFFFF" fill-opacity="1"><g transform="translate(167.095833, 306.916248)"><g><path d="M 8.109375 -92.78125 L 23.390625 -92.78125 L 52.078125 -41.65625 C 52.703125 -40.664062 53.488281 -39.15625 54.4375 -37.125 C 55.382812 -35.09375 55.992188 -33.71875 56.265625 -33 L 56.671875 -33.40625 L 56.53125 -41.109375 L 56.53125 -92.78125 L 71.953125 -92.78125 L 71.953125 0 L 56.53125 0 L 27.859375 -51.125 C 27.140625 -52.5625 26.347656 -54.179688 25.484375 -55.984375 C 24.628906 -57.796875 24.023438 -59.0625 23.671875 -59.78125 L 23.125 -59.375 C 23.125 -58.832031 23.164062 -57.796875 23.25 -56.265625 C 23.34375 -54.734375 23.390625 -53.203125 23.390625 -51.671875 L 23.390625 0 L 8.109375 0 Z M 8.109375 -92.78125 "/></g></g></g><g fill="#FFFFFF" fill-opacity="1"><g transform="translate(247.158276, 306.916248)"><g><path d="M 41.515625 1.625 C 29.617188 1.625 20.488281 -2.363281 14.125 -10.34375 C 7.769531 -18.320312 4.59375 -30.335938 4.59375 -46.390625 C 4.59375 -62.441406 7.769531 -74.457031 14.125 -82.4375 C 20.488281 -90.414062 29.617188 -94.40625 41.515625 -94.40625 C 51.710938 -94.40625 59.941406 -91.382812 66.203125 -85.34375 C 72.472656 -79.300781 75.609375 -70.285156 75.609375 -58.296875 L 57.890625 -58.296875 C 57.890625 -65.234375 56.421875 -70.503906 53.484375 -74.109375 C 50.554688 -77.722656 46.566406 -79.53125 41.515625 -79.53125 C 35.203125 -79.53125 30.445312 -76.9375 27.25 -71.75 C 24.050781 -66.5625 22.453125 -59.234375 22.453125 -49.765625 L 22.453125 -43.015625 C 22.453125 -33.546875 24.097656 -26.21875 27.390625 -21.03125 C 30.679688 -15.84375 35.570312 -13.25 42.0625 -13.25 C 47.195312 -13.25 51.253906 -15.03125 54.234375 -18.59375 C 57.210938 -22.15625 58.703125 -27.410156 58.703125 -34.359375 L 75.609375 -34.359375 C 75.609375 -22.628906 72.492188 -13.695312 66.265625 -7.5625 C 60.046875 -1.4375 51.796875 1.625 41.515625 1.625 Z M 41.515625 1.625 "/></g></g></g><g fill="#FFFFFF" fill-opacity="1"><g transform="translate(327.220707, 306.916248)"><g><path d="M 43.140625 1.625 C 30.878906 1.625 21.390625 -2.363281 14.671875 -10.34375 C 7.953125 -18.320312 4.59375 -30.335938 4.59375 -46.390625 C 4.59375 -62.441406 7.953125 -74.457031 14.671875 -82.4375 C 21.390625 -90.414062 30.878906 -94.40625 43.140625 -94.40625 C 55.398438 -94.40625 64.890625 -90.414062 71.609375 -82.4375 C 78.328125 -74.457031 81.6875 -62.441406 81.6875 -46.390625 C 81.6875 -30.335938 78.328125 -18.320312 71.609375 -10.34375 C 64.890625 -2.363281 55.398438 1.625 43.140625 1.625 Z M 43.140625 -13.25 C 49.898438 -13.25 55.039062 -15.84375 58.5625 -21.03125 C 62.082031 -26.21875 63.84375 -33.546875 63.84375 -43.015625 L 63.84375 -49.765625 C 63.84375 -59.234375 62.082031 -66.5625 58.5625 -71.75 C 55.039062 -76.9375 49.898438 -79.53125 43.140625 -79.53125 C 36.378906 -79.53125 31.238281 -76.9375 27.71875 -71.75 C 24.207031 -66.5625 22.453125 -59.234375 22.453125 -49.765625 L 22.453125 -43.015625 C 22.453125 -33.546875 24.207031 -26.21875 27.71875 -21.03125 C 31.238281 -15.84375 36.378906 -13.25 43.140625 -13.25 Z M 43.140625 -13.25 "/></g></g></g><g fill="#FFFFFF" fill-opacity="1"><g transform="translate(413.504226, 306.916248)"><g><path d="M 8.109375 -92.78125 L 46.9375 -92.78125 C 56.039062 -92.78125 63.046875 -90.34375 67.953125 -85.46875 C 72.867188 -80.601562 75.328125 -74.203125 75.328125 -66.265625 C 75.328125 -60.679688 73.953125 -55.8125 71.203125 -51.65625 C 68.453125 -47.507812 64.644531 -44.445312 59.78125 -42.46875 L 77.640625 0 L 58.828125 0 L 43.421875 -38.6875 L 25.421875 -38.6875 L 25.421875 0 L 8.109375 0 Z M 44.5 -53.96875 C 48.550781 -53.96875 51.59375 -55.023438 53.625 -57.140625 C 55.65625 -59.265625 56.671875 -62.304688 56.671875 -66.265625 C 56.671875 -69.785156 55.722656 -72.515625 53.828125 -74.453125 C 51.929688 -76.390625 49.046875 -77.359375 45.171875 -77.359375 L 25.421875 -77.359375 L 25.421875 -53.96875 Z M 44.5 -53.96875 "/></g></g></g><g fill="#FFFFFF" fill-opacity="1"><g transform="translate(493.566657, 306.916248)"><g><path d="M 8.109375 -92.78125 L 38.28125 -92.78125 C 50 -92.78125 59.125 -88.945312 65.65625 -81.28125 C 72.195312 -73.613281 75.46875 -62.4375 75.46875 -47.75 C 75.46875 -32.144531 72.222656 -20.285156 65.734375 -12.171875 C 59.242188 -4.054688 50.09375 0 38.28125 0 L 8.109375 0 Z M 36.65625 -15.421875 C 43.238281 -15.421875 48.375 -17.875 52.0625 -22.78125 C 55.757812 -27.695312 57.609375 -34.890625 57.609375 -44.359375 L 57.609375 -51.125 C 57.609375 -59.6875 55.757812 -66.195312 52.0625 -70.65625 C 48.375 -75.125 43.238281 -77.359375 36.65625 -77.359375 L 25.421875 -77.359375 L 25.421875 -15.421875 Z M 36.65625 -15.421875 "/></g></g></g><g fill="#FFFFFF" fill-opacity="1"><g transform="translate(573.629089, 306.916248)"><g><path d="M 6.765625 -92.78125 L 24.078125 -92.78125 L 24.078125 0 L 6.765625 0 Z M 6.765625 -92.78125 "/></g></g></g><g fill="#FFFFFF" fill-opacity="1"><g transform="translate(604.463893, 306.916248)"><g><path d="M 29.890625 -92.78125 L 50.046875 -92.78125 L 79.9375 0 L 62.21875 0 L 56.53125 -18.265625 L 22.3125 -18.265625 L 16.765625 0 L 0 0 Z M 51.796875 -33.671875 L 42.46875 -64.65625 C 41.832031 -66.632812 41.242188 -69.019531 40.703125 -71.8125 C 40.171875 -74.613281 39.859375 -76.421875 39.765625 -77.234375 L 39.21875 -77.234375 C 39.039062 -76.328125 38.679688 -74.453125 38.140625 -71.609375 C 37.597656 -68.773438 37.054688 -66.457031 36.515625 -64.65625 L 27.046875 -33.671875 Z M 51.796875 -33.671875 "/></g></g></g></g></g></svg></div>
+      <div class="footer-copy">© 2026 RRHH Concordia. Todos los derechos reservados.</div>
+    </div>
+  </div>
+</footer>
+
+<!-- ─── WHATSAPP ────────────────────────────────────────────── -->
+<a href="https://wa.me/5434552836 88" class="wa-btn" target="_blank" rel="noopener noreferrer" aria-label="Contactar por WhatsApp">
+  <svg viewBox="0 0 24 24" role="img" aria-label="WhatsApp"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg>
+</a>
+
+<!-- ─── MODAL POSTULACIÓN ───────────────────────────────────── -->
+<div class="modal-overlay" id="modalOverlay" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+  <div class="modal">
+    <button class="modal-close" id="modalClose" aria-label="Cerrar">&times;</button>
+    <div class="modal-eyebrow" id="modal-eyebrow">Postulación</div>
+    <h2 class="modal-title" id="modal-title">Cargo</h2>
+    <form id="postulacion-form" novalidate>
+      <div id="post-fields">
+        <div class="form-group">
+          <label class="form-label" for="post-nombre">Nombre completo</label>
+          <input class="form-input" type="text" id="post-nombre" placeholder="Tu nombre y apellido" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="post-email">Email</label>
+          <input class="form-input" type="email" id="post-email" placeholder="tucorreo@email.com" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="post-tel">Teléfono</label>
+          <input class="form-input" type="tel" id="post-tel" placeholder="+54 345 0000000">
+        </div>
+        <div class="form-group">
+          <label class="form-label">CV adjunto</label>
+          <div class="upload-area" role="button" tabindex="0" aria-label="Adjuntar archivo">
+            <input type="file" id="post-file" accept=".pdf,.doc,.docx,.jpg,.png" aria-label="Seleccionar CV">
+            <div class="upload-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            </div>
+            <p class="upload-text"><strong>Hacé clic para adjuntar</strong><br>PDF, Word, JPG · Máx. 5MB</p>
+            <p id="post-filename" style="font-size:12px; color: var(--blue); margin-top: 6px; display:none;"></p>
+          </div>
+        </div>
+        <button type="submit" class="btn-submit">Enviar postulación</button>
+      </div>
+      <div class="form-success" id="post-success" role="status" aria-live="polite" style="padding:24px 0;">
+        <div class="form-success-icon" style="background: rgba(57,160,90,0.08);">
+          <svg viewBox="0 0 24 24" stroke="var(--green)" fill="none" stroke-width="2" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+        <h3 style="font-family: var(--font-display); font-size:18px; font-weight:600; color: var(--text); margin-bottom:8px;">¡Postulación enviada!</h3>
+        <p style="font-size:14px; color: var(--text2); line-height:1.6;">Recibimos tu postulación. Te contactaremos si tu perfil se adapta al puesto.</p>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ─── SCRIPTS ────────────────────────────────────────────── -->
+<script>
+/* ── Hamburger ─────────────────────────────────────────────── */
+const hamburger = document.getElementById('hamburger');
+const mobileMenu = document.getElementById('mobileMenu');
+
+hamburger.addEventListener('click', () => {
+  const isOpen = mobileMenu.classList.toggle('open');
+  hamburger.setAttribute('aria-expanded', isOpen);
+  document.body.style.overflow = isOpen ? 'hidden' : '';
+});
+
+document.querySelectorAll('.mobile-menu-link').forEach(link => {
+  link.addEventListener('click', () => {
+    mobileMenu.classList.remove('open');
+    hamburger.setAttribute('aria-expanded', 'false');
+    document.body.style.overflow = '';
+  });
+});
+
+/* ── Scroll animations ─────────────────────────────────────── */
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('in');
+      observer.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+document.querySelectorAll('.anim').forEach(el => observer.observe(el));
+
+/* ── Navbar scroll ─────────────────────────────────────────── */
+const navbar = document.getElementById('navbar');
+window.addEventListener('scroll', () => {
+  navbar.classList.toggle('scrolled', window.scrollY > 20);
+}, { passive: true });
+
+/* ── CV file upload ────────────────────────────────────────── */
+document.getElementById('cv-file').addEventListener('change', function() {
+  const fn = document.getElementById('cv-filename');
+  if (this.files.length > 0) {
+    fn.textContent = '✓ ' + this.files[0].name;
+    fn.style.display = 'block';
+  }
+});
+
+document.getElementById('post-file').addEventListener('change', function() {
+  const fn = document.getElementById('post-filename');
+  if (this.files.length > 0) {
+    fn.textContent = '✓ ' + this.files[0].name;
+    fn.style.display = 'block';
+  }
+});
+
+/* ── Cargar vacantes desde API ─────────────────────────────── */
+async function cargarVacantes() {
+  const list = document.getElementById('vacantes-list');
+  try {
+    const res = await fetch('/api/vacantes');
+    const data = await res.json();
+    const vacantes = Array.isArray(data) ? data : (data.vacantes || []);
+
+    if (!vacantes.length) {
+      list.innerHTML = `<div class="vacantes-empty" role="status">
+        No hay vacantes activas en este momento. <a href="#cv" style="color:var(--blue);">Dejá tu CV</a> para que te avisemos cuando aparezcan.
+      </div>`;
+      return;
+    }
+
+    list.innerHTML = vacantes.map(v => {
+      const activa = v.activa !== false;
+      return `
+        <div class="vacante-row" role="listitem" tabindex="0"
+          onclick="abrirVacante('${v.id || ''}', '${(v.titulo||v.title||'Puesto').replace(/'/g,"&apos;")}')"
+          onkeydown="if(event.key==='Enter')abrirVacante('${v.id || ''}', '${(v.titulo||v.title||'Puesto').replace(/'/g,"&apos;")}')">
+          <div class="vacante-row-body">
+            <div class="vacante-puesto">${v.titulo || v.title || 'Puesto'}</div>
+            <div class="vacante-empresa">${v.empresa || v.area || 'Concordia, Entre Ríos'}</div>
+          </div>
+          <span class="badge ${activa ? 'badge-green' : 'badge-orange'}">
+            <span class="badge-dot"></span>
+            ${activa ? 'Activa' : 'En proceso'}
+          </span>
+          <svg class="vacante-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M9 18l6-6-6-6"/>
+          </svg>
+        </div>`;
+    }).join('');
+
+  } catch(e) {
+    list.innerHTML = `<div class="vacantes-empty" role="status">
+      No hay vacantes activas en este momento. <a href="#cv" style="color:var(--blue);">Dejá tu CV</a> para que te avisemos cuando aparezcan.
+    </div>`;
+  }
+}
+
+cargarVacantes();
+
+/* ── Modal postulación ─────────────────────────────────────── */
+function abrirVacante(id, titulo) {
+  document.getElementById('modal-title').textContent = titulo;
+  document.getElementById('modal-eyebrow').textContent = 'Postulación · ' + titulo;
+  document.getElementById('post-success').style.display = 'none';
+  document.getElementById('post-fields').style.display = 'block';
+  document.getElementById('post-filename').style.display = 'none';
+  document.getElementById('postulacion-form').reset();
+  const overlay = document.getElementById('modalOverlay');
+  overlay.classList.add('open');
+  document.body.style.overflow = 'hidden';
+  document.getElementById('post-nombre').focus();
+  overlay.dataset.vacanteId = id;
+}
+
+document.getElementById('modalClose').addEventListener('click', cerrarModal);
+document.getElementById('modalOverlay').addEventListener('click', e => {
+  if (e.target === e.currentTarget) cerrarModal();
+});
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') cerrarModal();
+});
+
+function cerrarModal() {
+  document.getElementById('modalOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+/* ── Form submit — CV espontáneo ───────────────────────────── */
+document.getElementById('cv-form').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  const btn = this.querySelector('.btn-submit');
+  btn.textContent = 'Enviando...';
+  btn.disabled = true;
+
+  const fd = new FormData(this);
+  try {
+    const res = await fetch('/api/cvs', { method: 'POST', body: fd });
+    if (res.ok) {
+      document.getElementById('cv-form-fields').style.display = 'none';
+      document.getElementById('cv-success').style.display = 'block';
+    } else {
+      throw new Error();
+    }
+  } catch {
+    btn.textContent = 'Error al enviar. Intentá de nuevo.';
+    btn.disabled = false;
+    btn.style.background = 'var(--red)';
+    setTimeout(() => {
+      btn.textContent = 'Enviar mi CV';
+      btn.disabled = false;
+      btn.style.background = '';
+    }, 3000);
+  }
+});
+
+/* ── Form submit — postulación ─────────────────────────────── */
+document.getElementById('postulacion-form').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  const btn = this.querySelector('.btn-submit');
+  btn.textContent = 'Enviando...';
+  btn.disabled = true;
+
+  const fd = new FormData(this);
+  const vacanteId = document.getElementById('modalOverlay').dataset.vacanteId;
+  if (vacanteId) fd.append('vacanteId', vacanteId);
+  fd.append('nombre', document.getElementById('post-nombre').value);
+  fd.append('email',  document.getElementById('post-email').value);
+  fd.append('telefono', document.getElementById('post-tel').value);
+  const archivo = document.getElementById('post-file').files[0];
+  if (archivo) fd.append('archivo', archivo);
+
+  try {
+    const res = await fetch('/api/postulaciones', { method: 'POST', body: fd });
+    if (res.ok || res.status === 201) {
+      document.getElementById('post-fields').style.display = 'none';
+      document.getElementById('post-success').style.display = 'block';
+    } else {
+      throw new Error();
+    }
+  } catch {
+    btn.textContent = 'Error al enviar. Intentá de nuevo.';
+    btn.disabled = false;
+    btn.style.background = 'var(--red)';
+    setTimeout(() => {
+      btn.textContent = 'Enviar postulación';
+      btn.disabled = false;
+      btn.style.background = '';
+    }, 3000);
+  }
+});
+</script>
+
+</body>
+</html>
