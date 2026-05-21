@@ -1349,6 +1349,240 @@ footer {
   .trust-inner { grid-template-columns: repeat(2, 1fr); }
 }
 
+
+/* ─── MODAL DETALLE DE VACANTE ──────────────────────────────── */
+.detail-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(12,17,25,0.60);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.28s;
+}
+
+.detail-overlay.open {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.detail-modal {
+  background: var(--bg2);
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-lg);
+  width: 100%;
+  max-width: 620px;
+  max-height: 88vh;
+  display: flex;
+  flex-direction: column;
+  transform: translateY(16px) scale(0.99);
+  transition: transform 0.32s var(--ease);
+  overflow: hidden;
+  position: relative;
+}
+
+.detail-overlay.open .detail-modal {
+  transform: translateY(0) scale(1);
+}
+
+/* Header del modal */
+.detail-header {
+  padding: 28px 32px 20px;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+  position: relative;
+}
+
+.detail-close {
+  position: absolute;
+  top: 18px; right: 20px;
+  width: 30px; height: 30px;
+  border-radius: 50%;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text3);
+  font-size: 17px;
+  line-height: 1;
+  transition: background 0.18s, color 0.18s;
+  flex-shrink: 0;
+}
+
+.detail-close:hover { background: var(--bg3); color: var(--text); }
+
+.detail-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text3);
+  margin-bottom: 10px;
+}
+
+.detail-title {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--text);
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  margin-bottom: 12px;
+  padding-right: 36px;
+}
+
+.detail-meta {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.detail-empresa {
+  font-size: 13px;
+  color: var(--text2);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.detail-empresa svg {
+  width: 13px; height: 13px;
+  stroke: var(--text3);
+  stroke-width: 1.5;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* Cuerpo scrolleable */
+.detail-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px 32px;
+  scroll-behavior: smooth;
+}
+
+/* Secciones del detalle */
+.detail-section {
+  margin-bottom: 24px;
+}
+
+.detail-section:last-child { margin-bottom: 0; }
+
+.detail-section-title {
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text3);
+  margin-bottom: 10px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+}
+
+.detail-content {
+  font-size: 14px;
+  color: var(--text2);
+  line-height: 1.75;
+  font-weight: 300;
+  letter-spacing: -0.003em;
+}
+
+/* Estilos para HTML generado por el RTE */
+.detail-content ul {
+  padding-left: 18px;
+  margin: 8px 0;
+}
+
+.detail-content li {
+  margin-bottom: 5px;
+  color: var(--text2);
+}
+
+.detail-content strong { color: var(--text); font-weight: 500; }
+.detail-content em { font-style: italic; }
+.detail-content p { margin-bottom: 8px; }
+.detail-content p:last-child { margin-bottom: 0; }
+
+/* Footer con CTA */
+.detail-footer {
+  padding: 18px 32px;
+  border-top: 1px solid var(--border);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  background: var(--bg);
+}
+
+.detail-footer-note {
+  font-size: 12px;
+  color: var(--text3);
+  line-height: 1.5;
+  max-width: 260px;
+}
+
+.btn-postular {
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 500;
+  background: var(--blue);
+  color: #fff;
+  border: none;
+  padding: 12px 26px;
+  border-radius: 9px;
+  cursor: pointer;
+  letter-spacing: -0.003em;
+  box-shadow: var(--shadow-blue);
+  transition: background 0.2s, transform 0.18s var(--ease), box-shadow 0.2s;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.btn-postular:hover {
+  background: var(--blue-dk);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 24px rgba(66,96,192,0.28), 0 2px 6px rgba(66,96,192,0.14);
+}
+
+.btn-postular:active { transform: translateY(0); }
+.btn-postular svg { transition: transform 0.2s var(--ease); }
+.btn-postular:hover svg { transform: translateX(3px); }
+
+/* Vacante sin descripción */
+.detail-empty {
+  padding: 32px 0;
+  text-align: center;
+  color: var(--text3);
+  font-size: 14px;
+}
+
+@media (max-width: 480px) {
+  .detail-modal { border-radius: 16px; max-height: 92vh; }
+  .detail-header { padding: 22px 20px 16px; }
+  .detail-body { padding: 20px; }
+  .detail-footer { padding: 14px 20px; flex-direction: column; align-items: stretch; }
+  .btn-postular { text-align: center; justify-content: center; }
+  .detail-footer-note { max-width: 100%; }
+}
 </style>
   <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
   <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
@@ -1671,6 +1905,40 @@ footer {
   <svg viewBox="0 0 24 24" role="img" aria-label="WhatsApp"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg>
 </a>
 
+
+<!-- ─── MODAL DETALLE DE VACANTE ──────────────────────────── -->
+<div class="detail-overlay" id="detailOverlay" role="dialog" aria-modal="true" aria-labelledby="detail-title">
+  <div class="detail-modal">
+
+    <div class="detail-header">
+      <button class="detail-close" id="detail-close-btn" aria-label="Cerrar">&times;</button>
+      <div class="detail-tag" id="detail-empresa-tag">
+        <svg viewBox="0 0 24 24" style="width:11px;height:11px;stroke:currentColor;stroke-width:1.5;fill:none;stroke-linecap:round;stroke-linejoin:round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        <span id="detail-empresa-text">Concordia, Entre Ríos</span>
+      </div>
+      <h2 class="detail-title" id="detail-title">Puesto</h2>
+      <div class="detail-meta">
+        <span class="badge badge-green" id="detail-badge">
+          <span class="badge-dot"></span>Activa
+        </span>
+      </div>
+    </div>
+
+    <div class="detail-body" id="detail-body">
+      <!-- Se carga dinámicamente -->
+    </div>
+
+    <div class="detail-footer">
+      <p class="detail-footer-note">Postulaciones confidenciales. Tus datos solo serán vistos por nuestro equipo.</p>
+      <button class="btn-postular" id="detail-postular-btn">
+        Postularme
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </button>
+    </div>
+
+  </div>
+</div>
+
 <!-- ─── MODAL POSTULACIÓN ───────────────────────────────────── -->
 <div class="modal-overlay" id="modalOverlay" role="dialog" aria-modal="true" aria-labelledby="modal-title">
   <div class="modal">
@@ -1785,6 +2053,9 @@ async function cargarVacantes() {
       return;
     }
 
+    // Guardar en cache para el modal de detalle
+    _vacantesCache = vacantes;
+
     list.innerHTML = vacantes.map(v => {
       const activa = v.activa !== false;
       return `
@@ -1815,8 +2086,97 @@ async function cargarVacantes() {
 
 cargarVacantes();
 
+/* ── Cache de vacantes para el modal de detalle ──────────────── */
+let _vacantesCache = [];
+
+/* ── Listeners del modal de detalle ─────────────────────────── */
+document.getElementById('detail-close-btn').addEventListener('click', () => {
+  document.getElementById('detailOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+});
+
+document.getElementById('detailOverlay').addEventListener('click', e => {
+  if (e.target === e.currentTarget) {
+    document.getElementById('detailOverlay').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+});
+
+document.getElementById('detail-postular-btn').addEventListener('click', () => {
+  const btn = document.getElementById('detail-postular-btn');
+  abrirFormularioPostulacion(btn.dataset.vacanteId, btn.dataset.vacanteTitulo);
+});
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    document.getElementById('detailOverlay').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+});
+
 /* ── Modal postulación ─────────────────────────────────────── */
+// ── Abre el DETALLE de la vacante primero ────────────────────
 function abrirVacante(id, titulo) {
+  // Buscar la vacante en el array ya cargado
+  const vacante = _vacantesCache.find(v => String(v.id) === String(id));
+
+  // Setear header
+  document.getElementById('detail-title').textContent = titulo;
+  const empresa = vacante?.empresa || 'Concordia, Entre Ríos';
+  document.getElementById('detail-empresa-text').textContent = empresa;
+
+  // Construir cuerpo
+  const body = document.getElementById('detail-body');
+  let bodyHTML = '';
+
+  if (vacante?.descripcion && vacante.descripcion.trim() !== '') {
+    bodyHTML += `
+      <div class="detail-section">
+        <div class="detail-section-title">Descripción del puesto</div>
+        <div class="detail-content">${vacante.descripcion}</div>
+      </div>`;
+  }
+
+  if (vacante?.requisitos && vacante.requisitos.trim() !== '') {
+    bodyHTML += `
+      <div class="detail-section">
+        <div class="detail-section-title">Requisitos</div>
+        <div class="detail-content">${vacante.requisitos}</div>
+      </div>`;
+  }
+
+  if (vacante?.ofrecimientos && vacante.ofrecimientos.trim() !== '') {
+    bodyHTML += `
+      <div class="detail-section">
+        <div class="detail-section-title">Qué ofrecemos</div>
+        <div class="detail-content">${vacante.ofrecimientos}</div>
+      </div>`;
+  }
+
+  if (!bodyHTML) {
+    bodyHTML = `<div class="detail-empty">
+      Para más información sobre este puesto, postulate y nos contactamos a la brevedad.
+    </div>`;
+  }
+
+  body.innerHTML = bodyHTML;
+  body.scrollTop = 0;
+
+  // Guardar id para cuando hagan clic en "Postularme"
+  document.getElementById('detail-postular-btn').dataset.vacanteId = id;
+  document.getElementById('detail-postular-btn').dataset.vacanteTitulo = titulo;
+
+  // Abrir overlay de detalle
+  document.getElementById('detailOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+// ── Abre el FORMULARIO de postulación (desde detalle) ─────────
+function abrirFormularioPostulacion(id, titulo) {
+  // Cerrar detalle
+  document.getElementById('detailOverlay').classList.remove('open');
+
+  // Preparar formulario
   document.getElementById('modal-title').textContent = titulo;
   document.getElementById('modal-eyebrow').textContent = 'Postulación · ' + titulo;
   document.getElementById('post-success').style.display = 'none';
