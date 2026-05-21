@@ -1456,18 +1456,27 @@ document.getElementById('drawerOverlay').addEventListener('click', e => {
 });
 
 function openDrawer(vac = null) {
+  console.log('openDrawer called with:', vac);
   document.getElementById('drawer-title').textContent = vac ? 'Editar vacante' : 'Nueva vacante';
   document.getElementById('drawer-save-btn').textContent = vac ? 'Guardar cambios' : 'Publicar vacante';
-  document.getElementById('vac-id').value = vac?.id || '';
+  document.getElementById('vac-id').value = vac ? String(vac.id) : '';
   document.getElementById('vac-titulo').value = vac?.titulo || vac?.title || '';
   document.getElementById('vac-empresa').value = vac?.empresa || vac?.area || '';
-  document.getElementById('vac-estado').value = vac ? String(vac.activa !== false) : 'true';
-  document.getElementById('vac-descripcion').innerHTML = vac?.descripcion || '';
-  document.getElementById('vac-requisitos').innerHTML = vac?.requisitos || '';
-  document.getElementById('vac-ofrecimientos').innerHTML = vac?.ofrecimientos || '';
+  document.getElementById('vac-estado').value = (vac && vac.activa === false) ? 'false' : 'true';
+  // Rich text editors — limpiar y cargar contenido
+  const desc = document.getElementById('vac-descripcion');
+  const req  = document.getElementById('vac-requisitos');
+  const ofr  = document.getElementById('vac-ofrecimientos');
+  desc.innerHTML = vac?.descripcion  || '';
+  req.innerHTML  = vac?.requisitos   || '';
+  ofr.innerHTML  = vac?.ofrecimientos || '';
+  // Abrir drawer
   document.getElementById('drawerOverlay').classList.add('open');
   document.body.style.overflow = 'hidden';
-  setTimeout(() => document.getElementById('vac-titulo').focus(), 300);
+  setTimeout(() => {
+    document.getElementById('vac-titulo').focus();
+    document.getElementById('vac-titulo').select();
+  }, 320);
 }
 
 function closeDrawer() {
@@ -1479,9 +1488,18 @@ async function editarVacante(id) {
   try {
     const data = await apiFetch('/api/vacantes');
     const list = Array.isArray(data) ? data : (data.vacantes || []);
-    const vac = list.find(v => v.id === id);
-    if (vac) openDrawer(vac);
-  } catch { toast('No se pudo cargar la vacante', 'error'); }
+    // Comparar como string en ambos lados por si el ID es número en DB
+    const vac = list.find(v => String(v.id) === String(id));
+    if (vac) {
+      openDrawer(vac);
+    } else {
+      toast('No se encontró la vacante (ID: ' + id + ')', 'error');
+      console.error('IDs disponibles:', list.map(v => v.id));
+    }
+  } catch(e) {
+    console.error('Error editarVacante:', e);
+    toast('No se pudo cargar la vacante', 'error');
+  }
 }
 
 document.getElementById('drawer-save-btn').addEventListener('click', async () => {
@@ -1495,12 +1513,14 @@ document.getElementById('drawer-save-btn').addEventListener('click', async () =>
 
   const payload = {
     titulo,
-    empresa:      document.getElementById('vac-empresa').value,
-    activa:       document.getElementById('vac-estado').value === 'true',
-    descripcion:  document.getElementById('vac-descripcion').innerHTML,
-    requisitos:   document.getElementById('vac-requisitos').innerHTML,
-    ofrecimientos:document.getElementById('vac-ofrecimientos').innerHTML,
+    empresa:       document.getElementById('vac-empresa').value,
+    activa:        document.getElementById('vac-estado').value === 'true',
+    descripcion:   document.getElementById('vac-descripcion').innerHTML,
+    requisitos:    document.getElementById('vac-requisitos').innerHTML,
+    ofrecimientos: document.getElementById('vac-ofrecimientos').innerHTML,
   };
+
+  console.log('Guardando vacante, id:', id, 'payload:', payload);
 
   try {
     if (id) {
