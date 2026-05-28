@@ -122,12 +122,13 @@ app.get('/api/vacantes', (req, res) => {
 });
 
 // POST — crear vacante nueva
-app.post('/api/vacantes', isAuth, (req, res) => {
+app.post('/api/vacantes', isAuth, upload.single('imagen'), (req, res) => {
   const db = loadDB();
   const vacante = {
     id: String(Date.now()),
     ...req.body,
     activa: req.body.activa !== false && req.body.activa !== 'false',
+    imagen: req.file ? '/uploads/' + req.file.filename : (req.body.imagen || null),
     postulantes: 0,
     createdAt: new Date().toISOString()
   };
@@ -137,7 +138,7 @@ app.post('/api/vacantes', isAuth, (req, res) => {
 });
 
 // PUT — editar vacante
-app.put('/api/vacantes/:id', isAuth, (req, res) => {
+app.put('/api/vacantes/:id', isAuth, upload.single('imagen'), (req, res) => {
   const db = loadDB();
   const idx = db.vacantes.findIndex(v => String(v.id) === String(req.params.id));
   if (idx === -1) return res.status(404).json({ error: 'Vacante no encontrada' });
@@ -145,7 +146,8 @@ app.put('/api/vacantes/:id', isAuth, (req, res) => {
     ...db.vacantes[idx],
     ...req.body,
     id: db.vacantes[idx].id, // preservar ID original
-    activa: req.body.activa !== false && req.body.activa !== 'false'
+    activa: req.body.activa !== false && req.body.activa !== 'false',
+    imagen: req.file ? '/uploads/' + req.file.filename : (req.body.imagen || db.vacantes[idx].imagen || null)
   };
   saveDB(db);
   res.json(db.vacantes[idx]);
