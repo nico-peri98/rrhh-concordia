@@ -1055,6 +1055,15 @@ tbody tr:hover td { background: var(--bg); }
         </div>
       </div>
       <div class="form-group">
+        <label class="form-label" for="vac-imagen">Imagen de la vacante</label>
+        <div id="vac-imagen-preview" style="display:none;margin-bottom:8px;border-radius:8px;overflow:hidden;height:120px;background:#f0f0f0">
+          <img id="vac-imagen-img" src="" alt="Preview" style="width:100%;height:100%;object-fit:cover">
+        </div>
+        <input class="form-input" type="file" id="vac-imagen-file" accept="image/*" style="padding:8px;cursor:pointer">
+        <input type="hidden" id="vac-imagen-url">
+        <p style="font-size:11px;color:var(--text3);margin-top:4px">JPG o PNG. Se mostrará en la card de la vacante.</p>
+      </div>
+      <div class="form-group">
         <label class="form-label">Descripción</label>
         <div class="rte-toolbar">
           <button class="rte-btn" onclick="rteCmd('bold')" title="Negrita"><b>N</b></button>
@@ -1461,6 +1470,15 @@ function openDrawer(vac = null) {
   document.getElementById('drawer-save-btn').textContent = vac ? 'Guardar cambios' : 'Publicar vacante';
   document.getElementById('vac-id').value = vac ? String(vac.id) : '';
   document.getElementById('vac-titulo').value = vac?.titulo || vac?.title || '';
+  // Imagen preview
+  document.getElementById('vac-imagen-file').value = '';
+  document.getElementById('vac-imagen-url').value = vac?.imagen || '';
+  if (vac?.imagen) {
+    document.getElementById('vac-imagen-img').src = vac.imagen;
+    document.getElementById('vac-imagen-preview').style.display = 'block';
+  } else {
+    document.getElementById('vac-imagen-preview').style.display = 'none';
+  }
   document.getElementById('vac-empresa').value = vac?.empresa || vac?.area || '';
   document.getElementById('vac-estado').value = (vac && vac.activa === false) ? 'false' : 'true';
   // Rich text editors — limpiar y cargar contenido
@@ -1511,23 +1529,27 @@ document.getElementById('drawer-save-btn').addEventListener('click', async () =>
   btn.textContent = 'Guardando...';
   btn.disabled = true;
 
-  const payload = {
-    titulo,
-    empresa:       document.getElementById('vac-empresa').value,
-    activa:        document.getElementById('vac-estado').value === 'true',
-    descripcion:   document.getElementById('vac-descripcion').innerHTML,
-    requisitos:    document.getElementById('vac-requisitos').innerHTML,
-    ofrecimientos: document.getElementById('vac-ofrecimientos').innerHTML,
-  };
+  const fd = new FormData();
+  fd.append('titulo',       titulo);
+  fd.append('empresa',      document.getElementById('vac-empresa').value);
+  fd.append('activa',       document.getElementById('vac-estado').value);
+  fd.append('descripcion',  document.getElementById('vac-descripcion').innerHTML);
+  fd.append('requisitos',   document.getElementById('vac-requisitos').innerHTML);
+  fd.append('ofrecimientos',document.getElementById('vac-ofrecimientos').innerHTML);
+  // Imagen: archivo nuevo o URL existente
+  const imgFile = document.getElementById('vac-imagen-file').files[0];
+  const imgUrl  = document.getElementById('vac-imagen-url').value;
+  if (imgFile) fd.append('imagen', imgFile);
+  else if (imgUrl) fd.append('imagen', imgUrl);
 
-  console.log('Guardando vacante, id:', id, 'payload:', payload);
+  console.log('Guardando vacante, id:', id);
 
   try {
     if (id) {
-      await apiFetch(`/api/vacantes/${id}`, { method: 'PUT', headers: {'Content-Type':'application/json'}, body: JSON.stringify(payload) });
+      await apiFetch(`/api/vacantes/${id}`, { method: 'PUT', body: fd });
       toast('Vacante actualizada', 'success');
     } else {
-      await apiFetch('/api/vacantes', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(payload) });
+      await apiFetch('/api/vacantes', { method: 'POST', body: fd });
       toast('Vacante publicada', 'success');
     }
     closeDrawer();
@@ -1599,6 +1621,18 @@ function toast(msg, type = 'success') {
   }, 3500);
 }
 
+
+/* ── Preview imagen vacante ── */
+document.getElementById('vac-imagen-file').addEventListener('change', function() {
+  const file = this.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    document.getElementById('vac-imagen-img').src = e.target.result;
+    document.getElementById('vac-imagen-preview').style.display = 'block';
+  };
+  reader.readAsDataURL(file);
+});
 </script>
 </body>
 </html>
