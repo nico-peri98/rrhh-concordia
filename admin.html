@@ -14,7 +14,7 @@ body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background:
 .login-box h2 { margin-bottom: 20px; text-align: center; }
 .form-group { margin-bottom: 20px; }
 .form-group label { display: block; margin-bottom: 8px; }
-.form-group input, .form-group textarea, .form-group select { width: 100%; padding: 12px; border: 1px solid #444; border-radius: 5px; background: #333; color: #fff; }
+.form-group input, .form-group textarea, .form-group select { width: 100%; padding: 12px; border: 1px solid #444; border-radius: 5px; background: #333; color: #fff; font-family: inherit; }
 .btn { background: #3498db; color: white; padding: 12px 24px; border: none; border-radius: 5px; cursor: pointer; font-size: 14px; }
 .btn:hover { background: #2980b9; }
 .btn-danger { background: #e74c3c; }
@@ -31,8 +31,9 @@ body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background:
 .card { background: #2c3e50; padding: 20px; border-radius: 8px; margin-bottom: 20px; }
 .card h3 { margin-bottom: 15px; }
 .filters { background: #2c3e50; padding: 20px; border-radius: 8px; margin-bottom: 20px; display: flex; gap: 15px; align-items: flex-end; flex-wrap: wrap; }
+.filters div { flex: 1; min-width: 200px; }
 .filters label { display: block; margin-bottom: 8px; font-size: 12px; color: #aaa; }
-.filters select { padding: 8px 12px; background: #333; border: 1px solid #444; color: #fff; border-radius: 5px; }
+.filters select { width: 100%; padding: 8px 12px; background: #333; border: 1px solid #444; color: #fff; border-radius: 5px; }
 .table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 13px; }
 .table th, .table td { padding: 12px; text-align: left; border-bottom: 1px solid #444; }
 .table th { background: #34495e; font-weight: 600; }
@@ -41,16 +42,17 @@ body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background:
 .score-high { background: #27ae60; color: white; }
 .score-medium { background: #f39c12; color: white; }
 .score-low { background: #e74c3c; color: white; }
-.modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); justify-content: center; align-items: center; z-index: 1000; }
+.score-none { background: #555; color: white; }
+.modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); justify-content: center; align-items: center; z-index: 1000; overflow-y: auto; }
 .modal.active { display: flex; }
-.modal-content { background: #2c3e50; padding: 30px; border-radius: 10px; width: 90%; max-width: 800px; max-height: 90vh; overflow-y: auto; }
-.btn-group { display: flex; gap: 10px; margin-top: 20px; }
+.modal-content { background: #2c3e50; padding: 30px; border-radius: 10px; width: 90%; max-width: 800px; max-height: 90vh; overflow-y: auto; margin: auto; }
+.btn-group { display: flex; gap: 10px; margin-top: 20px; flex-wrap: wrap; }
 .hidden { display: none; }
 .modal-section { margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid #444; }
 .modal-section h4 { margin-bottom: 15px; color: #3498db; }
 textarea { min-height: 80px; resize: vertical; }
-.scoring-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
 .score-input { width: 100%; padding: 8px; border: 1px solid #444; border-radius: 5px; background: #333; color: #fff; }
+.action-buttons { display: flex; gap: 5px; }
 </style>
 </head>
 <body>
@@ -99,7 +101,7 @@ textarea { min-height: 80px; resize: vertical; }
 
 <div id="tabCandidatos" class="tab-content">
 <div class="filters">
-<div style="flex: 1; min-width: 200px;">
+<div>
 <label>Filtrar por Rubro</label>
 <select id="filtroRubro" onchange="cargarCandidatos()">
 <option value="">— Todos los rubros —</option>
@@ -109,11 +111,10 @@ textarea { min-height: 80px; resize: vertical; }
 <option value="Otro">Otro</option>
 </select>
 </div>
-<div style="flex: 1; min-width: 200px;">
+<div>
 <label>Filtrar por Vacante</label>
 <select id="filtroVacante" onchange="cargarCandidatos()">
 <option value="">— Todas las vacantes —</option>
-<div id="listaVacantesSelect"></div>
 </select>
 </div>
 </div>
@@ -150,7 +151,6 @@ textarea { min-height: 80px; resize: vertical; }
 </div>
 </div>
 
-<!-- Modal Vacante -->
 <div class="modal" id="modalVacante">
 <div class="modal-content">
 <h2>Nueva Vacante</h2>
@@ -193,262 +193,277 @@ textarea { min-height: 80px; resize: vertical; }
 </div>
 </div>
 
-<!-- Modal Detalles Candidato -->
 <div class="modal" id="modalCandidato">
 <div class="modal-content">
 <h2 id="modalCandidatoNombre"></h2>
 <div id="modalCandidatoBody"></div>
 <div class="btn-group">
-<button type="button" class="btn btn-danger" onclick="eliminarCandidato(window.candidatoActual)">Eliminar</button>
+<button type="button" class="btn btn-danger" onclick="eliminarCandidatoConfirm()">Eliminar</button>
 <button type="button" class="btn btn-danger" onclick="cerrarModal('modalCandidato')">Cerrar</button>
 </div>
 </div>
 </div>
 
-<!-- Modal Scoring -->
 <div class="modal" id="modalScoring">
 <div class="modal-content">
 <h2>Evaluar Candidato</h2>
 <div id="modalScoringBody"></div>
 <div class="btn-group">
-<button type="submit" class="btn btn-success" onclick="guardarScoring()">Guardar Evaluacion</button>
+<button type="button" class="btn btn-success" onclick="guardarScoring()">Guardar Evaluacion</button>
 <button type="button" class="btn btn-danger" onclick="cerrarModal('modalScoring')">Cancelar</button>
 </div>
 </div>
 </div>
 
 <script>
+let candidatoActualId = null;
+
 document.getElementById('loginForm').addEventListener('submit', async (e) => {
-e.preventDefault();
-const password = document.getElementById('password').value;
-const res = await fetch('/api/login', {
-method: 'POST',
-headers: { 'Content-Type': 'application/json' },
-body: JSON.stringify({ username: 'admin', password })
-});
-if (res.ok) {
-document.getElementById('loginScreen').classList.add('hidden');
-document.getElementById('adminPanel').classList.remove('hidden');
-cargarDatos();
-} else {
-alert('Contrasena incorrecta');
-}
+  e.preventDefault();
+  const password = document.getElementById('password').value;
+  const res = await fetch('/api/login', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ username: 'admin', password })
+  });
+  if (res.ok) {
+    document.getElementById('loginScreen').classList.add('hidden');
+    document.getElementById('adminPanel').classList.remove('hidden');
+    cargarDatos();
+  } else {
+    alert('Contrasena incorrecta');
+  }
 });
 
 async function logout() {
-await fetch('/api/logout', { method: 'POST' });
-location.reload();
+  await fetch('/api/logout', { method: 'POST' });
+  location.reload();
 }
 
 function cambiarTab(tab) {
-document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-event.target.classList.add('active');
-document.getElementById('tab' + tab.charAt(0).toUpperCase() + tab.slice(1)).classList.add('active');
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+  event.target.classList.add('active');
+  const tabName = 'tab' + tab.charAt(0).toUpperCase() + tab.slice(1);
+  document.getElementById(tabName).classList.add('active');
 }
 
 function abrirModalVacante() {
-document.getElementById('modalVacante').classList.add('active');
+  document.getElementById('modalVacante').classList.add('active');
 }
 
 function cerrarModal(id) {
-document.getElementById(id).classList.remove('active');
+  document.getElementById(id).classList.remove('active');
 }
 
 document.getElementById('formVacante').addEventListener('submit', async (e) => {
-e.preventDefault();
-const formData = new FormData(e.target);
-const data = Object.fromEntries(formData);
-await fetch('/api/vacantes', {
-method: 'POST',
-headers: { 'Content-Type': 'application/json' },
-body: JSON.stringify(data)
-});
-cerrarModal('modalVacante');
-e.target.reset();
-cargarVacantes();
+  e.preventDefault();
+  const formData = new FormData(e.target);
+  const data = Object.fromEntries(formData);
+  await fetch('/api/vacantes', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data)
+  });
+  cerrarModal('modalVacante');
+  e.target.reset();
+  cargarVacantes();
 });
 
 document.getElementById('formPassword').addEventListener('submit', async (e) => {
-e.preventDefault();
-const newPassword = document.getElementById('newPassword').value;
-await fetch('/api/change-password', {
-method: 'POST',
-headers: { 'Content-Type': 'application/json' },
-body: JSON.stringify({ newPassword })
-});
-alert('Contrasena actualizada');
-document.getElementById('newPassword').value = '';
+  e.preventDefault();
+  const newPassword = document.getElementById('newPassword').value;
+  await fetch('/api/change-password', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ newPassword })
+  });
+  alert('Contrasena actualizada');
+  document.getElementById('newPassword').value = '';
 });
 
 async function cargarVacantes() {
-const res = await fetch('/api/vacantes');
-const vacantes = await res.json();
-const tbody = document.getElementById('listaVacantes');
-const select = document.getElementById('listaVacantesSelect');
+  const res = await fetch('/api/vacantes');
+  const vacantes = await res.json();
+  const tbody = document.getElementById('listaVacantes');
+  const select = document.getElementById('filtroVacante');
 
-tbody.innerHTML = vacantes.map(v => `
-<tr>
-<td>${v.titulo}</td>
-<td>${v.ubicacion}</td>
-<td>${v.tipo}</td>
-<td>${v.rubro || 'N/A'}</td>
-<td>${new Date(v.fecha).toLocaleDateString()}</td>
-<td><button class="btn btn-danger" onclick="eliminarVacante(${v.id})">Eliminar</button></td>
-</tr>
-`).join('');
+  tbody.innerHTML = vacantes.map(v => `
+    <tr>
+      <td>${v.titulo}</td>
+      <td>${v.ubicacion}</td>
+      <td>${v.tipo}</td>
+      <td>${v.rubro || 'N/A'}</td>
+      <td>${new Date(v.fecha).toLocaleDateString()}</td>
+      <td><button class="btn btn-danger" onclick="eliminarVacante(${v.id})">Eliminar</button></td>
+    </tr>
+  `).join('');
 
-select.innerHTML = vacantes.map(v => `<option value="${v.id}">${v.titulo}</option>`).join('');
+  select.innerHTML = '<option value="">— Todas las vacantes —</option>' + vacantes.map(v => `<option value="${v.id}">${v.titulo}</option>`).join('');
 }
 
 async function eliminarVacante(id) {
-if (!confirm('Eliminar esta vacante?')) return;
-await fetch('/api/vacantes/' + id, { method: 'DELETE' });
-cargarVacantes();
+  if (!confirm('Eliminar esta vacante?')) return;
+  await fetch('/api/vacantes/' + id, { method: 'DELETE' });
+  cargarVacantes();
 }
-
-let window.candidatoActual = null;
 
 async function cargarCandidatos() {
-const filtroRubro = document.getElementById('filtroRubro').value;
-const filtroVacante = document.getElementById('filtroVacante').value;
-const url = new URL('/api/candidatos', window.location.origin);
-if (filtroRubro) url.searchParams.append('rubro', filtroRubro);
+  const filtroRubro = document.getElementById('filtroRubro').value;
+  const filtroVacante = document.getElementById('filtroVacante').value;
+  const url = new URL('/api/candidatos', window.location.origin);
+  if (filtroRubro) url.searchParams.append('rubro', filtroRubro);
 
-const res = await fetch(url, { headers: { 'Content-Type': 'application/json' } });
-let candidatos = await res.json();
+  const res = await fetch(url);
+  let candidatos = await res.json();
 
-if (filtroVacante) {
-candidatos = candidatos.filter(c => c.vacanteId == filtroVacante);
-}
+  if (filtroVacante) {
+    candidatos = candidatos.filter(c => c.vacanteId == filtroVacante);
+  }
 
-const resVacantes = await fetch('/api/vacantes');
-const vacantes = await resVacantes.json();
-const tbody = document.getElementById('listaCandidatos');
+  const resVacantes = await fetch('/api/vacantes');
+  const vacantes = await resVacantes.json();
+  const tbody = document.getElementById('listaCandidatos');
 
-tbody.innerHTML = candidatos.map(c => {
-const vacante = vacantes.find(v => v.id == c.vacanteId);
-const score = c.scoring ? c.scoring.score : '—';
-const scoreBadge = c.scoring ? `<span class="score-badge score-${score >= 70 ? 'high' : score >= 50 ? 'medium' : 'low'}">${score}</span>` : '<span class="score-badge">Sin evaluar</span>';
+  tbody.innerHTML = candidatos.map(c => {
+    const vacante = vacantes.find(v => v.id == c.vacanteId);
+    const score = c.scoring ? c.scoring.score : null;
+    let scoreBadge = '<span class="score-badge score-none">Sin evaluar</span>';
+    if (score !== null) {
+      if (score >= 70) {
+        scoreBadge = '<span class="score-badge score-high">' + score + '</span>';
+      } else if (score >= 50) {
+        scoreBadge = '<span class="score-badge score-medium">' + score + '</span>';
+      } else {
+        scoreBadge = '<span class="score-badge score-low">' + score + '</span>';
+      }
+    }
 
-return `
-<tr>
-<td>${c.nombre}</td>
-<td>${c.email}</td>
-<td>${c.telefono}</td>
-<td>${c.rubro || 'N/A'}</td>
-<td>${vacante ? vacante.titulo : 'N/A'}</td>
-<td>${scoreBadge}</td>
-<td>${new Date(c.fecha).toLocaleDateString()}</td>
-<td style="display: flex; gap: 5px;">
-<button class="btn btn-primary" onclick="abrirDetalleCandidato(${c.id})">Ver</button>
-<button class="btn btn-success" onclick="abrirScoring(${c.id})">Evaluar</button>
-<button class="btn btn-danger" onclick="eliminarCandidato(${c.id})">Eliminar</button>
-</td>
-</tr>
-`;
-}).join('');
+    return `
+      <tr>
+        <td>${c.nombre}</td>
+        <td>${c.email}</td>
+        <td>${c.telefono}</td>
+        <td>${c.rubro || 'N/A'}</td>
+        <td>${vacante ? vacante.titulo : 'N/A'}</td>
+        <td>${scoreBadge}</td>
+        <td>${new Date(c.fecha).toLocaleDateString()}</td>
+        <td>
+          <div class="action-buttons">
+            <button class="btn btn-primary" onclick="abrirDetalleCandidato(${c.id})">Ver</button>
+            <button class="btn btn-success" onclick="abrirScoring(${c.id})">Evaluar</button>
+            <button class="btn btn-danger" onclick="eliminarCandidatoAPI(${c.id})">Eliminar</button>
+          </div>
+        </td>
+      </tr>
+    `;
+  }).join('');
 }
 
 async function abrirDetalleCandidato(id) {
-const res = await fetch('/api/candidatos');
-const candidatos = await res.json();
-const c = candidatos.find(x => x.id == id);
-window.candidatoActual = id;
+  const res = await fetch('/api/candidatos');
+  const candidatos = await res.json();
+  const c = candidatos.find(x => x.id == id);
+  candidatoActualId = id;
 
-let scoringHTML = '';
-if (c.scoring) {
-scoringHTML = `
-<div class="modal-section">
-<h4>Evaluación</h4>
-<p><strong>Score:</strong> ${c.scoring.score}/100</p>
-<p><strong>Fortalezas:</strong></p>
-<p>${c.scoring.fortalezas}</p>
-<p><strong>Debilidades:</strong></p>
-<p>${c.scoring.debilidades}</p>
-<p><strong>Recomendacion:</strong></p>
-<p>${c.scoring.recomendacion}</p>
-<p style="font-size: 12px; color: #999;">Evaluado: ${new Date(c.scoring.fechaEvaluacion).toLocaleString()}</p>
-</div>
-`;
-}
+  let scoringHTML = '';
+  if (c.scoring) {
+    scoringHTML = `
+      <div class="modal-section">
+        <h4>Evaluación</h4>
+        <p><strong>Score:</strong> ${c.scoring.score}/100</p>
+        <p><strong>Fortalezas:</strong></p>
+        <p>${c.scoring.fortalezas}</p>
+        <p><strong>Debilidades:</strong></p>
+        <p>${c.scoring.debilidades}</p>
+        <p><strong>Recomendacion:</strong></p>
+        <p>${c.scoring.recomendacion}</p>
+        <p style="font-size: 12px; color: #999;">Evaluado: ${new Date(c.scoring.fechaEvaluacion).toLocaleString()}</p>
+      </div>
+    `;
+  }
 
-document.getElementById('modalCandidatoNombre').innerHTML = c.nombre;
-document.getElementById('modalCandidatoBody').innerHTML = `
-<div class="modal-section">
-<h4>Informacion Personal</h4>
-<p><strong>Email:</strong> ${c.email}</p>
-<p><strong>Telefono:</strong> ${c.telefono}</p>
-<p><strong>Rubro:</strong> ${c.rubro || 'N/A'}</p>
-<p><strong>Fecha de postulación:</strong> ${new Date(c.fecha).toLocaleString()}</p>
-</div>
-<div class="modal-section">
-<h4>CV</h4>
-<a href="/${c.cvPath}" target="_blank" class="btn">Descargar CV</a>
-</div>
-${scoringHTML}
-`;
-document.getElementById('modalCandidato').classList.add('active');
+  document.getElementById('modalCandidatoNombre').innerHTML = c.nombre;
+  document.getElementById('modalCandidatoBody').innerHTML = `
+    <div class="modal-section">
+      <h4>Informacion Personal</h4>
+      <p><strong>Email:</strong> ${c.email}</p>
+      <p><strong>Telefono:</strong> ${c.telefono}</p>
+      <p><strong>Rubro:</strong> ${c.rubro || 'N/A'}</p>
+      <p><strong>Fecha de postulación:</strong> ${new Date(c.fecha).toLocaleString()}</p>
+    </div>
+    <div class="modal-section">
+      <h4>CV</h4>
+      <a href="/${c.cvPath}" target="_blank" class="btn">Descargar CV</a>
+    </div>
+    ${scoringHTML}
+  `;
+  document.getElementById('modalCandidato').classList.add('active');
 }
 
 async function abrirScoring(id) {
-const res = await fetch('/api/candidatos');
-const candidatos = await res.json();
-const c = candidatos.find(x => x.id == id);
-window.candidatoActual = id;
+  const res = await fetch('/api/candidatos');
+  const candidatos = await res.json();
+  const c = candidatos.find(x => x.id == id);
+  candidatoActualId = id;
 
-const scoring = c.scoring || { score: 0, fortalezas: '', debilidades: '', recomendacion: '' };
+  const scoring = c.scoring || { score: 0, fortalezas: '', debilidades: '', recomendacion: '' };
 
-document.getElementById('modalScoringBody').innerHTML = `
-<div class="modal-section">
-<h4>${c.nombre}</h4>
-<div class="form-group">
-<label>Score (0-100)</label>
-<input type="number" id="scoringScore" min="0" max="100" value="${scoring.score}" class="score-input">
-</div>
-<div class="form-group">
-<label>Fortalezas</label>
-<textarea id="scoringFortalezas" class="score-input">${scoring.fortalezas}</textarea>
-</div>
-<div class="form-group">
-<label>Debilidades</label>
-<textarea id="scoringDebilidades" class="score-input">${scoring.debilidades}</textarea>
-</div>
-<div class="form-group">
-<label>Recomendacion</label>
-<textarea id="scoringRecomendacion" class="score-input">${scoring.recomendacion}</textarea>
-</div>
-</div>
-`;
-document.getElementById('modalScoring').classList.add('active');
+  document.getElementById('modalScoringBody').innerHTML = `
+    <div class="modal-section">
+      <h4>${c.nombre}</h4>
+      <div class="form-group">
+        <label>Score (0-100)</label>
+        <input type="number" id="scoringScore" min="0" max="100" value="${scoring.score}" class="score-input">
+      </div>
+      <div class="form-group">
+        <label>Fortalezas</label>
+        <textarea id="scoringFortalezas" class="score-input">${scoring.fortalezas}</textarea>
+      </div>
+      <div class="form-group">
+        <label>Debilidades</label>
+        <textarea id="scoringDebilidades" class="score-input">${scoring.debilidades}</textarea>
+      </div>
+      <div class="form-group">
+        <label>Recomendacion</label>
+        <textarea id="scoringRecomendacion" class="score-input">${scoring.recomendacion}</textarea>
+      </div>
+    </div>
+  `;
+  document.getElementById('modalScoring').classList.add('active');
 }
 
 async function guardarScoring() {
-const score = document.getElementById('scoringScore').value;
-const fortalezas = document.getElementById('scoringFortalezas').value;
-const debilidades = document.getElementById('scoringDebilidades').value;
-const recomendacion = document.getElementById('scoringRecomendacion').value;
+  const score = document.getElementById('scoringScore').value;
+  const fortalezas = document.getElementById('scoringFortalezas').value;
+  const debilidades = document.getElementById('scoringDebilidades').value;
+  const recomendacion = document.getElementById('scoringRecomendacion').value;
 
-await fetch(`/api/candidatos/${window.candidatoActual}/scoring`, {
-method: 'POST',
-headers: { 'Content-Type': 'application/json' },
-body: JSON.stringify({ score, fortalezas, debilidades, recomendacion })
-});
+  await fetch(`/api/candidatos/${candidatoActualId}/scoring`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ score, fortalezas, debilidades, recomendacion })
+  });
 
-cerrarModal('modalScoring');
-cargarCandidatos();
-alert('Evaluacion guardada');
+  cerrarModal('modalScoring');
+  cargarCandidatos();
+  alert('Evaluacion guardada');
 }
 
-async function eliminarCandidato(id) {
-if (!confirm('Eliminar este candidato?')) return;
-await fetch('/api/candidatos/' + id, { method: 'DELETE' });
-cargarCandidatos();
+function eliminarCandidatoConfirm() {
+  if (!confirm('Eliminar este candidato?')) return;
+  eliminarCandidatoAPI(candidatoActualId);
+}
+
+async function eliminarCandidatoAPI(id) {
+  await fetch('/api/candidatos/' + id, { method: 'DELETE' });
+  cerrarModal('modalCandidato');
+  cargarCandidatos();
 }
 
 function cargarDatos() {
-cargarVacantes();
-cargarCandidatos();
+  cargarVacantes();
+  cargarCandidatos();
 }
 </script>
 </body>
