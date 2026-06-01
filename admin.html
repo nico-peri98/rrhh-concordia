@@ -3,1636 +3,453 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Panel Admin — RRHH Concordia</title>
-<meta name="robots" content="noindex, nofollow">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<title>Panel Admin - RRHH Concordia</title>
 <style>
-
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-:root {
-  --blue:    #4260C0;
-  --blue-dk: #2e479a;
-  --blue-lt: #eef1fb;
-  --orange:  #FC9738;
-  --red:     #FF5E57;
-  --green:   #39A05A;
-  --bg:      #f4f4f2;
-  --bg2:     #ffffff;
-  --text:    #1a1a2a;
-  --text2:   #5a5a72;
-  --text3:   #9898aa;
-  --border:  rgba(26,26,42,0.09);
-  --sidebar: 240px;
-  --font-display: 'Plus Jakarta Sans', sans-serif;
-  --font-body:    'Inter', sans-serif;
-  --ease: cubic-bezier(.22,1,.36,1);
-}
-
-body {
-  font-family: var(--font-body);
-  background: var(--bg);
-  color: var(--text);
-  font-size: 14px;
-  line-height: 1.6;
-  -webkit-font-smoothing: antialiased;
-}
-
-/* ─── LOGIN ────────────────────────────────────────────────── */
-#login-screen {
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: #0d1220;
-  padding: 24px;
-  position: relative;
-  overflow: hidden;
-}
-
-#login-screen::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background-image:
-    linear-gradient(rgba(66,96,192,0.045) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(66,96,192,0.045) 1px, transparent 1px);
-  background-size: 72px 72px;
-  filter: blur(0.4px);
-}
-
-#login-screen::after {
-  content: '';
-  position: absolute;
-  top: -20%; right: -10%;
-  width: 500px; height: 500px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(66,96,192,0.18) 0%, transparent 65%);
-}
-
-.login-card {
-  background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 18px;
-  padding: 44px 40px;
-  width: 100%;
-  max-width: 380px;
-  position: relative;
-  z-index: 1;
-}
-
-.login-logo {
-  display: flex;
-  align-items: center;
-  margin-bottom: 4px;
-}
-.login-logo-svg { height: 26px; width: auto; display: block; opacity: 0.92; }
-.login-logo-dot { display: none; }
-
-.login-title {
-  font-family: var(--font-display);
-  font-size: 22px;
-  font-weight: 600;
-  color: #fff;
-  letter-spacing: -0.02em;
-  margin: 20px 0 6px;
-}
-
-.login-sub {
-  font-size: 13px;
-  color: rgba(255,255,255,0.4);
-  margin-bottom: 32px;
-  font-weight: 300;
-}
-
-.login-label {
-  display: block;
-  font-size: 11px;
-  font-weight: 500;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: rgba(255,255,255,0.4);
-  margin-bottom: 8px;
-}
-
-.login-input {
-  width: 100%;
-  background: rgba(255,255,255,0.06);
-  border: 1px solid rgba(255,255,255,0.1);
-  border-radius: 8px;
-  padding: 11px 14px;
-  font-family: var(--font-body);
-  font-size: 14px;
-  color: #fff;
-  outline: none;
-  transition: border-color 0.2s;
-  margin-bottom: 20px;
-  letter-spacing: 0.08em;
-}
-
-.login-input::placeholder { color: rgba(255,255,255,0.2); }
-.login-input:focus { border-color: rgba(66,96,192,0.6); background: rgba(66,96,192,0.08); }
-
-.login-btn {
-  width: 100%;
-  background: var(--blue);
-  color: #fff;
-  font-family: var(--font-body);
-  font-size: 14px;
-  font-weight: 500;
-  border: none;
-  padding: 12px;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background 0.2s, transform 0.15s;
-}
-
-.login-btn:hover { background: var(--blue-dk); transform: translateY(-1px); }
-
-.login-error {
-  font-size: 12px;
-  color: var(--red);
-  margin-top: 10px;
-  display: none;
-  text-align: center;
-}
-
-.login-back {
-  text-align: center;
-  margin-top: 20px;
-}
-
-.login-back a {
-  font-size: 12px;
-  color: rgba(255,255,255,0.3);
-  text-decoration: none;
-  transition: color 0.2s;
-}
-
-.login-back a:hover { color: rgba(255,255,255,0.6); }
-
-/* ─── APP SHELL ────────────────────────────────────────────── */
-#app { display: none; min-height: 100vh; }
-
-/* ─── SIDEBAR ──────────────────────────────────────────────── */
-.sidebar {
-  position: fixed;
-  top: 0; left: 0; bottom: 0;
-  width: var(--sidebar);
-  background: var(--bg2);
-  border-right: 1px solid var(--border);
-  display: flex;
-  flex-direction: column;
-  z-index: 50;
-  overflow-y: auto;
-}
-
-.sidebar-logo {
-  padding: 20px 20px 16px;
-  border-bottom: 1px solid var(--border);
-}
-
-.sidebar-logo-mark {
-  display: flex;
-  align-items: center;
-  text-decoration: none;
-  margin-bottom: 4px;
-  transition: opacity 0.2s;
-}
-.sidebar-logo-mark:hover { opacity: 0.75; }
-.admin-logo-svg { height: 24px; width: auto; display: block; }
-.sidebar-logo-dot { display: none; }
-
-.sidebar-badge {
-  display: inline-block;
-  font-size: 10px;
-  font-weight: 500;
-  color: var(--text3);
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-}
-
-.sidebar-section {
-  padding: 16px 12px 8px;
-  font-size: 10px;
-  font-weight: 500;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--text3);
-  padding-left: 14px;
-}
-
-.sidebar-nav {
-  flex: 1;
-  padding: 4px 8px;
-}
-
-.nav-item {
-  display: flex;
-  align-items: center;
-  gap: 9px;
-  padding: 9px 10px;
-  border-radius: 8px;
-  cursor: pointer;
-  color: var(--text2);
-  font-size: 13px;
-  font-weight: 400;
-  transition: background 0.15s, color 0.15s;
-  text-decoration: none;
-  margin-bottom: 1px;
-}
-
-.nav-item svg {
-  width: 15px; height: 15px;
-  stroke: currentColor;
-  stroke-width: 1.5;
-  fill: none;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  flex-shrink: 0;
-}
-
-.nav-item:hover { background: var(--bg); color: var(--text); }
-.nav-item.active { background: var(--blue-lt); color: var(--blue); font-weight: 500; }
-
-.sidebar-footer {
-  padding: 16px 8px;
-  border-top: 1px solid var(--border);
-}
-
-.sidebar-user {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 8px 10px;
-  border-radius: 8px;
-}
-
-.sidebar-avatar {
-  width: 30px; height: 30px;
-  border-radius: 50%;
-  background: var(--blue-lt);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: var(--font-display);
-  font-size: 11px;
-  font-weight: 600;
-  color: var(--blue);
-  flex-shrink: 0;
-}
-
-.sidebar-user-info { flex: 1; min-width: 0; }
-
-.sidebar-user-name {
-  font-size: 12px;
-  font-weight: 500;
-  color: var(--text);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.sidebar-user-role {
-  font-size: 11px;
-  color: var(--text3);
-}
-
-.logout-btn {
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: var(--text3);
-  padding: 4px;
-  border-radius: 4px;
-  display: flex;
-  transition: color 0.2s;
-}
-
-.logout-btn:hover { color: var(--red); }
-.logout-btn svg { width: 14px; height: 14px; stroke: currentColor; stroke-width: 1.5; fill: none; stroke-linecap: round; stroke-linejoin: round; }
-
-/* ─── MAIN CONTENT ─────────────────────────────────────────── */
-.main {
-  margin-left: var(--sidebar);
-  padding: 32px 36px;
-  max-width: calc(100vw - var(--sidebar));
-}
-
-/* ─── TOPBAR ───────────────────────────────────────────────── */
-.topbar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 32px;
-  gap: 16px;
-}
-
-.page-title {
-  font-family: var(--font-display);
-  font-size: 20px;
-  font-weight: 600;
-  color: var(--text);
-  letter-spacing: -0.02em;
-}
-
-.page-sub {
-  font-size: 13px;
-  color: var(--text3);
-  margin-top: 2px;
-}
-
-/* ─── STAT CARDS ───────────────────────────────────────────── */
-.stats-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 16px;
-  margin-bottom: 32px;
-}
-
-.stat-card {
-  background: var(--bg2);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 20px 22px;
-}
-
-.stat-label {
-  font-size: 11px;
-  font-weight: 500;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--text3);
-  margin-bottom: 8px;
-}
-
-.stat-value {
-  font-family: var(--font-display);
-  font-size: 28px;
-  font-weight: 600;
-  letter-spacing: -0.025em;
-  color: var(--text);
-  line-height: 1;
-}
-
-.stat-delta {
-  font-size: 11px;
-  color: var(--green);
-  margin-top: 4px;
-}
-
-/* ─── CARD BASE ────────────────────────────────────────────── */
-.card {
-  background: var(--bg2);
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  overflow: hidden;
-}
-
-.card-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 18px 22px;
-  border-bottom: 1px solid var(--border);
-  gap: 12px;
-}
-
-.card-title {
-  font-family: var(--font-display);
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--text);
-  letter-spacing: -0.01em;
-}
-
-.card-body { padding: 22px; }
-
-/* ─── BUTTONS ──────────────────────────────────────────────── */
-.btn {
-  font-family: var(--font-body);
-  font-size: 13px;
-  font-weight: 500;
-  border: none;
-  padding: 8px 16px;
-  border-radius: 7px;
-  cursor: pointer;
-  transition: all 0.18s var(--ease);
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  text-decoration: none;
-}
-
-.btn svg { width: 13px; height: 13px; stroke: currentColor; stroke-width: 1.5; fill: none; stroke-linecap: round; stroke-linejoin: round; }
-
-.btn-blue { background: var(--blue); color: #fff; }
-.btn-blue:hover { background: var(--blue-dk); transform: translateY(-1px); }
-
-.btn-outline { background: transparent; color: var(--text2); border: 1px solid var(--border); }
-.btn-outline:hover { background: var(--bg); color: var(--text); }
-
-.btn-danger { background: transparent; color: var(--red); border: 1px solid rgba(255,94,87,0.25); }
-.btn-danger:hover { background: rgba(255,94,87,0.06); }
-
-.btn-green { background: var(--green); color: #fff; }
-.btn-green:hover { background: #2d8549; }
-
-.btn-sm { padding: 5px 10px; font-size: 12px; border-radius: 6px; }
-
-/* ─── BADGE ────────────────────────────────────────────────── */
-.badge { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 500; padding: 3px 8px; border-radius: 20px; }
-.badge-dot { width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
-.badge-green { background: rgba(57,160,90,0.1); color: var(--green); }
-.badge-orange { background: rgba(252,151,56,0.12); color: #c97820; }
-.badge-red { background: rgba(255,94,87,0.1); color: var(--red); }
-.badge-blue { background: var(--blue-lt); color: var(--blue); }
-
-/* ─── TABLE ────────────────────────────────────────────────── */
-.table-wrap { overflow-x: auto; }
-
-table { width: 100%; border-collapse: collapse; font-size: 13px; }
-
-thead th {
-  padding: 10px 14px;
-  text-align: left;
-  font-size: 11px;
-  font-weight: 500;
-  letter-spacing: 0.07em;
-  text-transform: uppercase;
-  color: var(--text3);
-  border-bottom: 1px solid var(--border);
-  white-space: nowrap;
-}
-
-tbody td {
-  padding: 13px 14px;
-  border-bottom: 1px solid var(--border);
-  color: var(--text);
-  vertical-align: middle;
-}
-
-tbody tr:last-child td { border-bottom: none; }
-tbody tr:hover td { background: var(--bg); }
-
-.td-name { font-weight: 500; color: var(--text); }
-.td-muted { color: var(--text3); font-size: 12px; }
-
-.td-actions { display: flex; gap: 6px; justify-content: flex-end; }
-
-/* ─── FORM ─────────────────────────────────────────────────── */
-.form-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-
-.form-group { margin-bottom: 16px; }
-.form-group:last-child { margin-bottom: 0; }
-
-.form-label {
-  display: block;
-  font-size: 11px;
-  font-weight: 500;
-  letter-spacing: 0.07em;
-  text-transform: uppercase;
-  color: var(--text3);
-  margin-bottom: 7px;
-}
-
-.form-input, .form-select, .form-textarea {
-  width: 100%;
-  background: var(--bg);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 9px 12px;
-  font-family: var(--font-body);
-  font-size: 13px;
-  color: var(--text);
-  outline: none;
-  transition: border-color 0.2s, background 0.2s;
-}
-
-.form-input::placeholder, .form-textarea::placeholder { color: var(--text3); }
-.form-input:focus, .form-select:focus, .form-textarea:focus {
-  border-color: rgba(66,96,192,0.4);
-  background: var(--bg2);
-}
-
-.form-textarea { resize: vertical; min-height: 80px; line-height: 1.6; }
-
-.form-select {
-  appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%239898aa' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 10px center;
-  cursor: pointer;
-}
-
-/* ─── DRAWER / SLIDE PANEL ─────────────────────────────────── */
-.drawer-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(10,10,20,0.35);
-  backdrop-filter: blur(2px);
-  z-index: 200;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.25s;
-}
-
-.drawer-overlay.open { opacity: 1; pointer-events: all; }
-
-.drawer {
-  position: fixed;
-  top: 0; right: 0; bottom: 0;
-  width: 480px;
-  background: var(--bg2);
-  border-left: 1px solid var(--border);
-  z-index: 201;
-  display: flex;
-  flex-direction: column;
-  transform: translateX(100%);
-  transition: transform 0.3s var(--ease);
-}
-
-.drawer-overlay.open .drawer { transform: translateX(0); }
-
-.drawer-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 18px 24px;
-  border-bottom: 1px solid var(--border);
-  flex-shrink: 0;
-}
-
-.drawer-title {
-  font-family: var(--font-display);
-  font-size: 15px;
-  font-weight: 600;
-  color: var(--text);
-  letter-spacing: -0.01em;
-}
-
-.drawer-close {
-  width: 28px; height: 28px;
-  border-radius: 6px;
-  background: var(--bg);
-  border: none;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--text3);
-  font-size: 16px;
-  transition: background 0.15s;
-}
-
-.drawer-close:hover { background: var(--border); }
-
-.drawer-body {
-  flex: 1;
-  overflow-y: auto;
-  padding: 24px;
-}
-
-.drawer-footer {
-  padding: 16px 24px;
-  border-top: 1px solid var(--border);
-  display: flex;
-  gap: 10px;
-  justify-content: flex-end;
-  flex-shrink: 0;
-}
-
-/* ─── RICH TEXT TOOLBAR ────────────────────────────────────── */
-.rte-toolbar {
-  display: flex;
-  gap: 2px;
-  padding: 6px 8px;
-  background: var(--bg);
-  border: 1px solid var(--border);
-  border-bottom: none;
-  border-radius: 8px 8px 0 0;
-}
-
-.rte-btn {
-  width: 26px; height: 26px;
-  border-radius: 5px;
-  background: none;
-  border: none;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--text2);
-  transition: background 0.15s, color 0.15s;
-}
-
-.rte-btn:hover { background: var(--border); color: var(--text); }
-
-.rte-area {
-  background: var(--bg2);
-  border: 1px solid var(--border);
-  border-radius: 0 0 8px 8px;
-  padding: 10px 12px;
-  min-height: 100px;
-  outline: none;
-  font-family: var(--font-body);
-  font-size: 13px;
-  line-height: 1.6;
-  color: var(--text);
-}
-
-.rte-area:focus { border-color: rgba(66,96,192,0.4); }
-
-/* ─── EMPTY STATE ──────────────────────────────────────────── */
-.empty-state {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 56px 24px;
-  text-align: center;
-  gap: 12px;
-}
-
-.empty-icon {
-  width: 44px; height: 44px;
-  border-radius: 12px;
-  background: var(--bg);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.empty-icon svg { width: 20px; height: 20px; stroke: var(--text3); stroke-width: 1.5; fill: none; stroke-linecap: round; stroke-linejoin: round; }
-
-.empty-title { font-size: 14px; font-weight: 500; color: var(--text2); }
-.empty-sub { font-size: 13px; color: var(--text3); }
-
-/* ─── TABS ─────────────────────────────────────────────────── */
-.tabs { display: flex; gap: 2px; background: var(--bg); border-radius: 9px; padding: 3px; }
-.tab-btn { font-family: var(--font-body); font-size: 12px; font-weight: 500; color: var(--text3); background: none; border: none; padding: 6px 14px; border-radius: 7px; cursor: pointer; transition: all 0.18s; white-space: nowrap; }
-.tab-btn.active { background: var(--bg2); color: var(--text); box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
-.tab-btn:hover:not(.active) { color: var(--text2); }
-
-/* ─── SEARCH ───────────────────────────────────────────────── */
-.search-wrap { position: relative; }
-.search-icon { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); }
-.search-icon svg { width: 13px; height: 13px; stroke: var(--text3); stroke-width: 1.5; fill: none; stroke-linecap: round; stroke-linejoin: round; }
-.search-input { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 7px 12px 7px 30px; font-family: var(--font-body); font-size: 13px; color: var(--text); outline: none; width: 220px; transition: border-color 0.2s, width 0.3s; }
-.search-input::placeholder { color: var(--text3); }
-.search-input:focus { border-color: rgba(66,96,192,0.4); width: 260px; }
-
-/* ─── TOAST ────────────────────────────────────────────────── */
-.toast-container { position: fixed; bottom: 24px; right: 24px; z-index: 300; display: flex; flex-direction: column; gap: 10px; pointer-events: none; }
-.toast {
-  background: var(--text);
-  color: rgba(255,255,255,0.9);
-  font-size: 13px;
-  padding: 12px 18px;
-  border-radius: 9px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.18);
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  pointer-events: all;
-  animation: slideUp 0.3s var(--ease) both;
-  max-width: 320px;
-}
-
-.toast-success::before { content: '✓'; display: inline-flex; width: 18px; height: 18px; border-radius: 50%; background: var(--green); color: #fff; font-size: 10px; font-weight: 700; align-items: center; justify-content: center; flex-shrink: 0; }
-.toast-error::before { content: '!'; display: inline-flex; width: 18px; height: 18px; border-radius: 50%; background: var(--red); color: #fff; font-size: 11px; font-weight: 700; align-items: center; justify-content: center; flex-shrink: 0; }
-
-@keyframes slideUp { from { opacity:0; transform: translateY(12px); } to { opacity:1; transform: translateY(0); } }
-
-/* ─── PAGES ────────────────────────────────────────────────── */
-.page { display: none; }
-.page.active { display: block; }
-
-/* ─── CONFIRM MODAL ────────────────────────────────────────── */
-.confirm-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(10,10,20,0.4);
-  backdrop-filter: blur(3px);
-  z-index: 400;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 24px;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.2s;
-}
-
-.confirm-overlay.open { opacity: 1; pointer-events: all; }
-
-.confirm-card {
-  background: var(--bg2);
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  padding: 28px;
-  max-width: 360px;
-  width: 100%;
-  transform: translateY(8px);
-  transition: transform 0.25s var(--ease);
-}
-
-.confirm-overlay.open .confirm-card { transform: translateY(0); }
-
-.confirm-title { font-family: var(--font-display); font-size: 16px; font-weight: 600; color: var(--text); margin-bottom: 8px; }
-.confirm-text { font-size: 13px; color: var(--text2); line-height: 1.55; margin-bottom: 22px; }
-.confirm-actions { display: flex; gap: 10px; justify-content: flex-end; }
-
-/* ─── INFO EMPRESA ─────────────────────────────────────────── */
-.info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-
-/* ─── RESPONSIVE ───────────────────────────────────────────── */
-@media (max-width: 900px) {
-  :root { --sidebar: 0px; }
-  .sidebar { transform: translateX(-240px); width: 240px; transition: transform 0.3s var(--ease); }
-  .sidebar.mobile-open { transform: translateX(0); }
-  .main { margin-left: 0; padding: 20px 16px; max-width: 100vw; }
-  .stats-grid { grid-template-columns: repeat(2,1fr); }
-  .drawer { width: 100%; }
-  .form-grid-2 { grid-template-columns: 1fr; }
-  .info-grid { grid-template-columns: 1fr; }
-}
-
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #1a1a1a; color: #fff; }
+.header { background: #2c3e50; padding: 20px; display: flex; justify-content: space-between; align-items: center; }
+.container { max-width: 1400px; margin: 20px auto; padding: 20px; }
+.login-container { display: flex; justify-content: center; align-items: center; height: 100vh; }
+.login-box { background: #2c3e50; padding: 40px; border-radius: 10px; width: 100%; max-width: 400px; }
+.login-box h2 { margin-bottom: 20px; text-align: center; }
+.form-group { margin-bottom: 20px; }
+.form-group label { display: block; margin-bottom: 8px; }
+.form-group input, .form-group textarea, .form-group select { width: 100%; padding: 12px; border: 1px solid #444; border-radius: 5px; background: #333; color: #fff; }
+.btn { background: #3498db; color: white; padding: 12px 24px; border: none; border-radius: 5px; cursor: pointer; font-size: 14px; }
+.btn:hover { background: #2980b9; }
+.btn-danger { background: #e74c3c; }
+.btn-danger:hover { background: #c0392b; }
+.btn-success { background: #27ae60; }
+.btn-success:hover { background: #229954; }
+.btn-primary { background: #3498db; }
+.btn-primary:hover { background: #2980b9; }
+.tabs { display: flex; gap: 10px; margin-bottom: 30px; border-bottom: 2px solid #444; }
+.tab { padding: 15px 30px; cursor: pointer; background: transparent; border: none; color: #999; font-size: 16px; }
+.tab.active { color: #3498db; border-bottom: 3px solid #3498db; }
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+.card { background: #2c3e50; padding: 20px; border-radius: 8px; margin-bottom: 20px; }
+.card h3 { margin-bottom: 15px; }
+.filters { background: #2c3e50; padding: 20px; border-radius: 8px; margin-bottom: 20px; display: flex; gap: 15px; align-items: flex-end; flex-wrap: wrap; }
+.filters label { display: block; margin-bottom: 8px; font-size: 12px; color: #aaa; }
+.filters select { padding: 8px 12px; background: #333; border: 1px solid #444; color: #fff; border-radius: 5px; }
+.table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 13px; }
+.table th, .table td { padding: 12px; text-align: left; border-bottom: 1px solid #444; }
+.table th { background: #34495e; font-weight: 600; }
+.table tr:hover { background: #34495e; }
+.score-badge { display: inline-block; padding: 4px 12px; border-radius: 20px; font-weight: bold; font-size: 11px; }
+.score-high { background: #27ae60; color: white; }
+.score-medium { background: #f39c12; color: white; }
+.score-low { background: #e74c3c; color: white; }
+.modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); justify-content: center; align-items: center; z-index: 1000; }
+.modal.active { display: flex; }
+.modal-content { background: #2c3e50; padding: 30px; border-radius: 10px; width: 90%; max-width: 800px; max-height: 90vh; overflow-y: auto; }
+.btn-group { display: flex; gap: 10px; margin-top: 20px; }
+.hidden { display: none; }
+.modal-section { margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid #444; }
+.modal-section h4 { margin-bottom: 15px; color: #3498db; }
+textarea { min-height: 80px; resize: vertical; }
+.scoring-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+.score-input { width: 100%; padding: 8px; border: 1px solid #444; border-radius: 5px; background: #333; color: #fff; }
 </style>
 </head>
 <body>
-
-<!-- ─── LOGIN ────────────────────────────────────────────── -->
-<div id="login-screen">
-  <div class="login-card">
-    <div class="login-logo"><svg class="login-logo-svg" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" zoomAndPan="magnify" viewBox="40 148 1097 393" preserveAspectRatio="xMidYMid meet" version="1.0"><defs><g/><clipPath id="c7c725d30d"><path d="M 66.960938 172.789062 L 204 172.789062 L 204 344 L 66.960938 344 Z M 66.960938 172.789062 " clip-rule="nonzero"/></clipPath><clipPath id="b09cb06645"><path d="M 220 222 L 390.210938 222 L 390.210938 358.789062 L 220 358.789062 Z M 220 222 " clip-rule="nonzero"/></clipPath><clipPath id="8ec5b49331"><path d="M 26.542969 0 L 100 0 L 100 73.636719 L 26.542969 73.636719 Z M 26.542969 0 " clip-rule="nonzero"/></clipPath><clipPath id="4a16b515d8"><path d="M 1 73.574219 L 125.347656 73.574219 L 125.347656 134.351562 L 1 134.351562 Z M 1 73.574219 " clip-rule="nonzero"/></clipPath><clipPath id="a91371e48e"><rect x="0" width="126" y="0" height="135"/></clipPath><clipPath id="d81f1cb520"><path d="M 26.261719 0 L 99.902344 0 L 99.902344 73.636719 L 26.261719 73.636719 Z M 26.261719 0 " clip-rule="nonzero"/></clipPath><clipPath id="901a368752"><path d="M 0.582031 73.574219 L 125.039062 73.574219 L 125.039062 134.351562 L 0.582031 134.351562 Z M 0.582031 73.574219 " clip-rule="nonzero"/></clipPath><clipPath id="8ec5385c98"><rect x="0" width="126" y="0" height="135"/></clipPath><clipPath id="4fea750218"><rect x="0" width="686" y="0" height="337"/></clipPath></defs><g clip-path="url(#c7c725d30d)"><path fill="#4260c0" d="M 190.308594 254.050781 C 195.28125 254.050781 199.683594 255.789062 203.386719 258.683594 L 203.386719 207.058594 L 151.609375 207.058594 C 154.496094 203.015625 156.230469 198.761719 156.226562 193.796875 C 156.226562 182.226562 146.847656 172.773438 135.28125 172.773438 C 123.710938 172.773438 114.332031 182.261719 114.332031 193.832031 C 114.332031 198.796875 116.0625 203.015625 118.949219 207.058594 L 66.96875 207.058594 L 66.96875 343.476562 L 203.386719 343.476562 L 203.386719 291.316406 C 199.683594 294.210938 195.28125 295.949219 190.308594 295.949219 C 178.738281 295.949219 169.359375 286.570312 169.359375 275 C 169.359375 263.429688 178.738281 254.050781 190.308594 254.050781 Z M 190.308594 254.050781 " fill-opacity="1" fill-rule="nonzero"/></g><g clip-path="url(#b09cb06645)"><path fill="#fc9738" d="M 338.679688 222.550781 C 341.574219 225.921875 343.3125 230.601562 343.3125 235.578125 C 343.3125 247.144531 333.933594 256.46875 322.363281 256.46875 C 310.792969 256.46875 301.414062 247.171875 301.414062 235.605469 C 301.414062 230.628906 303.152344 225.921875 306.046875 222.550781 L 253.914062 222.550781 L 253.914062 274.25 C 250.546875 271.34375 245.867188 269.601562 240.886719 269.601562 C 229.316406 269.601562 220 278.980469 220 290.550781 C 220 302.121094 229.285156 311.5 240.855469 311.5 C 245.835938 311.5 250.546875 309.757812 253.914062 306.851562 L 253.914062 358.972656 L 390.332031 358.972656 L 390.332031 222.550781 Z M 338.679688 222.550781 " fill-opacity="1" fill-rule="nonzero"/></g><g transform="matrix(1, 0, 0, 1, 265, 384)"><g clip-path="url(#a91371e48e)"><g clip-path="url(#8ec5b49331)"><path fill="#ffd699" d="M 63.226562 0 C 42.957031 0 26.542969 16.414062 26.542969 36.683594 C 26.542969 56.949219 42.957031 73.363281 63.226562 73.363281 C 83.492188 73.363281 99.90625 56.949219 99.90625 36.683594 C 99.90625 16.414062 83.492188 0 63.226562 0 Z M 63.226562 0 " fill-opacity="1" fill-rule="nonzero"/></g><g clip-path="url(#4a16b515d8)"><path fill="#ff3131" d="M 1.132812 134.351562 C 1.71875 100.578125 29.285156 73.394531 63.234375 73.394531 C 97.144531 73.394531 124.710938 100.578125 125.296875 134.351562 Z M 1.132812 134.351562 " fill-opacity="1" fill-rule="nonzero"/></g></g></g><g transform="matrix(1, 0, 0, 1, 78, 384)"><g clip-path="url(#8ec5385c98)"><g clip-path="url(#d81f1cb520)"><path fill="#ffd699" d="M 62.945312 0 C 42.679688 0 26.261719 16.414062 26.261719 36.683594 C 26.261719 56.949219 42.679688 73.363281 62.945312 73.363281 C 83.210938 73.363281 99.628906 56.949219 99.628906 36.683594 C 99.628906 16.414062 83.210938 0 62.945312 0 Z M 62.945312 0 " fill-opacity="1" fill-rule="nonzero"/></g><g clip-path="url(#901a368752)"><path fill="#39a05a" d="M 0.851562 134.351562 C 1.441406 100.578125 29.007812 73.394531 62.953125 73.394531 C 96.863281 73.394531 124.429688 100.578125 125.015625 134.351562 Z M 0.851562 134.351562 " fill-opacity="1" fill-rule="nonzero"/></g></g></g><g transform="matrix(1, 0, 0, 1, 429, 191)"><g clip-path="url(#4fea750218)"><g fill="#FFFFFF" fill-opacity="1"><g transform="translate(0.749895, 117.783084)"><g><path d="M 8.109375 -92.78125 L 46.9375 -92.78125 C 56.039062 -92.78125 63.046875 -90.34375 67.953125 -85.46875 C 72.867188 -80.601562 75.328125 -74.203125 75.328125 -66.265625 C 75.328125 -60.679688 73.953125 -55.8125 71.203125 -51.65625 C 68.453125 -47.507812 64.644531 -44.445312 59.78125 -42.46875 L 77.640625 0 L 58.828125 0 L 43.421875 -38.6875 L 25.421875 -38.6875 L 25.421875 0 L 8.109375 0 Z M 44.5 -53.96875 C 48.550781 -53.96875 51.59375 -55.023438 53.625 -57.140625 C 55.65625 -59.265625 56.671875 -62.304688 56.671875 -66.265625 C 56.671875 -69.785156 55.722656 -72.515625 53.828125 -74.453125 C 51.929688 -76.390625 49.046875 -77.359375 45.171875 -77.359375 L 25.421875 -77.359375 L 25.421875 -53.96875 Z M 44.5 -53.96875 "/></g></g></g><g fill="#FFFFFF" fill-opacity="1"><g transform="translate(80.812327, 117.783084)"><g><path d="M 8.109375 -92.78125 L 46.9375 -92.78125 C 56.039062 -92.78125 63.046875 -90.34375 67.953125 -85.46875 C 72.867188 -80.601562 75.328125 -74.203125 75.328125 -66.265625 C 75.328125 -60.679688 73.953125 -55.8125 71.203125 -51.65625 C 68.453125 -47.507812 64.644531 -44.445312 59.78125 -42.46875 L 77.640625 0 L 58.828125 0 L 43.421875 -38.6875 L 25.421875 -38.6875 L 25.421875 0 L 8.109375 0 Z M 44.5 -53.96875 C 48.550781 -53.96875 51.59375 -55.023438 53.625 -57.140625 C 55.65625 -59.265625 56.671875 -62.304688 56.671875 -66.265625 C 56.671875 -69.785156 55.722656 -72.515625 53.828125 -74.453125 C 51.929688 -76.390625 49.046875 -77.359375 45.171875 -77.359375 L 25.421875 -77.359375 L 25.421875 -53.96875 Z M 44.5 -53.96875 "/></g></g></g><g fill="#FFFFFF" fill-opacity="1"><g transform="translate(160.874758, 117.783084)"><g><path d="M 6.09375 -18.53125 L 24.75 -18.53125 L 24.75 0 L 6.09375 0 Z M 6.09375 -18.53125 "/></g></g></g><g fill="#FFFFFF" fill-opacity="1"><g transform="translate(191.709611, 117.783084)"><g><path d="M 8.109375 -92.78125 L 25.421875 -92.78125 L 25.421875 -55.1875 L 54.640625 -55.1875 L 54.640625 -92.78125 L 71.953125 -92.78125 L 71.953125 0 L 54.640625 0 L 54.640625 -39.765625 L 25.421875 -39.765625 L 25.421875 0 L 8.109375 0 Z M 8.109375 -92.78125 "/></g></g></g><g fill="#FFFFFF" fill-opacity="1"><g transform="translate(271.772042, 117.783084)"><g><path d="M 8.109375 -92.78125 L 25.421875 -92.78125 L 25.421875 -55.1875 L 54.640625 -55.1875 L 54.640625 -92.78125 L 71.953125 -92.78125 L 71.953125 0 L 54.640625 0 L 54.640625 -39.765625 L 25.421875 -39.765625 L 25.421875 0 L 8.109375 0 Z M 8.109375 -92.78125 "/></g></g></g><g fill="#FFFFFF" fill-opacity="1"><g transform="translate(351.834474, 117.783084)"><g><path d="M 6.09375 -18.53125 L 24.75 -18.53125 L 24.75 0 L 6.09375 0 Z M 6.09375 -18.53125 "/></g></g></g><g fill="#FFFFFF" fill-opacity="1"><g transform="translate(382.670378, 117.783084)"><g/></g></g><g fill="#FFFFFF" fill-opacity="1"><g transform="translate(0.749895, 306.916248)"><g><path d="M 41.515625 1.625 C 29.617188 1.625 20.488281 -2.363281 14.125 -10.34375 C 7.769531 -18.320312 4.59375 -30.335938 4.59375 -46.390625 C 4.59375 -62.441406 7.769531 -74.457031 14.125 -82.4375 C 20.488281 -90.414062 29.617188 -94.40625 41.515625 -94.40625 C 51.710938 -94.40625 59.941406 -91.382812 66.203125 -85.34375 C 72.472656 -79.300781 75.609375 -70.285156 75.609375 -58.296875 L 57.890625 -58.296875 C 57.890625 -65.234375 56.421875 -70.503906 53.484375 -74.109375 C 50.554688 -77.722656 46.566406 -79.53125 41.515625 -79.53125 C 35.203125 -79.53125 30.445312 -76.9375 27.25 -71.75 C 24.050781 -66.5625 22.453125 -59.234375 22.453125 -49.765625 L 22.453125 -43.015625 C 22.453125 -33.546875 24.097656 -26.21875 27.390625 -21.03125 C 30.679688 -15.84375 35.570312 -13.25 42.0625 -13.25 C 47.195312 -13.25 51.253906 -15.03125 54.234375 -18.59375 C 57.210938 -22.15625 58.703125 -27.410156 58.703125 -34.359375 L 75.609375 -34.359375 C 75.609375 -22.628906 72.492188 -13.695312 66.265625 -7.5625 C 60.046875 -1.4375 51.796875 1.625 41.515625 1.625 Z M 41.515625 1.625 "/></g></g></g><g fill="#FFFFFF" fill-opacity="1"><g transform="translate(80.812327, 306.916248)"><g><path d="M 43.140625 1.625 C 30.878906 1.625 21.390625 -2.363281 14.671875 -10.34375 C 7.953125 -18.320312 4.59375 -30.335938 4.59375 -46.390625 C 4.59375 -62.441406 7.953125 -74.457031 14.671875 -82.4375 C 21.390625 -90.414062 30.878906 -94.40625 43.140625 -94.40625 C 55.398438 -94.40625 64.890625 -90.414062 71.609375 -82.4375 C 78.328125 -74.457031 81.6875 -62.441406 81.6875 -46.390625 C 81.6875 -30.335938 78.328125 -18.320312 71.609375 -10.34375 C 64.890625 -2.363281 55.398438 1.625 43.140625 1.625 Z M 43.140625 -13.25 C 49.898438 -13.25 55.039062 -15.84375 58.5625 -21.03125 C 62.082031 -26.21875 63.84375 -33.546875 63.84375 -43.015625 L 63.84375 -49.765625 C 63.84375 -59.234375 62.082031 -66.5625 58.5625 -71.75 C 55.039062 -76.9375 49.898438 -79.53125 43.140625 -79.53125 C 36.378906 -79.53125 31.238281 -76.9375 27.71875 -71.75 C 24.207031 -66.5625 22.453125 -59.234375 22.453125 -49.765625 L 22.453125 -43.015625 C 22.453125 -33.546875 24.207031 -26.21875 27.71875 -21.03125 C 31.238281 -15.84375 36.378906 -13.25 43.140625 -13.25 Z M 43.140625 -13.25 "/></g></g></g><g fill="#FFFFFF" fill-opacity="1"><g transform="translate(167.095833, 306.916248)"><g><path d="M 8.109375 -92.78125 L 23.390625 -92.78125 L 52.078125 -41.65625 C 52.703125 -40.664062 53.488281 -39.15625 54.4375 -37.125 C 55.382812 -35.09375 55.992188 -33.71875 56.265625 -33 L 56.671875 -33.40625 L 56.53125 -41.109375 L 56.53125 -92.78125 L 71.953125 -92.78125 L 71.953125 0 L 56.53125 0 L 27.859375 -51.125 C 27.140625 -52.5625 26.347656 -54.179688 25.484375 -55.984375 C 24.628906 -57.796875 24.023438 -59.0625 23.671875 -59.78125 L 23.125 -59.375 C 23.125 -58.832031 23.164062 -57.796875 23.25 -56.265625 C 23.34375 -54.734375 23.390625 -53.203125 23.390625 -51.671875 L 23.390625 0 L 8.109375 0 Z M 8.109375 -92.78125 "/></g></g></g><g fill="#FFFFFF" fill-opacity="1"><g transform="translate(247.158276, 306.916248)"><g><path d="M 41.515625 1.625 C 29.617188 1.625 20.488281 -2.363281 14.125 -10.34375 C 7.769531 -18.320312 4.59375 -30.335938 4.59375 -46.390625 C 4.59375 -62.441406 7.769531 -74.457031 14.125 -82.4375 C 20.488281 -90.414062 29.617188 -94.40625 41.515625 -94.40625 C 51.710938 -94.40625 59.941406 -91.382812 66.203125 -85.34375 C 72.472656 -79.300781 75.609375 -70.285156 75.609375 -58.296875 L 57.890625 -58.296875 C 57.890625 -65.234375 56.421875 -70.503906 53.484375 -74.109375 C 50.554688 -77.722656 46.566406 -79.53125 41.515625 -79.53125 C 35.203125 -79.53125 30.445312 -76.9375 27.25 -71.75 C 24.050781 -66.5625 22.453125 -59.234375 22.453125 -49.765625 L 22.453125 -43.015625 C 22.453125 -33.546875 24.097656 -26.21875 27.390625 -21.03125 C 30.679688 -15.84375 35.570312 -13.25 42.0625 -13.25 C 47.195312 -13.25 51.253906 -15.03125 54.234375 -18.59375 C 57.210938 -22.15625 58.703125 -27.410156 58.703125 -34.359375 L 75.609375 -34.359375 C 75.609375 -22.628906 72.492188 -13.695312 66.265625 -7.5625 C 60.046875 -1.4375 51.796875 1.625 41.515625 1.625 Z M 41.515625 1.625 "/></g></g></g><g fill="#FFFFFF" fill-opacity="1"><g transform="translate(327.220707, 306.916248)"><g><path d="M 43.140625 1.625 C 30.878906 1.625 21.390625 -2.363281 14.671875 -10.34375 C 7.953125 -18.320312 4.59375 -30.335938 4.59375 -46.390625 C 4.59375 -62.441406 7.953125 -74.457031 14.671875 -82.4375 C 21.390625 -90.414062 30.878906 -94.40625 43.140625 -94.40625 C 55.398438 -94.40625 64.890625 -90.414062 71.609375 -82.4375 C 78.328125 -74.457031 81.6875 -62.441406 81.6875 -46.390625 C 81.6875 -30.335938 78.328125 -18.320312 71.609375 -10.34375 C 64.890625 -2.363281 55.398438 1.625 43.140625 1.625 Z M 43.140625 -13.25 C 49.898438 -13.25 55.039062 -15.84375 58.5625 -21.03125 C 62.082031 -26.21875 63.84375 -33.546875 63.84375 -43.015625 L 63.84375 -49.765625 C 63.84375 -59.234375 62.082031 -66.5625 58.5625 -71.75 C 55.039062 -76.9375 49.898438 -79.53125 43.140625 -79.53125 C 36.378906 -79.53125 31.238281 -76.9375 27.71875 -71.75 C 24.207031 -66.5625 22.453125 -59.234375 22.453125 -49.765625 L 22.453125 -43.015625 C 22.453125 -33.546875 24.207031 -26.21875 27.71875 -21.03125 C 31.238281 -15.84375 36.378906 -13.25 43.140625 -13.25 Z M 43.140625 -13.25 "/></g></g></g><g fill="#FFFFFF" fill-opacity="1"><g transform="translate(413.504226, 306.916248)"><g><path d="M 8.109375 -92.78125 L 46.9375 -92.78125 C 56.039062 -92.78125 63.046875 -90.34375 67.953125 -85.46875 C 72.867188 -80.601562 75.328125 -74.203125 75.328125 -66.265625 C 75.328125 -60.679688 73.953125 -55.8125 71.203125 -51.65625 C 68.453125 -47.507812 64.644531 -44.445312 59.78125 -42.46875 L 77.640625 0 L 58.828125 0 L 43.421875 -38.6875 L 25.421875 -38.6875 L 25.421875 0 L 8.109375 0 Z M 44.5 -53.96875 C 48.550781 -53.96875 51.59375 -55.023438 53.625 -57.140625 C 55.65625 -59.265625 56.671875 -62.304688 56.671875 -66.265625 C 56.671875 -69.785156 55.722656 -72.515625 53.828125 -74.453125 C 51.929688 -76.390625 49.046875 -77.359375 45.171875 -77.359375 L 25.421875 -77.359375 L 25.421875 -53.96875 Z M 44.5 -53.96875 "/></g></g></g><g fill="#FFFFFF" fill-opacity="1"><g transform="translate(493.566657, 306.916248)"><g><path d="M 8.109375 -92.78125 L 38.28125 -92.78125 C 50 -92.78125 59.125 -88.945312 65.65625 -81.28125 C 72.195312 -73.613281 75.46875 -62.4375 75.46875 -47.75 C 75.46875 -32.144531 72.222656 -20.285156 65.734375 -12.171875 C 59.242188 -4.054688 50.09375 0 38.28125 0 L 8.109375 0 Z M 36.65625 -15.421875 C 43.238281 -15.421875 48.375 -17.875 52.0625 -22.78125 C 55.757812 -27.695312 57.609375 -34.890625 57.609375 -44.359375 L 57.609375 -51.125 C 57.609375 -59.6875 55.757812 -66.195312 52.0625 -70.65625 C 48.375 -75.125 43.238281 -77.359375 36.65625 -77.359375 L 25.421875 -77.359375 L 25.421875 -15.421875 Z M 36.65625 -15.421875 "/></g></g></g><g fill="#FFFFFF" fill-opacity="1"><g transform="translate(573.629089, 306.916248)"><g><path d="M 6.765625 -92.78125 L 24.078125 -92.78125 L 24.078125 0 L 6.765625 0 Z M 6.765625 -92.78125 "/></g></g></g><g fill="#FFFFFF" fill-opacity="1"><g transform="translate(604.463893, 306.916248)"><g><path d="M 29.890625 -92.78125 L 50.046875 -92.78125 L 79.9375 0 L 62.21875 0 L 56.53125 -18.265625 L 22.3125 -18.265625 L 16.765625 0 L 0 0 Z M 51.796875 -33.671875 L 42.46875 -64.65625 C 41.832031 -66.632812 41.242188 -69.019531 40.703125 -71.8125 C 40.171875 -74.613281 39.859375 -76.421875 39.765625 -77.234375 L 39.21875 -77.234375 C 39.039062 -76.328125 38.679688 -74.453125 38.140625 -71.609375 C 37.597656 -68.773438 37.054688 -66.457031 36.515625 -64.65625 L 27.046875 -33.671875 Z M 51.796875 -33.671875 "/></g></g></g></g></g></svg></div>
-    <h1 class="login-title">Panel administrativo</h1>
-    <p class="login-sub">Ingresá tu contraseña para continuar</p>
-    <label class="login-label" for="pw-input">Contraseña</label>
-    <input class="login-input" type="password" id="pw-input" placeholder="••••••••" autocomplete="current-password">
-    <button class="login-btn" id="login-btn">Ingresar</button>
-    <p class="login-error" id="login-error">Contraseña incorrecta. Intentá de nuevo.</p>
-    <div class="login-back"><a href="/">← Volver al sitio</a></div>
-  </div>
+<div id="loginScreen" class="login-container">
+<div class="login-box">
+<h2>Panel de Administracion</h2>
+<p style="text-align: center; margin-bottom: 20px; color: #999;">Ingresa tu contrasena</p>
+<form id="loginForm">
+<div class="form-group">
+<label>Contrasena</label>
+<input type="password" id="password" required>
+</div>
+<button type="submit" class="btn" style="width: 100%;">Acceder</button>
+</form>
+</div>
 </div>
 
-<!-- ─── APP ───────────────────────────────────────────────── -->
-<div id="app">
-
-  <!-- Sidebar -->
-  <aside class="sidebar" id="sidebar" role="navigation" aria-label="Navegación admin">
-    <div class="sidebar-logo">
-      <a href="/" class="sidebar-logo-mark" aria-label="Ir al sitio"><svg class="admin-logo-svg" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" zoomAndPan="magnify" viewBox="40 148 1097 393" preserveAspectRatio="xMidYMid meet" version="1.0"><defs><g/><clipPath id="c7c725d30d"><path d="M 66.960938 172.789062 L 204 172.789062 L 204 344 L 66.960938 344 Z M 66.960938 172.789062 " clip-rule="nonzero"/></clipPath><clipPath id="b09cb06645"><path d="M 220 222 L 390.210938 222 L 390.210938 358.789062 L 220 358.789062 Z M 220 222 " clip-rule="nonzero"/></clipPath><clipPath id="8ec5b49331"><path d="M 26.542969 0 L 100 0 L 100 73.636719 L 26.542969 73.636719 Z M 26.542969 0 " clip-rule="nonzero"/></clipPath><clipPath id="4a16b515d8"><path d="M 1 73.574219 L 125.347656 73.574219 L 125.347656 134.351562 L 1 134.351562 Z M 1 73.574219 " clip-rule="nonzero"/></clipPath><clipPath id="a91371e48e"><rect x="0" width="126" y="0" height="135"/></clipPath><clipPath id="d81f1cb520"><path d="M 26.261719 0 L 99.902344 0 L 99.902344 73.636719 L 26.261719 73.636719 Z M 26.261719 0 " clip-rule="nonzero"/></clipPath><clipPath id="901a368752"><path d="M 0.582031 73.574219 L 125.039062 73.574219 L 125.039062 134.351562 L 0.582031 134.351562 Z M 0.582031 73.574219 " clip-rule="nonzero"/></clipPath><clipPath id="8ec5385c98"><rect x="0" width="126" y="0" height="135"/></clipPath><clipPath id="4fea750218"><rect x="0" width="686" y="0" height="337"/></clipPath></defs><g clip-path="url(#c7c725d30d)"><path fill="#4260c0" d="M 190.308594 254.050781 C 195.28125 254.050781 199.683594 255.789062 203.386719 258.683594 L 203.386719 207.058594 L 151.609375 207.058594 C 154.496094 203.015625 156.230469 198.761719 156.226562 193.796875 C 156.226562 182.226562 146.847656 172.773438 135.28125 172.773438 C 123.710938 172.773438 114.332031 182.261719 114.332031 193.832031 C 114.332031 198.796875 116.0625 203.015625 118.949219 207.058594 L 66.96875 207.058594 L 66.96875 343.476562 L 203.386719 343.476562 L 203.386719 291.316406 C 199.683594 294.210938 195.28125 295.949219 190.308594 295.949219 C 178.738281 295.949219 169.359375 286.570312 169.359375 275 C 169.359375 263.429688 178.738281 254.050781 190.308594 254.050781 Z M 190.308594 254.050781 " fill-opacity="1" fill-rule="nonzero"/></g><g clip-path="url(#b09cb06645)"><path fill="#fc9738" d="M 338.679688 222.550781 C 341.574219 225.921875 343.3125 230.601562 343.3125 235.578125 C 343.3125 247.144531 333.933594 256.46875 322.363281 256.46875 C 310.792969 256.46875 301.414062 247.171875 301.414062 235.605469 C 301.414062 230.628906 303.152344 225.921875 306.046875 222.550781 L 253.914062 222.550781 L 253.914062 274.25 C 250.546875 271.34375 245.867188 269.601562 240.886719 269.601562 C 229.316406 269.601562 220 278.980469 220 290.550781 C 220 302.121094 229.285156 311.5 240.855469 311.5 C 245.835938 311.5 250.546875 309.757812 253.914062 306.851562 L 253.914062 358.972656 L 390.332031 358.972656 L 390.332031 222.550781 Z M 338.679688 222.550781 " fill-opacity="1" fill-rule="nonzero"/></g><g transform="matrix(1, 0, 0, 1, 265, 384)"><g clip-path="url(#a91371e48e)"><g clip-path="url(#8ec5b49331)"><path fill="#ffd699" d="M 63.226562 0 C 42.957031 0 26.542969 16.414062 26.542969 36.683594 C 26.542969 56.949219 42.957031 73.363281 63.226562 73.363281 C 83.492188 73.363281 99.90625 56.949219 99.90625 36.683594 C 99.90625 16.414062 83.492188 0 63.226562 0 Z M 63.226562 0 " fill-opacity="1" fill-rule="nonzero"/></g><g clip-path="url(#4a16b515d8)"><path fill="#ff3131" d="M 1.132812 134.351562 C 1.71875 100.578125 29.285156 73.394531 63.234375 73.394531 C 97.144531 73.394531 124.710938 100.578125 125.296875 134.351562 Z M 1.132812 134.351562 " fill-opacity="1" fill-rule="nonzero"/></g></g></g><g transform="matrix(1, 0, 0, 1, 78, 384)"><g clip-path="url(#8ec5385c98)"><g clip-path="url(#d81f1cb520)"><path fill="#ffd699" d="M 62.945312 0 C 42.679688 0 26.261719 16.414062 26.261719 36.683594 C 26.261719 56.949219 42.679688 73.363281 62.945312 73.363281 C 83.210938 73.363281 99.628906 56.949219 99.628906 36.683594 C 99.628906 16.414062 83.210938 0 62.945312 0 Z M 62.945312 0 " fill-opacity="1" fill-rule="nonzero"/></g><g clip-path="url(#901a368752)"><path fill="#39a05a" d="M 0.851562 134.351562 C 1.441406 100.578125 29.007812 73.394531 62.953125 73.394531 C 96.863281 73.394531 124.429688 100.578125 125.015625 134.351562 Z M 0.851562 134.351562 " fill-opacity="1" fill-rule="nonzero"/></g></g></g><g transform="matrix(1, 0, 0, 1, 429, 191)"><g clip-path="url(#4fea750218)"><g fill="#1A1F2D" fill-opacity="1"><g transform="translate(0.749895, 117.783084)"><g><path d="M 8.109375 -92.78125 L 46.9375 -92.78125 C 56.039062 -92.78125 63.046875 -90.34375 67.953125 -85.46875 C 72.867188 -80.601562 75.328125 -74.203125 75.328125 -66.265625 C 75.328125 -60.679688 73.953125 -55.8125 71.203125 -51.65625 C 68.453125 -47.507812 64.644531 -44.445312 59.78125 -42.46875 L 77.640625 0 L 58.828125 0 L 43.421875 -38.6875 L 25.421875 -38.6875 L 25.421875 0 L 8.109375 0 Z M 44.5 -53.96875 C 48.550781 -53.96875 51.59375 -55.023438 53.625 -57.140625 C 55.65625 -59.265625 56.671875 -62.304688 56.671875 -66.265625 C 56.671875 -69.785156 55.722656 -72.515625 53.828125 -74.453125 C 51.929688 -76.390625 49.046875 -77.359375 45.171875 -77.359375 L 25.421875 -77.359375 L 25.421875 -53.96875 Z M 44.5 -53.96875 "/></g></g></g><g fill="#1A1F2D" fill-opacity="1"><g transform="translate(80.812327, 117.783084)"><g><path d="M 8.109375 -92.78125 L 46.9375 -92.78125 C 56.039062 -92.78125 63.046875 -90.34375 67.953125 -85.46875 C 72.867188 -80.601562 75.328125 -74.203125 75.328125 -66.265625 C 75.328125 -60.679688 73.953125 -55.8125 71.203125 -51.65625 C 68.453125 -47.507812 64.644531 -44.445312 59.78125 -42.46875 L 77.640625 0 L 58.828125 0 L 43.421875 -38.6875 L 25.421875 -38.6875 L 25.421875 0 L 8.109375 0 Z M 44.5 -53.96875 C 48.550781 -53.96875 51.59375 -55.023438 53.625 -57.140625 C 55.65625 -59.265625 56.671875 -62.304688 56.671875 -66.265625 C 56.671875 -69.785156 55.722656 -72.515625 53.828125 -74.453125 C 51.929688 -76.390625 49.046875 -77.359375 45.171875 -77.359375 L 25.421875 -77.359375 L 25.421875 -53.96875 Z M 44.5 -53.96875 "/></g></g></g><g fill="#1A1F2D" fill-opacity="1"><g transform="translate(160.874758, 117.783084)"><g><path d="M 6.09375 -18.53125 L 24.75 -18.53125 L 24.75 0 L 6.09375 0 Z M 6.09375 -18.53125 "/></g></g></g><g fill="#1A1F2D" fill-opacity="1"><g transform="translate(191.709611, 117.783084)"><g><path d="M 8.109375 -92.78125 L 25.421875 -92.78125 L 25.421875 -55.1875 L 54.640625 -55.1875 L 54.640625 -92.78125 L 71.953125 -92.78125 L 71.953125 0 L 54.640625 0 L 54.640625 -39.765625 L 25.421875 -39.765625 L 25.421875 0 L 8.109375 0 Z M 8.109375 -92.78125 "/></g></g></g><g fill="#1A1F2D" fill-opacity="1"><g transform="translate(271.772042, 117.783084)"><g><path d="M 8.109375 -92.78125 L 25.421875 -92.78125 L 25.421875 -55.1875 L 54.640625 -55.1875 L 54.640625 -92.78125 L 71.953125 -92.78125 L 71.953125 0 L 54.640625 0 L 54.640625 -39.765625 L 25.421875 -39.765625 L 25.421875 0 L 8.109375 0 Z M 8.109375 -92.78125 "/></g></g></g><g fill="#1A1F2D" fill-opacity="1"><g transform="translate(351.834474, 117.783084)"><g><path d="M 6.09375 -18.53125 L 24.75 -18.53125 L 24.75 0 L 6.09375 0 Z M 6.09375 -18.53125 "/></g></g></g><g fill="#1A1F2D" fill-opacity="1"><g transform="translate(382.670378, 117.783084)"><g/></g></g><g fill="#1A1F2D" fill-opacity="1"><g transform="translate(0.749895, 306.916248)"><g><path d="M 41.515625 1.625 C 29.617188 1.625 20.488281 -2.363281 14.125 -10.34375 C 7.769531 -18.320312 4.59375 -30.335938 4.59375 -46.390625 C 4.59375 -62.441406 7.769531 -74.457031 14.125 -82.4375 C 20.488281 -90.414062 29.617188 -94.40625 41.515625 -94.40625 C 51.710938 -94.40625 59.941406 -91.382812 66.203125 -85.34375 C 72.472656 -79.300781 75.609375 -70.285156 75.609375 -58.296875 L 57.890625 -58.296875 C 57.890625 -65.234375 56.421875 -70.503906 53.484375 -74.109375 C 50.554688 -77.722656 46.566406 -79.53125 41.515625 -79.53125 C 35.203125 -79.53125 30.445312 -76.9375 27.25 -71.75 C 24.050781 -66.5625 22.453125 -59.234375 22.453125 -49.765625 L 22.453125 -43.015625 C 22.453125 -33.546875 24.097656 -26.21875 27.390625 -21.03125 C 30.679688 -15.84375 35.570312 -13.25 42.0625 -13.25 C 47.195312 -13.25 51.253906 -15.03125 54.234375 -18.59375 C 57.210938 -22.15625 58.703125 -27.410156 58.703125 -34.359375 L 75.609375 -34.359375 C 75.609375 -22.628906 72.492188 -13.695312 66.265625 -7.5625 C 60.046875 -1.4375 51.796875 1.625 41.515625 1.625 Z M 41.515625 1.625 "/></g></g></g><g fill="#1A1F2D" fill-opacity="1"><g transform="translate(80.812327, 306.916248)"><g><path d="M 43.140625 1.625 C 30.878906 1.625 21.390625 -2.363281 14.671875 -10.34375 C 7.953125 -18.320312 4.59375 -30.335938 4.59375 -46.390625 C 4.59375 -62.441406 7.953125 -74.457031 14.671875 -82.4375 C 21.390625 -90.414062 30.878906 -94.40625 43.140625 -94.40625 C 55.398438 -94.40625 64.890625 -90.414062 71.609375 -82.4375 C 78.328125 -74.457031 81.6875 -62.441406 81.6875 -46.390625 C 81.6875 -30.335938 78.328125 -18.320312 71.609375 -10.34375 C 64.890625 -2.363281 55.398438 1.625 43.140625 1.625 Z M 43.140625 -13.25 C 49.898438 -13.25 55.039062 -15.84375 58.5625 -21.03125 C 62.082031 -26.21875 63.84375 -33.546875 63.84375 -43.015625 L 63.84375 -49.765625 C 63.84375 -59.234375 62.082031 -66.5625 58.5625 -71.75 C 55.039062 -76.9375 49.898438 -79.53125 43.140625 -79.53125 C 36.378906 -79.53125 31.238281 -76.9375 27.71875 -71.75 C 24.207031 -66.5625 22.453125 -59.234375 22.453125 -49.765625 L 22.453125 -43.015625 C 22.453125 -33.546875 24.207031 -26.21875 27.71875 -21.03125 C 31.238281 -15.84375 36.378906 -13.25 43.140625 -13.25 Z M 43.140625 -13.25 "/></g></g></g><g fill="#1A1F2D" fill-opacity="1"><g transform="translate(167.095833, 306.916248)"><g><path d="M 8.109375 -92.78125 L 23.390625 -92.78125 L 52.078125 -41.65625 C 52.703125 -40.664062 53.488281 -39.15625 54.4375 -37.125 C 55.382812 -35.09375 55.992188 -33.71875 56.265625 -33 L 56.671875 -33.40625 L 56.53125 -41.109375 L 56.53125 -92.78125 L 71.953125 -92.78125 L 71.953125 0 L 56.53125 0 L 27.859375 -51.125 C 27.140625 -52.5625 26.347656 -54.179688 25.484375 -55.984375 C 24.628906 -57.796875 24.023438 -59.0625 23.671875 -59.78125 L 23.125 -59.375 C 23.125 -58.832031 23.164062 -57.796875 23.25 -56.265625 C 23.34375 -54.734375 23.390625 -53.203125 23.390625 -51.671875 L 23.390625 0 L 8.109375 0 Z M 8.109375 -92.78125 "/></g></g></g><g fill="#1A1F2D" fill-opacity="1"><g transform="translate(247.158276, 306.916248)"><g><path d="M 41.515625 1.625 C 29.617188 1.625 20.488281 -2.363281 14.125 -10.34375 C 7.769531 -18.320312 4.59375 -30.335938 4.59375 -46.390625 C 4.59375 -62.441406 7.769531 -74.457031 14.125 -82.4375 C 20.488281 -90.414062 29.617188 -94.40625 41.515625 -94.40625 C 51.710938 -94.40625 59.941406 -91.382812 66.203125 -85.34375 C 72.472656 -79.300781 75.609375 -70.285156 75.609375 -58.296875 L 57.890625 -58.296875 C 57.890625 -65.234375 56.421875 -70.503906 53.484375 -74.109375 C 50.554688 -77.722656 46.566406 -79.53125 41.515625 -79.53125 C 35.203125 -79.53125 30.445312 -76.9375 27.25 -71.75 C 24.050781 -66.5625 22.453125 -59.234375 22.453125 -49.765625 L 22.453125 -43.015625 C 22.453125 -33.546875 24.097656 -26.21875 27.390625 -21.03125 C 30.679688 -15.84375 35.570312 -13.25 42.0625 -13.25 C 47.195312 -13.25 51.253906 -15.03125 54.234375 -18.59375 C 57.210938 -22.15625 58.703125 -27.410156 58.703125 -34.359375 L 75.609375 -34.359375 C 75.609375 -22.628906 72.492188 -13.695312 66.265625 -7.5625 C 60.046875 -1.4375 51.796875 1.625 41.515625 1.625 Z M 41.515625 1.625 "/></g></g></g><g fill="#1A1F2D" fill-opacity="1"><g transform="translate(327.220707, 306.916248)"><g><path d="M 43.140625 1.625 C 30.878906 1.625 21.390625 -2.363281 14.671875 -10.34375 C 7.953125 -18.320312 4.59375 -30.335938 4.59375 -46.390625 C 4.59375 -62.441406 7.953125 -74.457031 14.671875 -82.4375 C 21.390625 -90.414062 30.878906 -94.40625 43.140625 -94.40625 C 55.398438 -94.40625 64.890625 -90.414062 71.609375 -82.4375 C 78.328125 -74.457031 81.6875 -62.441406 81.6875 -46.390625 C 81.6875 -30.335938 78.328125 -18.320312 71.609375 -10.34375 C 64.890625 -2.363281 55.398438 1.625 43.140625 1.625 Z M 43.140625 -13.25 C 49.898438 -13.25 55.039062 -15.84375 58.5625 -21.03125 C 62.082031 -26.21875 63.84375 -33.546875 63.84375 -43.015625 L 63.84375 -49.765625 C 63.84375 -59.234375 62.082031 -66.5625 58.5625 -71.75 C 55.039062 -76.9375 49.898438 -79.53125 43.140625 -79.53125 C 36.378906 -79.53125 31.238281 -76.9375 27.71875 -71.75 C 24.207031 -66.5625 22.453125 -59.234375 22.453125 -49.765625 L 22.453125 -43.015625 C 22.453125 -33.546875 24.207031 -26.21875 27.71875 -21.03125 C 31.238281 -15.84375 36.378906 -13.25 43.140625 -13.25 Z M 43.140625 -13.25 "/></g></g></g><g fill="#1A1F2D" fill-opacity="1"><g transform="translate(413.504226, 306.916248)"><g><path d="M 8.109375 -92.78125 L 46.9375 -92.78125 C 56.039062 -92.78125 63.046875 -90.34375 67.953125 -85.46875 C 72.867188 -80.601562 75.328125 -74.203125 75.328125 -66.265625 C 75.328125 -60.679688 73.953125 -55.8125 71.203125 -51.65625 C 68.453125 -47.507812 64.644531 -44.445312 59.78125 -42.46875 L 77.640625 0 L 58.828125 0 L 43.421875 -38.6875 L 25.421875 -38.6875 L 25.421875 0 L 8.109375 0 Z M 44.5 -53.96875 C 48.550781 -53.96875 51.59375 -55.023438 53.625 -57.140625 C 55.65625 -59.265625 56.671875 -62.304688 56.671875 -66.265625 C 56.671875 -69.785156 55.722656 -72.515625 53.828125 -74.453125 C 51.929688 -76.390625 49.046875 -77.359375 45.171875 -77.359375 L 25.421875 -77.359375 L 25.421875 -53.96875 Z M 44.5 -53.96875 "/></g></g></g><g fill="#1A1F2D" fill-opacity="1"><g transform="translate(493.566657, 306.916248)"><g><path d="M 8.109375 -92.78125 L 38.28125 -92.78125 C 50 -92.78125 59.125 -88.945312 65.65625 -81.28125 C 72.195312 -73.613281 75.46875 -62.4375 75.46875 -47.75 C 75.46875 -32.144531 72.222656 -20.285156 65.734375 -12.171875 C 59.242188 -4.054688 50.09375 0 38.28125 0 L 8.109375 0 Z M 36.65625 -15.421875 C 43.238281 -15.421875 48.375 -17.875 52.0625 -22.78125 C 55.757812 -27.695312 57.609375 -34.890625 57.609375 -44.359375 L 57.609375 -51.125 C 57.609375 -59.6875 55.757812 -66.195312 52.0625 -70.65625 C 48.375 -75.125 43.238281 -77.359375 36.65625 -77.359375 L 25.421875 -77.359375 L 25.421875 -15.421875 Z M 36.65625 -15.421875 "/></g></g></g><g fill="#1A1F2D" fill-opacity="1"><g transform="translate(573.629089, 306.916248)"><g><path d="M 6.765625 -92.78125 L 24.078125 -92.78125 L 24.078125 0 L 6.765625 0 Z M 6.765625 -92.78125 "/></g></g></g><g fill="#1A1F2D" fill-opacity="1"><g transform="translate(604.463893, 306.916248)"><g><path d="M 29.890625 -92.78125 L 50.046875 -92.78125 L 79.9375 0 L 62.21875 0 L 56.53125 -18.265625 L 22.3125 -18.265625 L 16.765625 0 L 0 0 Z M 51.796875 -33.671875 L 42.46875 -64.65625 C 41.832031 -66.632812 41.242188 -69.019531 40.703125 -71.8125 C 40.171875 -74.613281 39.859375 -76.421875 39.765625 -77.234375 L 39.21875 -77.234375 C 39.039062 -76.328125 38.679688 -74.453125 38.140625 -71.609375 C 37.597656 -68.773438 37.054688 -66.457031 36.515625 -64.65625 L 27.046875 -33.671875 Z M 51.796875 -33.671875 "/></g></g></g></g></g></svg></a>
-      <span class="sidebar-badge">Panel admin</span>
-    </div>
-
-    <nav class="sidebar-nav">
-      <div class="sidebar-section">Principal</div>
-      <a class="nav-item active" data-page="dashboard" href="#">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
-        Resumen
-      </a>
-      <a class="nav-item" data-page="vacantes" href="#">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
-        Vacantes
-      </a>
-      <a class="nav-item" data-page="candidatos" href="#">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-        Candidatos
-      </a>
-      <a class="nav-item" data-page="cvs" href="#">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-        CVs recibidos
-      </a>
-      <div class="sidebar-section">Configuración</div>
-      <a class="nav-item" data-page="empresa" href="#">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>
-        Información empresa
-      </a>
-    </nav>
-
-    <div class="sidebar-footer">
-      <div class="sidebar-user">
-        <div class="sidebar-avatar">AD</div>
-        <div class="sidebar-user-info">
-          <div class="sidebar-user-name">Administrador</div>
-          <div class="sidebar-user-role">RRHH Concordia</div>
-        </div>
-        <button class="logout-btn" id="logout-btn" aria-label="Cerrar sesión">
-          <svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
-        </button>
-      </div>
-    </div>
-  </aside>
-
-  <!-- Main -->
-  <main class="main" role="main">
-
-    <!-- Topbar -->
-    <div class="topbar">
-      <div>
-        <h1 class="page-title" id="page-title">Resumen</h1>
-        <p class="page-sub" id="page-sub">Vista general del sistema</p>
-      </div>
-      <div id="topbar-actions"></div>
-    </div>
-
-    <!-- ── DASHBOARD ─────────────────────────────────────────── -->
-    <div class="page active" id="page-dashboard">
-      <div class="stats-grid" id="stats-grid">
-        <div class="stat-card">
-          <div class="stat-label">Vacantes activas</div>
-          <div class="stat-value" id="stat-vacantes">—</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-label">Candidatos totales</div>
-          <div class="stat-value" id="stat-candidatos">—</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-label">CVs recibidos</div>
-          <div class="stat-value" id="stat-cvs">—</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-label">Postulaciones hoy</div>
-          <div class="stat-value" id="stat-hoy">—</div>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="card-header">
-          <span class="card-title">Últimas postulaciones</span>
-          <a class="btn btn-outline btn-sm" data-page="candidatos" href="#">Ver todas</a>
-        </div>
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>Candidato</th>
-                <th>Vacante</th>
-                <th>Fecha</th>
-                <th>Estado</th>
-              </tr>
-            </thead>
-            <tbody id="recent-postulaciones">
-              <tr><td colspan="4"><div class="empty-state">
-                <div class="empty-icon"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div>
-                <span class="empty-title">Cargando...</span>
-              </div></td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-
-    <!-- ── VACANTES ───────────────────────────────────────────── -->
-    <div class="page" id="page-vacantes">
-      <div class="card">
-        <div class="card-header">
-          <span class="card-title">Gestión de vacantes</span>
-          <button class="btn btn-blue" id="btn-nueva-vacante">
-            <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-            Nueva vacante
-          </button>
-        </div>
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>Puesto</th>
-                <th>Estado</th>
-                <th>Postulantes</th>
-                <th>Creada</th>
-                <th style="text-align:right">Acciones</th>
-              </tr>
-            </thead>
-            <tbody id="tabla-vacantes">
-              <tr><td colspan="5"><div class="empty-state">
-                <div class="empty-icon"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
-                <span class="empty-title">Cargando vacantes...</span>
-              </div></td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-
-    <!-- ── CANDIDATOS ─────────────────────────────────────────── -->
-    <div class="page" id="page-candidatos">
-      <div class="card">
-        <div class="card-header">
-          <div class="tabs" id="candidatos-tabs">
-            <button class="tab-btn active" data-filter="all">Todos</button>
-          </div>
-          <div class="search-wrap">
-            <div class="search-icon"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></div>
-            <input type="search" class="search-input" id="search-candidatos" placeholder="Buscar candidato...">
-          </div>
-        </div>
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>Candidato</th>
-                <th>Vacante</th>
-                <th>Fecha</th>
-                <th>CV</th>
-                <th style="text-align:right">Acciones</th>
-              </tr>
-            </thead>
-            <tbody id="tabla-candidatos">
-              <tr><td colspan="5"><div class="empty-state">
-                <div class="empty-icon"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div>
-                <span class="empty-title">Cargando candidatos...</span>
-              </div></td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-
-    <!-- ── CVS RECIBIDOS ──────────────────────────────────────── -->
-    <div class="page" id="page-cvs">
-      <div class="card">
-        <div class="card-header">
-          <span class="card-title">CVs espontáneos</span>
-          <span class="badge badge-blue" id="cvs-count">Cargando...</span>
-        </div>
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>Nombre</th>
-                <th>Email</th>
-                <th>Área de interés</th>
-                <th>Fecha</th>
-                <th>CV</th>
-              </tr>
-            </thead>
-            <tbody id="tabla-cvs">
-              <tr><td colspan="5"><div class="empty-state">
-                <div class="empty-icon"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg></div>
-                <span class="empty-title">Cargando CVs...</span>
-              </div></td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-
-    <!-- ── INFORMACIÓN EMPRESA ────────────────────────────────── -->
-    <div class="page" id="page-empresa">
-      <div class="card">
-        <div class="card-header">
-          <span class="card-title">Información de la empresa</span>
-          <button class="btn btn-blue" id="btn-guardar-empresa">Guardar cambios</button>
-        </div>
-        <div class="card-body">
-          <div class="info-grid">
-            <div>
-              <div class="form-group">
-                <label class="form-label" for="emp-sobre">Sobre RRHH Concordia</label>
-                <textarea class="form-textarea" id="emp-sobre" rows="5" placeholder="Descripción de la empresa..."></textarea>
-              </div>
-              <div class="form-group">
-                <label class="form-label" for="emp-servicios">Servicios</label>
-                <textarea class="form-textarea" id="emp-servicios" rows="5" placeholder="Lista de servicios..."></textarea>
-              </div>
-            </div>
-            <div>
-              <div class="form-group">
-                <label class="form-label" for="emp-email">Email de contacto</label>
-                <input class="form-input" type="email" id="emp-email" placeholder="email@empresa.com">
-              </div>
-              <div class="form-group">
-                <label class="form-label" for="emp-tel">Teléfono</label>
-                <input class="form-input" type="tel" id="emp-tel" placeholder="+54 345 0000000">
-              </div>
-              <div class="form-group">
-                <label class="form-label" for="emp-dir">Dirección</label>
-                <input class="form-input" type="text" id="emp-dir" placeholder="Concordia, Entre Ríos">
-              </div>
-              <div class="form-group">
-                <label class="form-label" for="emp-whatsapp">WhatsApp</label>
-                <input class="form-input" type="tel" id="emp-whatsapp" placeholder="+54 345 0000000">
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-  </main>
+<div id="adminPanel" class="hidden">
+<div class="header">
+<h1>Panel de Administracion</h1>
+<button class="btn btn-danger" onclick="logout()">Cerrar sesion</button>
+</div>
+<div class="container">
+<div class="tabs">
+<button class="tab active" onclick="cambiarTab('vacantes')">Vacantes</button>
+<button class="tab" onclick="cambiarTab('candidatos')">Candidatos</button>
+<button class="tab" onclick="cambiarTab('config')">Configuracion</button>
 </div>
 
-<!-- ─── DRAWER — Nueva / Editar Vacante ──────────────────── -->
-<div class="drawer-overlay" id="drawerOverlay">
-  <div class="drawer" role="dialog" aria-modal="true" aria-labelledby="drawer-title">
-    <div class="drawer-header">
-      <h2 class="drawer-title" id="drawer-title">Nueva vacante</h2>
-      <button class="drawer-close" id="drawer-close-btn" aria-label="Cerrar">&times;</button>
-    </div>
-    <div class="drawer-body">
-      <input type="hidden" id="vac-id">
-      <div class="form-grid-2">
-        <div class="form-group" style="grid-column:1/-1">
-          <label class="form-label" for="vac-titulo">Título del puesto</label>
-          <input class="form-input" type="text" id="vac-titulo" placeholder="Ej: Responsable de Logística">
-        </div>
-        <div class="form-group">
-          <label class="form-label" for="vac-empresa">Empresa / Área</label>
-          <input class="form-input" type="text" id="vac-empresa" placeholder="Ej: Empresa industrial">
-        </div>
-        <div class="form-group">
-          <label class="form-label" for="vac-estado">Estado</label>
-          <select class="form-select" id="vac-estado">
-            <option value="true">Activa</option>
-            <option value="false">Pausada</option>
-          </select>
-        </div>
-      </div>
-      <div class="form-group">
-        <label class="form-label" for="vac-imagen">Imagen de la vacante</label>
-        <div id="vac-imagen-preview" style="display:none;margin-bottom:8px;border-radius:8px;overflow:hidden;height:120px;background:#f0f0f0">
-          <img id="vac-imagen-img" src="" alt="Preview" style="width:100%;height:100%;object-fit:cover">
-        </div>
-        <input class="form-input" type="file" id="vac-imagen-file" accept="image/*" style="padding:8px;cursor:pointer">
-        <input type="hidden" id="vac-imagen-url">
-        <p style="font-size:11px;color:var(--text3);margin-top:4px">JPG o PNG. Se mostrará en la card de la vacante.</p>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Descripción</label>
-        <div class="rte-toolbar">
-          <button class="rte-btn" onclick="rteCmd('bold')" title="Negrita"><b>N</b></button>
-          <button class="rte-btn" onclick="rteCmd('italic')" title="Cursiva"><i>I</i></button>
-          <button class="rte-btn" onclick="rteCmd('insertUnorderedList')" title="Lista">•</button>
-        </div>
-        <div class="rte-area" id="vac-descripcion" contenteditable="true" role="textbox" aria-multiline="true" aria-label="Descripción de la vacante"></div>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Requisitos</label>
-        <div class="rte-toolbar">
-          <button class="rte-btn" onclick="rteCmd2('bold')"><b>N</b></button>
-          <button class="rte-btn" onclick="rteCmd2('italic')"><i>I</i></button>
-          <button class="rte-btn" onclick="rteCmd2('insertUnorderedList')">•</button>
-        </div>
-        <div class="rte-area" id="vac-requisitos" contenteditable="true" role="textbox" aria-multiline="true" aria-label="Requisitos de la vacante"></div>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Ofrecimientos</label>
-        <div class="rte-toolbar">
-          <button class="rte-btn" onclick="rteCmd3('bold')"><b>N</b></button>
-          <button class="rte-btn" onclick="rteCmd3('italic')"><i>I</i></button>
-          <button class="rte-btn" onclick="rteCmd3('insertUnorderedList')">•</button>
-        </div>
-        <div class="rte-area" id="vac-ofrecimientos" contenteditable="true" role="textbox" aria-multiline="true" aria-label="Ofrecimientos de la vacante"></div>
-      </div>
-    </div>
-    <div class="drawer-footer">
-      <button class="btn btn-outline" id="drawer-cancel-btn">Cancelar</button>
-      <button class="btn btn-blue" id="drawer-save-btn">Publicar vacante</button>
-    </div>
-  </div>
+<div id="tabVacantes" class="tab-content active">
+<button class="btn btn-success" onclick="abrirModalVacante()">+ Nueva Vacante</button>
+<table class="table">
+<thead>
+<tr>
+<th>Titulo</th>
+<th>Ubicacion</th>
+<th>Tipo</th>
+<th>Rubro</th>
+<th>Fecha</th>
+<th>Acciones</th>
+</tr>
+</thead>
+<tbody id="listaVacantes"></tbody>
+</table>
 </div>
 
-<!-- ─── CONFIRM MODAL ─────────────────────────────────────── -->
-<div class="confirm-overlay" id="confirmOverlay">
-  <div class="confirm-card">
-    <h3 class="confirm-title" id="confirm-title">¿Confirmar acción?</h3>
-    <p class="confirm-text" id="confirm-text">Esta acción no se puede deshacer.</p>
-    <div class="confirm-actions">
-      <button class="btn btn-outline btn-sm" id="confirm-cancel">Cancelar</button>
-      <button class="btn btn-danger btn-sm" id="confirm-ok">Confirmar</button>
-    </div>
-  </div>
+<div id="tabCandidatos" class="tab-content">
+<div class="filters">
+<div style="flex: 1; min-width: 200px;">
+<label>Filtrar por Rubro</label>
+<select id="filtroRubro" onchange="cargarCandidatos()">
+<option value="">— Todos los rubros —</option>
+<option value="Trade Marketing">Trade Marketing</option>
+<option value="Operario Polivalente">Operario Polivalente</option>
+<option value="Administrativo">Administrativo</option>
+<option value="Otro">Otro</option>
+</select>
+</div>
+<div style="flex: 1; min-width: 200px;">
+<label>Filtrar por Vacante</label>
+<select id="filtroVacante" onchange="cargarCandidatos()">
+<option value="">— Todas las vacantes —</option>
+<div id="listaVacantesSelect"></div>
+</select>
+</div>
 </div>
 
-<!-- ─── TOASTS ─────────────────────────────────────────────── -->
-<div class="toast-container" id="toast-container" aria-live="polite" aria-atomic="true"></div>
+<table class="table">
+<thead>
+<tr>
+<th>Nombre</th>
+<th>Email</th>
+<th>Telefono</th>
+<th>Rubro</th>
+<th>Vacante</th>
+<th>Score</th>
+<th>Fecha</th>
+<th>Acciones</th>
+</tr>
+</thead>
+<tbody id="listaCandidatos"></tbody>
+</table>
+</div>
 
-<!-- ─── SCRIPT ─────────────────────────────────────────────── -->
+<div id="tabConfig" class="tab-content">
+<div class="card">
+<h3>Cambiar Contrasena</h3>
+<form id="formPassword">
+<div class="form-group">
+<label>Nueva contrasena</label>
+<input type="password" id="newPassword" required minlength="6">
+</div>
+<button type="submit" class="btn">Actualizar</button>
+</form>
+</div>
+</div>
+</div>
+</div>
+
+<!-- Modal Vacante -->
+<div class="modal" id="modalVacante">
+<div class="modal-content">
+<h2>Nueva Vacante</h2>
+<form id="formVacante">
+<div class="form-group">
+<label>Titulo del puesto</label>
+<input type="text" name="titulo" required>
+</div>
+<div class="form-group">
+<label>Ubicacion</label>
+<input type="text" name="ubicacion" required>
+</div>
+<div class="form-group">
+<label>Rubro</label>
+<select name="rubro" required>
+<option value="Trade Marketing">Trade Marketing</option>
+<option value="Operario Polivalente">Operario Polivalente</option>
+<option value="Administrativo">Administrativo</option>
+<option value="Otro">Otro</option>
+</select>
+</div>
+<div class="form-group">
+<label>Tipo de contrato</label>
+<select name="tipo" required>
+<option value="Full-time">Full-time</option>
+<option value="Part-time">Part-time</option>
+<option value="Contrato">Contrato</option>
+<option value="Pasantia">Pasantia</option>
+</select>
+</div>
+<div class="form-group">
+<label>Descripcion</label>
+<textarea name="descripcion" required rows="5"></textarea>
+</div>
+<div class="btn-group">
+<button type="submit" class="btn btn-success">Publicar</button>
+<button type="button" class="btn btn-danger" onclick="cerrarModal('modalVacante')">Cancelar</button>
+</div>
+</form>
+</div>
+</div>
+
+<!-- Modal Detalles Candidato -->
+<div class="modal" id="modalCandidato">
+<div class="modal-content">
+<h2 id="modalCandidatoNombre"></h2>
+<div id="modalCandidatoBody"></div>
+<div class="btn-group">
+<button type="button" class="btn btn-danger" onclick="eliminarCandidato(window.candidatoActual)">Eliminar</button>
+<button type="button" class="btn btn-danger" onclick="cerrarModal('modalCandidato')">Cerrar</button>
+</div>
+</div>
+</div>
+
+<!-- Modal Scoring -->
+<div class="modal" id="modalScoring">
+<div class="modal-content">
+<h2>Evaluar Candidato</h2>
+<div id="modalScoringBody"></div>
+<div class="btn-group">
+<button type="submit" class="btn btn-success" onclick="guardarScoring()">Guardar Evaluacion</button>
+<button type="button" class="btn btn-danger" onclick="cerrarModal('modalScoring')">Cancelar</button>
+</div>
+</div>
+</div>
+
 <script>
-
-/* ── Auth ──────────────────────────────────────────────────── */
-const PASS_KEY = 'rrhh_admin_auth';
-
-function getStoredPass() {
-  try {
-    const raw = localStorage.getItem(PASS_KEY);
-    return raw ? JSON.parse(raw) : null;
-  } catch { return null; }
+document.getElementById('loginForm').addEventListener('submit', async (e) => {
+e.preventDefault();
+const password = document.getElementById('password').value;
+const res = await fetch('/api/login', {
+method: 'POST',
+headers: { 'Content-Type': 'application/json' },
+body: JSON.stringify({ username: 'admin', password })
+});
+if (res.ok) {
+document.getElementById('loginScreen').classList.add('hidden');
+document.getElementById('adminPanel').classList.remove('hidden');
+cargarDatos();
+} else {
+alert('Contrasena incorrecta');
 }
-
-async function fetchAdminPass() {
-  try {
-    const r = await fetch('/api/admin-config');
-    if (r.ok) {
-      const d = await r.json();
-      return d.password || d.contraseña || null;
-    }
-  } catch {}
-  return null;
-}
-
-async function checkLogin(inputPass) {
-  // Intenta verificar contra la API primero
-  try {
-    const r = await fetch('/api/admin/login', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ password: inputPass })
-    });
-    if (r.ok) return true;
-    if (r.status === 401) return false;
-  } catch {}
-
-  // Fallback: compara con db.json via endpoint existente
-  const stored = getStoredPass();
-  if (stored && stored === inputPass) return true;
-
-  // Fallback final: contraseña hardcodeada como último recurso
-  return inputPass === 'peri657098';
-}
-
-document.getElementById('login-btn').addEventListener('click', async () => {
-  const pw = document.getElementById('pw-input').value;
-  if (!pw) return;
-  const btn = document.getElementById('login-btn');
-  btn.textContent = 'Verificando...';
-  btn.disabled = true;
-
-  const ok = await checkLogin(pw);
-  if (ok) {
-    sessionStorage.setItem(PASS_KEY, '1');
-    document.getElementById('login-screen').style.display = 'none';
-    document.getElementById('app').style.display = 'block';
-    initApp();
-  } else {
-    document.getElementById('login-error').style.display = 'block';
-    btn.textContent = 'Ingresar';
-    btn.disabled = false;
-    document.getElementById('pw-input').focus();
-  }
 });
 
-document.getElementById('pw-input').addEventListener('keydown', e => {
-  if (e.key === 'Enter') document.getElementById('login-btn').click();
+async function logout() {
+await fetch('/api/logout', { method: 'POST' });
+location.reload();
+}
+
+function cambiarTab(tab) {
+document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+event.target.classList.add('active');
+document.getElementById('tab' + tab.charAt(0).toUpperCase() + tab.slice(1)).classList.add('active');
+}
+
+function abrirModalVacante() {
+document.getElementById('modalVacante').classList.add('active');
+}
+
+function cerrarModal(id) {
+document.getElementById(id).classList.remove('active');
+}
+
+document.getElementById('formVacante').addEventListener('submit', async (e) => {
+e.preventDefault();
+const formData = new FormData(e.target);
+const data = Object.fromEntries(formData);
+await fetch('/api/vacantes', {
+method: 'POST',
+headers: { 'Content-Type': 'application/json' },
+body: JSON.stringify(data)
+});
+cerrarModal('modalVacante');
+e.target.reset();
+cargarVacantes();
 });
 
-document.getElementById('logout-btn').addEventListener('click', () => {
-  sessionStorage.removeItem(PASS_KEY);
-  location.reload();
+document.getElementById('formPassword').addEventListener('submit', async (e) => {
+e.preventDefault();
+const newPassword = document.getElementById('newPassword').value;
+await fetch('/api/change-password', {
+method: 'POST',
+headers: { 'Content-Type': 'application/json' },
+body: JSON.stringify({ newPassword })
+});
+alert('Contrasena actualizada');
+document.getElementById('newPassword').value = '';
 });
 
-// Auto-login si ya está autenticado en esta sesión
-if (sessionStorage.getItem(PASS_KEY)) {
-  document.getElementById('login-screen').style.display = 'none';
-  document.getElementById('app').style.display = 'block';
-  initApp();
+async function cargarVacantes() {
+const res = await fetch('/api/vacantes');
+const vacantes = await res.json();
+const tbody = document.getElementById('listaVacantes');
+const select = document.getElementById('listaVacantesSelect');
+
+tbody.innerHTML = vacantes.map(v => `
+<tr>
+<td>${v.titulo}</td>
+<td>${v.ubicacion}</td>
+<td>${v.tipo}</td>
+<td>${v.rubro || 'N/A'}</td>
+<td>${new Date(v.fecha).toLocaleDateString()}</td>
+<td><button class="btn btn-danger" onclick="eliminarVacante(${v.id})">Eliminar</button></td>
+</tr>
+`).join('');
+
+select.innerHTML = vacantes.map(v => `<option value="${v.id}">${v.titulo}</option>`).join('');
 }
 
-/* ── Navigation ────────────────────────────────────────────── */
-const PAGE_META = {
-  dashboard:  { title: 'Resumen',            sub: 'Vista general del sistema' },
-  vacantes:   { title: 'Vacantes',            sub: 'Gestioná y publicá posiciones abiertas' },
-  candidatos: { title: 'Candidatos',          sub: 'Postulaciones recibidas' },
-  cvs:        { title: 'CVs espontáneos',     sub: 'Perfiles sin postulación específica' },
-  empresa:    { title: 'Información empresa', sub: 'Datos visibles en el sitio público' },
-};
+async function eliminarVacante(id) {
+if (!confirm('Eliminar esta vacante?')) return;
+await fetch('/api/vacantes/' + id, { method: 'DELETE' });
+cargarVacantes();
+}
 
-document.querySelectorAll('.nav-item[data-page]').forEach(item => {
-  item.addEventListener('click', e => {
-    e.preventDefault();
-    navigateTo(item.dataset.page);
-  });
+let window.candidatoActual = null;
+
+async function cargarCandidatos() {
+const filtroRubro = document.getElementById('filtroRubro').value;
+const filtroVacante = document.getElementById('filtroVacante').value;
+const url = new URL('/api/candidatos', window.location.origin);
+if (filtroRubro) url.searchParams.append('rubro', filtroRubro);
+
+const res = await fetch(url, { headers: { 'Content-Type': 'application/json' } });
+let candidatos = await res.json();
+
+if (filtroVacante) {
+candidatos = candidatos.filter(c => c.vacanteId == filtroVacante);
+}
+
+const resVacantes = await fetch('/api/vacantes');
+const vacantes = await resVacantes.json();
+const tbody = document.getElementById('listaCandidatos');
+
+tbody.innerHTML = candidatos.map(c => {
+const vacante = vacantes.find(v => v.id == c.vacanteId);
+const score = c.scoring ? c.scoring.score : '—';
+const scoreBadge = c.scoring ? `<span class="score-badge score-${score >= 70 ? 'high' : score >= 50 ? 'medium' : 'low'}">${score}</span>` : '<span class="score-badge">Sin evaluar</span>';
+
+return `
+<tr>
+<td>${c.nombre}</td>
+<td>${c.email}</td>
+<td>${c.telefono}</td>
+<td>${c.rubro || 'N/A'}</td>
+<td>${vacante ? vacante.titulo : 'N/A'}</td>
+<td>${scoreBadge}</td>
+<td>${new Date(c.fecha).toLocaleDateString()}</td>
+<td style="display: flex; gap: 5px;">
+<button class="btn btn-primary" onclick="abrirDetalleCandidato(${c.id})">Ver</button>
+<button class="btn btn-success" onclick="abrirScoring(${c.id})">Evaluar</button>
+<button class="btn btn-danger" onclick="eliminarCandidato(${c.id})">Eliminar</button>
+</td>
+</tr>
+`;
+}).join('');
+}
+
+async function abrirDetalleCandidato(id) {
+const res = await fetch('/api/candidatos');
+const candidatos = await res.json();
+const c = candidatos.find(x => x.id == id);
+window.candidatoActual = id;
+
+let scoringHTML = '';
+if (c.scoring) {
+scoringHTML = `
+<div class="modal-section">
+<h4>Evaluación</h4>
+<p><strong>Score:</strong> ${c.scoring.score}/100</p>
+<p><strong>Fortalezas:</strong></p>
+<p>${c.scoring.fortalezas}</p>
+<p><strong>Debilidades:</strong></p>
+<p>${c.scoring.debilidades}</p>
+<p><strong>Recomendacion:</strong></p>
+<p>${c.scoring.recomendacion}</p>
+<p style="font-size: 12px; color: #999;">Evaluado: ${new Date(c.scoring.fechaEvaluacion).toLocaleString()}</p>
+</div>
+`;
+}
+
+document.getElementById('modalCandidatoNombre').innerHTML = c.nombre;
+document.getElementById('modalCandidatoBody').innerHTML = `
+<div class="modal-section">
+<h4>Informacion Personal</h4>
+<p><strong>Email:</strong> ${c.email}</p>
+<p><strong>Telefono:</strong> ${c.telefono}</p>
+<p><strong>Rubro:</strong> ${c.rubro || 'N/A'}</p>
+<p><strong>Fecha de postulación:</strong> ${new Date(c.fecha).toLocaleString()}</p>
+</div>
+<div class="modal-section">
+<h4>CV</h4>
+<a href="/${c.cvPath}" target="_blank" class="btn">Descargar CV</a>
+</div>
+${scoringHTML}
+`;
+document.getElementById('modalCandidato').classList.add('active');
+}
+
+async function abrirScoring(id) {
+const res = await fetch('/api/candidatos');
+const candidatos = await res.json();
+const c = candidatos.find(x => x.id == id);
+window.candidatoActual = id;
+
+const scoring = c.scoring || { score: 0, fortalezas: '', debilidades: '', recomendacion: '' };
+
+document.getElementById('modalScoringBody').innerHTML = `
+<div class="modal-section">
+<h4>${c.nombre}</h4>
+<div class="form-group">
+<label>Score (0-100)</label>
+<input type="number" id="scoringScore" min="0" max="100" value="${scoring.score}" class="score-input">
+</div>
+<div class="form-group">
+<label>Fortalezas</label>
+<textarea id="scoringFortalezas" class="score-input">${scoring.fortalezas}</textarea>
+</div>
+<div class="form-group">
+<label>Debilidades</label>
+<textarea id="scoringDebilidades" class="score-input">${scoring.debilidades}</textarea>
+</div>
+<div class="form-group">
+<label>Recomendacion</label>
+<textarea id="scoringRecomendacion" class="score-input">${scoring.recomendacion}</textarea>
+</div>
+</div>
+`;
+document.getElementById('modalScoring').classList.add('active');
+}
+
+async function guardarScoring() {
+const score = document.getElementById('scoringScore').value;
+const fortalezas = document.getElementById('scoringFortalezas').value;
+const debilidades = document.getElementById('scoringDebilidades').value;
+const recomendacion = document.getElementById('scoringRecomendacion').value;
+
+await fetch(`/api/candidatos/${window.candidatoActual}/scoring`, {
+method: 'POST',
+headers: { 'Content-Type': 'application/json' },
+body: JSON.stringify({ score, fortalezas, debilidades, recomendacion })
 });
 
-function navigateTo(pageId) {
-  document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.querySelector(`.nav-item[data-page="${pageId}"]`)?.classList.add('active');
-  document.getElementById(`page-${pageId}`)?.classList.add('active');
-  const meta = PAGE_META[pageId] || {};
-  document.getElementById('page-title').textContent = meta.title || pageId;
-  document.getElementById('page-sub').textContent = meta.sub || '';
-  document.getElementById('topbar-actions').innerHTML = '';
-  loadPage(pageId);
+cerrarModal('modalScoring');
+cargarCandidatos();
+alert('Evaluacion guardada');
 }
 
-// Also handle "Ver todas" link in dashboard
-document.querySelectorAll('[data-page]').forEach(el => {
-  if (el.tagName === 'A' && !el.classList.contains('nav-item')) {
-    el.addEventListener('click', e => {
-      e.preventDefault();
-      navigateTo(el.dataset.page);
-    });
-  }
-});
-
-/* ── App init ──────────────────────────────────────────────── */
-function initApp() {
-  loadPage('dashboard');
-  loadInfoEmpresa();
+async function eliminarCandidato(id) {
+if (!confirm('Eliminar este candidato?')) return;
+await fetch('/api/candidatos/' + id, { method: 'DELETE' });
+cargarCandidatos();
 }
 
-function loadPage(p) {
-  if (p === 'dashboard') loadDashboard();
-  else if (p === 'vacantes') loadVacantes();
-  else if (p === 'candidatos') loadCandidatos();
-  else if (p === 'cvs') loadCvs();
-  else if (p === 'empresa') loadInfoEmpresa();
+function cargarDatos() {
+cargarVacantes();
+cargarCandidatos();
 }
-
-/* ── API helpers ────────────────────────────────────────────── */
-async function apiFetch(url, opts = {}) {
-  try {
-    const r = await fetch(url, opts);
-    if (!r.ok) throw new Error(r.status);
-    return r.json();
-  } catch (e) {
-    throw e;
-  }
-}
-
-function fmtDate(str) {
-  if (!str) return '—';
-  try {
-    return new Date(str).toLocaleDateString('es-AR', { day:'2-digit', month:'short', year:'numeric' });
-  } catch { return str; }
-}
-
-/* ── Dashboard ─────────────────────────────────────────────── */
-async function loadDashboard() {
-  try {
-    const [vacantes, candidatos, cvs] = await Promise.allSettled([
-      apiFetch('/api/vacantes'),
-      apiFetch('/api/candidatos'),
-      apiFetch('/api/cvs'),
-    ]);
-
-    const vList = vacantes.status === 'fulfilled' ? (Array.isArray(vacantes.value) ? vacantes.value : vacantes.value?.vacantes || []) : [];
-    const cList = candidatos.status === 'fulfilled' ? (Array.isArray(candidatos.value) ? candidatos.value : []) : [];
-    const cvList = cvs.status === 'fulfilled' ? (Array.isArray(cvs.value) ? cvs.value : []) : [];
-
-    document.getElementById('stat-vacantes').textContent = vList.filter(v => v.activa !== false).length;
-    document.getElementById('stat-candidatos').textContent = cList.length;
-    document.getElementById('stat-cvs').textContent = cvList.length;
-
-    const today = new Date().toDateString();
-    const hoy = cList.filter(c => c.fecha && new Date(c.fecha).toDateString() === today).length;
-    document.getElementById('stat-hoy').textContent = hoy;
-
-    const recent = cList.slice(-5).reverse();
-    const tbody = document.getElementById('recent-postulaciones');
-    if (!recent.length) {
-      tbody.innerHTML = `<tr><td colspan="4"><div class="empty-state"><div class="empty-icon"><svg viewBox="0 0 24 24" fill="none" stroke="var(--text3)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div><span class="empty-title">Sin postulaciones todavía</span></div></td></tr>`;
-    } else {
-      tbody.innerHTML = recent.map(c => `
-        <tr>
-          <td><div class="td-name">${c.nombre || '—'}</div><div class="td-muted">${c.email || ''}</div></td>
-          <td>${c.vacanteNombre || c.vacante || '—'}</td>
-          <td class="td-muted">${fmtDate(c.fecha || c.createdAt)}</td>
-          <td><span class="badge badge-green"><span class="badge-dot"></span>Recibida</span></td>
-        </tr>`).join('');
-    }
-  } catch {
-    toast('No se pudo cargar el resumen', 'error');
-  }
-}
-
-/* ── Vacantes ──────────────────────────────────────────────── */
-async function loadVacantes() {
-  const tbody = document.getElementById('tabla-vacantes');
-  try {
-    const data = await apiFetch('/api/vacantes');
-    const list = Array.isArray(data) ? data : (data.vacantes || []);
-    if (!list.length) {
-      tbody.innerHTML = `<tr><td colspan="5"><div class="empty-state"><div class="empty-icon"><svg viewBox="0 0 24 24" fill="none" stroke="var(--text3)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div><span class="empty-title">No hay vacantes</span><span class="empty-sub">Creá la primera desde el botón superior</span></div></td></tr>`;
-      return;
-    }
-    tbody.innerHTML = list.map(v => `
-      <tr>
-        <td><div class="td-name">${v.titulo || v.title || '—'}</div><div class="td-muted">${v.empresa || v.area || ''}</div></td>
-        <td><span class="badge ${v.activa !== false ? 'badge-green' : 'badge-orange'}"><span class="badge-dot"></span>${v.activa !== false ? 'Activa' : 'Pausada'}</span></td>
-        <td class="td-muted">${v.postulantes || 0}</td>
-        <td class="td-muted">${fmtDate(v.createdAt || v.fecha)}</td>
-        <td><div class="td-actions">
-          <button class="btn btn-outline btn-sm" onclick="editarVacante('${v.id}')">Editar</button>
-          <button class="btn btn-danger btn-sm" onclick="confirmarEliminar('${v.id}', '${(v.titulo||'').replace(/'/g,"&apos;")}')">Eliminar</button>
-        </div></td>
-      </tr>`).join('');
-  } catch {
-    tbody.innerHTML = `<tr><td colspan="5"><div class="empty-state"><span class="empty-title">Error al cargar vacantes</span></div></td></tr>`;
-    toast('No se pudieron cargar las vacantes', 'error');
-  }
-}
-
-/* ── Candidatos ────────────────────────────────────────────── */
-async function loadCandidatos(filtroVacante = 'all') {
-  const tbody = document.getElementById('tabla-candidatos');
-  try {
-    const [candidatos, vacantes] = await Promise.all([
-      apiFetch('/api/candidatos'),
-      apiFetch('/api/vacantes'),
-    ]);
-    const cList = Array.isArray(candidatos) ? candidatos : [];
-    const vList = Array.isArray(vacantes) ? vacantes : (vacantes.vacantes || []);
-
-    // Rebuild tabs
-    const tabs = document.getElementById('candidatos-tabs');
-    const uniqueVacs = [...new Set(cList.map(c => c.vacanteId || c.vacante).filter(Boolean))];
-    tabs.innerHTML = `<button class="tab-btn ${filtroVacante === 'all' ? 'active' : ''}" data-filter="all">Todos</button>` +
-      uniqueVacs.map(id => {
-        const v = vList.find(x => x.id === id);
-        const label = v?.titulo || id;
-        return `<button class="tab-btn ${filtroVacante === id ? 'active' : ''}" data-filter="${id}">${label}</button>`;
-      }).join('');
-
-    tabs.querySelectorAll('.tab-btn').forEach(b => {
-      b.addEventListener('click', () => loadCandidatos(b.dataset.filter));
-    });
-
-    const filtered = filtroVacante === 'all' ? cList : cList.filter(c => (c.vacanteId || c.vacante) === filtroVacante);
-    const search = document.getElementById('search-candidatos').value.toLowerCase();
-    const shown = search ? filtered.filter(c => (c.nombre||'').toLowerCase().includes(search) || (c.email||'').toLowerCase().includes(search)) : filtered;
-
-    if (!shown.length) {
-      tbody.innerHTML = `<tr><td colspan="5"><div class="empty-state"><div class="empty-icon"><svg viewBox="0 0 24 24" fill="none" stroke="var(--text3)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div><span class="empty-title">Sin candidatos</span></div></td></tr>`;
-      return;
-    }
-
-    tbody.innerHTML = shown.map(c => {
-      const v = vList.find(x => x.id === (c.vacanteId || c.vacante));
-      return `<tr>
-        <td><div class="td-name">${c.nombre || '—'}</div><div class="td-muted">${c.email || ''} ${c.telefono ? '· ' + c.telefono : ''}</div></td>
-        <td class="td-muted">${v?.titulo || c.vacanteNombre || '—'}</td>
-        <td class="td-muted">${fmtDate(c.fecha || c.createdAt)}</td>
-        <td>${c.archivo ? `<a href="/uploads/${c.archivo}" target="_blank" rel="noopener" class="btn btn-outline btn-sm">Ver CV</a>` : '<span class="td-muted">Sin archivo</span>'}</td>
-        <td><div class="td-actions"><button class="btn btn-danger btn-sm" onclick="confirmarEliminarCandidato('${c.id}')">Eliminar</button></div></td>
-      </tr>`;
-    }).join('');
-
-  } catch {
-    tbody.innerHTML = `<tr><td colspan="5"><div class="empty-state"><span class="empty-title">Error al cargar candidatos</span></div></td></tr>`;
-    toast('No se pudieron cargar los candidatos', 'error');
-  }
-}
-
-document.getElementById('search-candidatos').addEventListener('input', () => {
-  const activeTab = document.querySelector('#candidatos-tabs .tab-btn.active');
-  loadCandidatos(activeTab?.dataset.filter || 'all');
-});
-
-/* ── CVs ────────────────────────────────────────────────────── */
-async function loadCvs() {
-  const tbody = document.getElementById('tabla-cvs');
-  try {
-    const data = await apiFetch('/api/cvs');
-    const list = Array.isArray(data) ? data : [];
-    document.getElementById('cvs-count').textContent = list.length + ' recibidos';
-    if (!list.length) {
-      tbody.innerHTML = `<tr><td colspan="5"><div class="empty-state"><div class="empty-icon"><svg viewBox="0 0 24 24" fill="none" stroke="var(--text3)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg></div><span class="empty-title">No hay CVs todavía</span></div></td></tr>`;
-      return;
-    }
-    tbody.innerHTML = list.map(c => `
-      <tr>
-        <td><div class="td-name">${c.nombre || '—'}</div>${c.telefono ? `<div class="td-muted">${c.telefono}</div>` : ''}</td>
-        <td class="td-muted">${c.email || '—'}</td>
-        <td>${c.area || c.perfil || '<span class="td-muted">—</span>'}</td>
-        <td class="td-muted">${fmtDate(c.fecha || c.createdAt)}</td>
-        <td>${c.archivo ? `<a href="/uploads/${c.archivo}" target="_blank" rel="noopener" class="btn btn-outline btn-sm">Ver CV</a>` : '<span class="td-muted">Sin archivo</span>'}</td>
-      </tr>`).join('');
-  } catch {
-    tbody.innerHTML = `<tr><td colspan="5"><div class="empty-state"><span class="empty-title">Error al cargar CVs</span></div></td></tr>`;
-    toast('No se pudieron cargar los CVs', 'error');
-  }
-}
-
-/* ── Info empresa ───────────────────────────────────────────── */
-async function loadInfoEmpresa() {
-  try {
-    const d = await apiFetch('/api/empresa');
-    if (d.sobre)     document.getElementById('emp-sobre').value = d.sobre;
-    if (d.servicios) document.getElementById('emp-servicios').value = Array.isArray(d.servicios) ? d.servicios.join('\n') : d.servicios;
-    if (d.contacto) {
-      const c = d.contacto;
-      if (c.email)    document.getElementById('emp-email').value = c.email;
-      if (c.telefono) document.getElementById('emp-tel').value = c.telefono;
-      if (c.direccion)document.getElementById('emp-dir').value = c.direccion;
-      if (c.whatsapp) document.getElementById('emp-whatsapp').value = c.whatsapp;
-    }
-  } catch {}
-}
-
-document.getElementById('btn-guardar-empresa').addEventListener('click', async () => {
-  const btn = document.getElementById('btn-guardar-empresa');
-  btn.textContent = 'Guardando...';
-  btn.disabled = true;
-  try {
-    await apiFetch('/api/empresa', {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        sobre: document.getElementById('emp-sobre').value,
-        servicios: document.getElementById('emp-servicios').value.split('\n').filter(Boolean),
-        contacto: {
-          email:    document.getElementById('emp-email').value,
-          telefono: document.getElementById('emp-tel').value,
-          direccion:document.getElementById('emp-dir').value,
-          whatsapp: document.getElementById('emp-whatsapp').value,
-        }
-      })
-    });
-    toast('Cambios guardados correctamente', 'success');
-  } catch {
-    toast('Error al guardar. Intentá de nuevo.', 'error');
-  } finally {
-    btn.textContent = 'Guardar cambios';
-    btn.disabled = false;
-  }
-});
-
-/* ── Drawer Vacante ─────────────────────────────────────────── */
-document.getElementById('btn-nueva-vacante').addEventListener('click', () => openDrawer());
-document.getElementById('drawer-close-btn').addEventListener('click', closeDrawer);
-document.getElementById('drawer-cancel-btn').addEventListener('click', closeDrawer);
-
-document.getElementById('drawerOverlay').addEventListener('click', e => {
-  if (e.target === e.currentTarget) closeDrawer();
-});
-
-function openDrawer(vac = null) {
-  console.log('openDrawer called with:', vac);
-  document.getElementById('drawer-title').textContent = vac ? 'Editar vacante' : 'Nueva vacante';
-  document.getElementById('drawer-save-btn').textContent = vac ? 'Guardar cambios' : 'Publicar vacante';
-  document.getElementById('vac-id').value = vac ? String(vac.id) : '';
-  document.getElementById('vac-titulo').value = vac?.titulo || vac?.title || '';
-  // Imagen preview
-  document.getElementById('vac-imagen-file').value = '';
-  document.getElementById('vac-imagen-url').value = vac?.imagen || '';
-  if (vac?.imagen) {
-    document.getElementById('vac-imagen-img').src = vac.imagen;
-    document.getElementById('vac-imagen-preview').style.display = 'block';
-  } else {
-    document.getElementById('vac-imagen-preview').style.display = 'none';
-  }
-  document.getElementById('vac-empresa').value = vac?.empresa || vac?.area || '';
-  document.getElementById('vac-estado').value = (vac && vac.activa === false) ? 'false' : 'true';
-  // Rich text editors — limpiar y cargar contenido
-  const desc = document.getElementById('vac-descripcion');
-  const req  = document.getElementById('vac-requisitos');
-  const ofr  = document.getElementById('vac-ofrecimientos');
-  desc.innerHTML = vac?.descripcion  || '';
-  req.innerHTML  = vac?.requisitos   || '';
-  ofr.innerHTML  = vac?.ofrecimientos || '';
-  // Abrir drawer
-  document.getElementById('drawerOverlay').classList.add('open');
-  document.body.style.overflow = 'hidden';
-  setTimeout(() => {
-    document.getElementById('vac-titulo').focus();
-    document.getElementById('vac-titulo').select();
-  }, 320);
-}
-
-function closeDrawer() {
-  document.getElementById('drawerOverlay').classList.remove('open');
-  document.body.style.overflow = '';
-}
-
-async function editarVacante(id) {
-  try {
-    const data = await apiFetch('/api/vacantes');
-    const list = Array.isArray(data) ? data : (data.vacantes || []);
-    // Comparar como string en ambos lados por si el ID es número en DB
-    const vac = list.find(v => String(v.id) === String(id));
-    if (vac) {
-      openDrawer(vac);
-    } else {
-      toast('No se encontró la vacante (ID: ' + id + ')', 'error');
-      console.error('IDs disponibles:', list.map(v => v.id));
-    }
-  } catch(e) {
-    console.error('Error editarVacante:', e);
-    toast('No se pudo cargar la vacante', 'error');
-  }
-}
-
-document.getElementById('drawer-save-btn').addEventListener('click', async () => {
-  const id = document.getElementById('vac-id').value;
-  const titulo = document.getElementById('vac-titulo').value.trim();
-  if (!titulo) { toast('El título es obligatorio', 'error'); return; }
-
-  const btn = document.getElementById('drawer-save-btn');
-  btn.textContent = 'Guardando...';
-  btn.disabled = true;
-
-  const fd = new FormData();
-  fd.append('titulo',       titulo);
-  fd.append('empresa',      document.getElementById('vac-empresa').value);
-  fd.append('activa',       document.getElementById('vac-estado').value);
-  fd.append('descripcion',  document.getElementById('vac-descripcion').innerHTML);
-  fd.append('requisitos',   document.getElementById('vac-requisitos').innerHTML);
-  fd.append('ofrecimientos',document.getElementById('vac-ofrecimientos').innerHTML);
-  // Imagen: archivo nuevo o URL existente
-  const imgFile = document.getElementById('vac-imagen-file').files[0];
-  const imgUrl  = document.getElementById('vac-imagen-url').value;
-  if (imgFile) fd.append('imagen', imgFile);
-  else if (imgUrl) fd.append('imagen', imgUrl);
-
-  console.log('Guardando vacante, id:', id);
-
-  try {
-    if (id) {
-      await apiFetch(`/api/vacantes/${id}`, { method: 'PUT', body: fd });
-      toast('Vacante actualizada', 'success');
-    } else {
-      await apiFetch('/api/vacantes', { method: 'POST', body: fd });
-      toast('Vacante publicada', 'success');
-    }
-    closeDrawer();
-    loadVacantes();
-  } catch {
-    toast('Error al guardar la vacante', 'error');
-  } finally {
-    btn.textContent = id ? 'Guardar cambios' : 'Publicar vacante';
-    btn.disabled = false;
-  }
-});
-
-/* ── RTE helpers ────────────────────────────────────────────── */
-function rteCmd(cmd)  { document.getElementById('vac-descripcion').focus();  document.execCommand(cmd, false); }
-function rteCmd2(cmd) { document.getElementById('vac-requisitos').focus();   document.execCommand(cmd, false); }
-function rteCmd3(cmd) { document.getElementById('vac-ofrecimientos').focus();document.execCommand(cmd, false); }
-
-/* ── Confirm / Eliminar ─────────────────────────────────────── */
-let _confirmCallback = null;
-
-function showConfirm(title, text, cb) {
-  document.getElementById('confirm-title').textContent = title;
-  document.getElementById('confirm-text').textContent = text;
-  _confirmCallback = cb;
-  document.getElementById('confirmOverlay').classList.add('open');
-}
-
-document.getElementById('confirm-cancel').addEventListener('click', () => {
-  document.getElementById('confirmOverlay').classList.remove('open');
-  _confirmCallback = null;
-});
-
-document.getElementById('confirm-ok').addEventListener('click', async () => {
-  document.getElementById('confirmOverlay').classList.remove('open');
-  if (_confirmCallback) { await _confirmCallback(); _confirmCallback = null; }
-});
-
-function confirmarEliminar(id, titulo) {
-  showConfirm(`Eliminar "${titulo}"`, 'Se eliminará esta vacante y todas sus postulaciones asociadas. Esta acción no se puede deshacer.', async () => {
-    try {
-      await apiFetch(`/api/vacantes/${id}`, { method: 'DELETE' });
-      toast('Vacante eliminada', 'success');
-      loadVacantes();
-    } catch { toast('Error al eliminar', 'error'); }
-  });
-}
-
-function confirmarEliminarCandidato(id) {
-  showConfirm('Eliminar candidato', 'Se eliminará este candidato del sistema.', async () => {
-    try {
-      await apiFetch(`/api/candidatos/${id}`, { method: 'DELETE' });
-      toast('Candidato eliminado', 'success');
-      loadCandidatos();
-    } catch { toast('Error al eliminar', 'error'); }
-  });
-}
-
-/* ── Toast ──────────────────────────────────────────────────── */
-function toast(msg, type = 'success') {
-  const c = document.getElementById('toast-container');
-  const t = document.createElement('div');
-  t.className = `toast toast-${type}`;
-  t.textContent = msg;
-  c.appendChild(t);
-  setTimeout(() => {
-    t.style.opacity = '0';
-    t.style.transition = 'opacity 0.3s';
-    setTimeout(() => t.remove(), 300);
-  }, 3500);
-}
-
-
-/* ── Preview imagen vacante ── */
-document.getElementById('vac-imagen-file').addEventListener('change', function() {
-  const file = this.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = e => {
-    document.getElementById('vac-imagen-img').src = e.target.result;
-    document.getElementById('vac-imagen-preview').style.display = 'block';
-  };
-  reader.readAsDataURL(file);
-});
 </script>
 </body>
 </html>
