@@ -6,74 +6,44 @@ const fs = require('fs');
 const path = require('path');
 
 const app = express();
-const PORT = process.env.PORT || 3000;
-const DATA_DIR = process.env.DATA_DIR || '.';
+const PORT = 3000;
 
-// Crear directorios necesarios
-if (!fs.existsSync(DATA_DIR + '/uploads')) fs.mkdirSync(DATA_DIR + '/uploads', { recursive: true });
-if (!fs.existsSync(DATA_DIR + '/data'))    fs.mkdirSync(DATA_DIR + '/data',    { recursive: true });
+if (!fs.existsSync('uploads')) fs.mkdirSync('uploads');
+if (!fs.existsSync('data')) fs.mkdirSync('data');
 
-// Multer — almacenamiento de archivos
 const storage = multer.diskStorage({
-  destination: (req, file, cb) => cb(null, DATA_DIR + '/uploads/'),
-  filename:    (req, file, cb) => cb(null, Date.now() + '-' + file.originalname)
+  destination: (req, file, cb) => cb(null, 'uploads/'),
+  filename: (req, file, cb) => cb(null, Date.now() + '-' + file.originalname)
 });
-const upload = multer({ storage, limits: { fileSize: 5 * 1024 * 1024 } }); // máx 5MB
+const upload = multer({ storage });
 
-// Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(session({ secret: 'rrhh_concordia_2026', resave: false, saveUninitialized: false }));
+app.use(session({ secret: 'rrhh', resave: false, saveUninitialized: false }));
+app.use('/uploads', express.static('uploads'));
 
-// Archivos estáticos
-app.use('/uploads', express.static(DATA_DIR + '/uploads'));
-app.use('/assets',  express.static(path.join(__dirname, 'assets')));
-
-// ── Base de datos ─────────────────────────────────────────────
-const DB_FILE = DATA_DIR + '/data/db.json';
+const DB_FILE = './data/db.json';
 
 function loadDB() {
   if (!fs.existsSync(DB_FILE)) {
-    const data = {
-      users: [{ username: 'admin', password: bcrypt.hashSync('peri657098', 10) }],
-      vacantes: [],
-      candidatos: [],
-      cvs: [],
-      empresa: {
-        sobre: '',
-        servicios: [],
-        contacto: { email: 'rrhhconcordia@hotmail.com', telefono: '+54 345 5283688', direccion: 'Concordia, Entre Ríos', whatsapp: '' }
-      }
-    };
-    fs.writeFileSync(DB_FILE, JSON.stringify(data, null, 2));
+    const data = { users: [{ username: 'admin', password: bcrypt.hashSync('admin123', 10) }], vacantes: [], candidatos: [] };
+    fs.writeFileSync(DB_FILE, JSON.stringify(data));
   }
-  const data = JSON.parse(fs.readFileSync(DB_FILE, 'utf8'));
-  // Migración: agregar cvs y empresa si no existen en DB vieja
-  if (!data.cvs)     data.cvs = [];
-  if (!data.empresa) data.empresa = {
-    sobre: '', servicios: [],
-    contacto: { email: 'rrhhconcordia@hotmail.com', telefono: '+54 345 5283688', direccion: 'Concordia, Entre Ríos', whatsapp: '' }
-  };
-  return data;
+  return JSON.parse(fs.readFileSync(DB_FILE, 'utf8'));
 }
 
 function saveDB(data) {
   fs.writeFileSync(DB_FILE, JSON.stringify(data, null, 2));
 }
 
-// ── Middleware de autenticación ───────────────────────────────
 function isAuth(req, res, next) {
   if (req.session.user) return next();
   res.status(401).json({ error: 'No autorizado' });
 }
 
-// ── Páginas ───────────────────────────────────────────────────
-app.get('/',      (req, res) => res.sendFile(path.join(__dirname, 'index.html')));
-app.get('/admin', (req, res) => res.sendFile(path.join(__dirname, 'admin.html')));
+app.get('/', (req, res) => res.sendFile(__dirname + '/index.html'));
+app.get('/admin', (req, res) => res.sendFile(__dirname + '/admin.html'));
 
-// ── Auth ──────────────────────────────────────────────────────
-
-// Login clásico (usuario + contraseña) — para compatibilidad
 app.post('/api/login', (req, res) => {
   const { username, password } = req.body;
   const db = loadDB();
@@ -82,20 +52,7 @@ app.post('/api/login', (req, res) => {
     req.session.user = username;
     res.json({ success: true });
   } else {
-    res.status(401).json({ error: 'Credenciales inválidas' });
-  }
-});
-
-// Login nuevo (solo contraseña) — usado por el nuevo admin.html
-app.post('/api/admin/login', (req, res) => {
-  const { password } = req.body;
-  const db = loadDB();
-  const admin = db.users.find(u => u.username === 'admin');
-  if (admin && bcrypt.compareSync(password, admin.password)) {
-    req.session.user = 'admin';
-    res.json({ success: true });
-  } else {
-    res.status(401).json({ error: 'Contraseña incorrecta' });
+    res.status(401).json({ error: 'Credenciales invalidas' });
   }
 });
 
@@ -106,159 +63,82 @@ app.post('/api/logout', (req, res) => {
 
 app.post('/api/change-password', isAuth, (req, res) => {
   const { newPassword } = req.body;
-  if (!newPassword || newPassword.length < 6) return res.status(400).json({ error: 'Contraseña muy corta' });
   const db = loadDB();
   db.users[0].password = bcrypt.hashSync(newPassword, 10);
   saveDB(db);
   res.json({ success: true });
 });
 
-// ── Vacantes ──────────────────────────────────────────────────
-
-// GET público — homepage las carga para mostrarlas
 app.get('/api/vacantes', (req, res) => {
   const db = loadDB();
   res.json(db.vacantes);
 });
 
-// POST — crear vacante nueva
-app.post('/api/vacantes', isAuth, upload.single('imagen'), (req, res) => {
+app.post('/api/vacantes', isAuth, (req, res) => {
   const db = loadDB();
-  const vacante = {
-    id: String(Date.now()),
-    ...req.body,
-    activa: req.body.activa !== false && req.body.activa !== 'false',
-    imagen: req.file ? '/uploads/' + req.file.filename : (req.body.imagen || null),
-    postulantes: 0,
-    createdAt: new Date().toISOString()
-  };
+  const vacante = { id: Date.now(), ...req.body, fecha: new Date().toISOString() };
   db.vacantes.push(vacante);
   saveDB(db);
-  res.status(201).json(vacante);
+  res.json(vacante);
 });
 
-// PUT — editar vacante
-app.put('/api/vacantes/:id', isAuth, upload.single('imagen'), (req, res) => {
-  const db = loadDB();
-  const idx = db.vacantes.findIndex(v => String(v.id) === String(req.params.id));
-  if (idx === -1) return res.status(404).json({ error: 'Vacante no encontrada' });
-  db.vacantes[idx] = {
-    ...db.vacantes[idx],
-    ...req.body,
-    id: db.vacantes[idx].id, // preservar ID original
-    activa: req.body.activa !== false && req.body.activa !== 'false',
-    imagen: req.file ? '/uploads/' + req.file.filename : (req.body.imagen || db.vacantes[idx].imagen || null)
-  };
-  saveDB(db);
-  res.json(db.vacantes[idx]);
-});
-
-// DELETE — eliminar vacante
 app.delete('/api/vacantes/:id', isAuth, (req, res) => {
   const db = loadDB();
-  db.vacantes = db.vacantes.filter(v => String(v.id) !== String(req.params.id));
+  db.vacantes = db.vacantes.filter(v => v.id != req.params.id);
   saveDB(db);
   res.json({ success: true });
 });
 
-// ── Postulaciones a vacantes (formulario público del homepage) ─
-
-app.post('/api/postulaciones', upload.single('archivo'), (req, res) => {
-  const db = loadDB();
-  const candidato = {
-    id: String(Date.now()),
-    nombre:        req.body.nombre   || '',
-    email:         req.body.email    || '',
-    telefono:      req.body.telefono || '',
-    vacanteId:     req.body.vacanteId || '',
-    vacanteNombre: req.body.vacanteNombre || '',
-    archivo:       req.file ? req.file.filename : null,
-    cvPath:        req.file ? req.file.path : null,
-    cvOriginal:    req.file ? req.file.originalname : null,
-    fecha:         new Date().toISOString()
-  };
-  db.candidatos.push(candidato);
-  // Incrementar contador de postulantes en la vacante
-  const vIdx = db.vacantes.findIndex(v => String(v.id) === String(candidato.vacanteId));
-  if (vIdx !== -1) db.vacantes[vIdx].postulantes = (db.vacantes[vIdx].postulantes || 0) + 1;
-  saveDB(db);
-  res.status(201).json({ success: true });
-});
-
-// ── Candidatos (panel admin) ──────────────────────────────────
-
-app.get('/api/candidatos', isAuth, (req, res) => {
-  const db = loadDB();
-  res.json(db.candidatos);
-});
-
-// Compatibilidad: POST viejo también sigue funcionando
 app.post('/api/candidatos', upload.single('cv'), (req, res) => {
   const db = loadDB();
   const candidato = {
-    id: String(Date.now()),
-    nombre:     req.body.nombre   || '',
-    email:      req.body.email    || '',
-    telefono:   req.body.telefono || '',
-    vacanteId:  req.body.vacanteId || '',
-    archivo:    req.file ? req.file.filename : null,
-    cvPath:     req.file ? req.file.path : null,
-    cvOriginal: req.file ? req.file.originalname : null,
-    fecha:      new Date().toISOString()
+    id: Date.now(),
+    ...req.body,
+    cvPath: req.file.path,
+    cvOriginal: req.file.originalname,
+    fecha: new Date().toISOString(),
+    scoring: null
   };
   db.candidatos.push(candidato);
+  saveDB(db);
+  res.json({ success: true });
+});
+
+app.get('/api/candidatos', isAuth, (req, res) => {
+  const db = loadDB();
+  const rubro = req.query.rubro;
+  let candidatos = db.candidatos;
+  if (rubro) {
+    candidatos = candidatos.filter(c => c.rubro === rubro);
+  }
+  res.json(candidatos);
+});
+
+app.post('/api/candidatos/:id/scoring', isAuth, (req, res) => {
+  const db = loadDB();
+  const candidato = db.candidatos.find(c => c.id == req.params.id);
+  if (!candidato) return res.status(404).json({ error: 'Candidato no encontrado' });
+  
+  candidato.scoring = {
+    score: req.body.score,
+    fortalezas: req.body.fortalezas,
+    debilidades: req.body.debilidades,
+    recomendacion: req.body.recomendacion,
+    fechaEvaluacion: new Date().toISOString()
+  };
   saveDB(db);
   res.json({ success: true });
 });
 
 app.delete('/api/candidatos/:id', isAuth, (req, res) => {
   const db = loadDB();
-  const candidato = db.candidatos.find(c => String(c.id) === String(req.params.id));
-  if (candidato && candidato.cvPath && fs.existsSync(candidato.cvPath)) {
-    try { fs.unlinkSync(candidato.cvPath); } catch (e) {}
+  const candidato = db.candidatos.find(c => c.id == req.params.id);
+  if (candidato && fs.existsSync(candidato.cvPath)) {
+    fs.unlinkSync(candidato.cvPath);
   }
-  db.candidatos = db.candidatos.filter(c => String(c.id) !== String(req.params.id));
+  db.candidatos = db.candidatos.filter(c => c.id != req.params.id);
   saveDB(db);
   res.json({ success: true });
 });
 
-// ── CVs espontáneos (formulario "Dejá tu CV" del homepage) ────
-
-app.post('/api/cvs', upload.single('archivo'), (req, res) => {
-  const db = loadDB();
-  const cv = {
-    id: String(Date.now()),
-    nombre:   req.body.nombre   || '',
-    email:    req.body.email    || '',
-    telefono: req.body.telefono || '',
-    area:     req.body.area     || '',
-    archivo:  req.file ? req.file.filename : null,
-    cvPath:   req.file ? req.file.path : null,
-    createdAt: new Date().toISOString()
-  };
-  db.cvs.push(cv);
-  saveDB(db);
-  res.status(201).json({ success: true });
-});
-
-app.get('/api/cvs', isAuth, (req, res) => {
-  const db = loadDB();
-  res.json(db.cvs);
-});
-
-// ── Información empresa ───────────────────────────────────────
-
-app.get('/api/empresa', isAuth, (req, res) => {
-  const db = loadDB();
-  res.json(db.empresa);
-});
-
-app.put('/api/empresa', isAuth, (req, res) => {
-  const db = loadDB();
-  db.empresa = { ...db.empresa, ...req.body };
-  saveDB(db);
-  res.json({ success: true });
-});
-
-// ── Iniciar servidor ──────────────────────────────────────────
-app.listen(PORT, () => console.log('✓ Servidor RRHH Concordia en puerto ' + PORT));
+app.listen(PORT, () => console.log('Servidor en http://localhost:' + PORT));
