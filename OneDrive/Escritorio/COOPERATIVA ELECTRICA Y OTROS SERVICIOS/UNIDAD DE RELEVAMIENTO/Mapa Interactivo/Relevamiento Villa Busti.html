@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Informe — Villa Busti / General Lamadrid</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Segoe UI', sans-serif; background: #f4f6f9; color: #333; }
+
+    .header {
+      background: linear-gradient(135deg, #7b2d8b, #a855c0);
+      color: white; padding: 30px 40px;
+    }
+    .header a.back { font-size: 13px; opacity: 0.8; margin-bottom: 10px; display: inline-block; text-decoration: none; color: white; }
+    .header a.back:hover { opacity: 1; }
+    .header h1 { font-size: 28px; font-weight: 700; }
+    .header p { font-size: 14px; opacity: 0.85; margin-top: 6px; }
+    .header .equipo { margin-top: 12px; font-size: 13px; opacity: 0.75; }
+
+    .content { max-width: 860px; margin: 30px auto; padding: 0 20px 60px; }
+
+    .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 20px; }
+    .kpi { background: white; border-radius: 12px; padding: 18px; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.07); border-top: 4px solid #7b2d8b; }
+    .kpi .val { font-size: 30px; font-weight: 700; color: #7b2d8b; }
+    .kpi .lbl { font-size: 11px; color: #888; margin-top: 4px; text-transform: uppercase; font-weight: 600; }
+
+    /* KPIs electricidad bicolor */
+    .kpi-elec-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 20px; }
+    .kpi-legal { background: white; border-radius: 12px; padding: 18px; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.07); border-top: 4px solid #2e7d32; }
+    .kpi-legal .val { font-size: 34px; font-weight: 700; color: #2e7d32; }
+    .kpi-legal .lbl { font-size: 11px; color: #888; margin-top: 4px; text-transform: uppercase; font-weight: 600; }
+    .kpi-ilegal { background: white; border-radius: 12px; padding: 18px; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.07); border-top: 4px solid #c62828; }
+    .kpi-ilegal .val { font-size: 34px; font-weight: 700; color: #c62828; }
+    .kpi-ilegal .lbl { font-size: 11px; color: #888; margin-top: 4px; text-transform: uppercase; font-weight: 600; }
+
+    .card { background: white; border-radius: 12px; padding: 24px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.07); }
+    .card h2 { font-size: 16px; font-weight: 700; color: #7b2d8b; border-bottom: 2px solid #f3e5f5; padding-bottom: 10px; margin-bottom: 16px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .card p { font-size: 14px; line-height: 1.75; color: #444; margin-bottom: 10px; }
+    .card p:last-child { margin-bottom: 0; }
+
+    .svc-table { width: 100%; border-collapse: collapse; }
+    .svc-table th { background: #f3e5f5; color: #7b2d8b; font-size: 12px; text-transform: uppercase; padding: 10px 14px; text-align: left; }
+    .svc-table td { padding: 10px 14px; font-size: 14px; border-bottom: 1px solid #f0f0f0; }
+    .svc-table tr:last-child td { border-bottom: none; }
+
+    .badge { display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 12px; font-weight: 600; }
+    .badge.si { background: #e6f4ea; color: #2e7d32; }
+    .badge.no { background: #fce8e6; color: #c62828; }
+    .badge.parcial { background: #fff8e1; color: #f57f17; }
+
+    .alerta { background: #fff8e1; border-left: 4px solid #f9a825; padding: 14px 18px; border-radius: 0 8px 8px 0; font-size: 14px; color: #555; margin-bottom: 10px; }
+    .alerta-roja { background: #fce8e6; border-left: 4px solid #c62828; padding: 14px 18px; border-radius: 0 8px 8px 0; font-size: 14px; color: #555; margin-bottom: 10px; }
+    .alerta-verde { background: #e6f4ea; border-left: 4px solid #2e7d32; padding: 14px 18px; border-radius: 0 8px 8px 0; font-size: 14px; color: #555; margin-bottom: 10px; }
+
+    .conclusion { background: #f3e5f5; border-radius: 12px; padding: 20px 24px; border-left: 5px solid #7b2d8b; }
+    .conclusion p { font-size: 14px; line-height: 1.75; color: #444; }
+
+    /* Galería */
+    .galeria { background: white; border-radius: 12px; padding: 30px; margin-top: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.07); }
+    .galeria h2 { font-size: 18px; font-weight: 700; color: #333; margin-bottom: 20px; text-align: center; text-transform: uppercase; letter-spacing: 0.5px; }
+    .galeria-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
+    .galeria-item { border-radius: 8px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1); transition: transform 0.2s, box-shadow 0.2s; }
+    .galeria-item:hover { transform: translateY(-4px); box-shadow: 0 6px 20px rgba(0,0,0,0.18); }
+    .galeria-item img { width: 100%; height: 220px; object-fit: cover; display: block; cursor: zoom-in; }
+
+    /* Lightbox */
+    #lightbox-overlay { display: none; position: fixed; z-index: 99999; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.92); justify-content: center; align-items: center; cursor: zoom-out; }
+    #lightbox-overlay.active { display: flex; }
+    #lightbox-overlay img { max-width: 92vw; max-height: 92vh; object-fit: contain; border-radius: 8px; }
+    #lightbox-close-btn { position: fixed; top: 20px; right: 30px; color: white; font-size: 36px; cursor: pointer; background: rgba(0,0,0,0.4); width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; z-index: 100000; }
+    #lightbox-close-btn:hover { background: rgba(0,0,0,0.7); }
+
+    @media (max-width: 600px) {
+      .kpi-grid { grid-template-columns: repeat(2,1fr); }
+      .kpi-elec-grid { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="header">
+  <a class="back" href="Mapa Relevamiento Asentamientos.html">← Volver al mapa</a>
+  <h1>Informe de Relevamiento — Villa Busti / General Lamadrid</h1>
+  <p>Sector Este · Delimitado por Echagüe, Maipú, Moreno y Bv. San Lorenzo</p>
+  <div class="equipo">Equipo: Lucas Masso · Agostina Rettori · Nicolás Peri · Laura Canali</div>
+</div>
+
+<div class="content">
+
+  <!-- KPIs principales -->
+  <div class="kpi-grid">
+    <div class="kpi"><div class="val">32,6</div><div class="lbl">Edad Promedio</div></div>
+    <div class="kpi"><div class="val">4,8</div><div class="lbl">Personas por Hogar</div></div>
+    <div class="kpi"><div class="val">Años 90</div><div class="lbl">Origen del barrio</div></div>
+    <div class="kpi"><div class="val">~90%</div><div class="lbl">Vivienda noble</div></div>
+  </div>
+
+  <!-- KPIs electricidad -->
+  <div class="kpi-elec-grid">
+    <div class="kpi-legal">
+      <div class="val">35%</div>
+      <div class="lbl">⚡ Conexiones eléctricas legales</div>
+    </div>
+    <div class="kpi-ilegal">
+      <div class="val">65%</div>
+      <div class="lbl">⚠️ Conexiones irregulares</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Introducción</h2>
+    <p>El barrio Villa Busti / General Lamadrid se ubica en el sector Este de la ciudad. Lo delimitan las calles Echagüe, Maipú, Moreno y el Boulevard San Lorenzo. Surgió en la década de 1990 como resultado de adjudicaciones del IAPV (Instituto Autárquico Provincial de Vivienda), consolidándose con el tiempo como barrio residencial.</p>
+    <p>A diferencia de los asentamientos informales relevados, este barrio posee trazado urbano definido y en su mayoría viviendas de material noble. Sin embargo, presenta importantes déficits en infraestructura interna, especialmente en los pasillos interiores, donde persisten conexiones eléctricas irregulares y dificultades en el acceso a servicios básicos.</p>
+  </div>
+
+  <div class="card">
+    <h2>Servicios públicos y comunicación</h2>
+    <table class="svc-table">
+      <thead><tr><th>Servicio</th><th>Estado</th><th>Detalle</th></tr></thead>
+      <tbody>
+        <tr><td>Cloacas</td><td><span class="badge si">Disponible</span></td><td>La mayoría de las viviendas está conectada a la red cloacal</td></tr>
+        <tr><td>Agua corriente</td><td><span class="badge parcial">Parcial</span></td><td>Disponible en la mayoría. Dificultades de acceso en pasillos internos</td></tr>
+        <tr><td>Alumbrado público</td><td><span class="badge parcial">Parcial</span></td><td>Presente en calles principales; deficiente en pasillos interiores</td></tr>
+        <tr><td>Calles</td><td><span class="badge no">Sin pavimentar</span></td><td>Calles de tierra en mal estado; pasillos internos sin mejoras</td></tr>
+        <tr><td>Transporte público</td><td><span class="badge si">Disponible</span></td><td>Línea 4 circula por Bv. San Lorenzo</td></tr>
+        <tr><td>Recolección residuos</td><td><span class="badge parcial">Deficiente</span></td><td>Basurales en pasillos internos y terrenos linderos; falta de contenedores</td></tr>
+        <tr><td>Telefonía celular</td><td><span class="badge si">Disponible</span></td><td>Buena cobertura en todo el barrio</td></tr>
+        <tr><td>Internet</td><td><span class="badge parcial">Parcial</span></td><td>Megacable e Internet Cooperativa con cobertura parcial</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>Servicio Eléctrico</h2>
+    <div class="alerta-verde">✅ Aproximadamente el <strong>35%</strong> de las conexiones son legales — el porcentaje más alto entre los barrios relevados.</div>
+    <div class="alerta-roja">⚠️ El <strong>65% restante</strong> presenta conexiones irregulares, concentradas principalmente en los pasillos interiores del barrio donde no llega el tendido formal de la red.</div>
+    <p>Las conexiones clandestinas en los pasillos generan riesgo eléctrico constante para los vecinos. Los cables van a escasa altura y sin la protección adecuada. A pesar de haberse acercado en varias oportunidades a la Cooperativa Eléctrica, los vecinos de los pasillos no han podido regularizar su situación por falta de infraestructura en esas áreas internas.</p>
+    <p>El ingreso promedio declarado es de <strong>$772.353</strong>, lo que representa ingresos bajos aunque ligeramente superiores a los de otros asentamientos relevados.</p>
+  </div>
+
+  <div class="card">
+    <h2>Establecimientos educativos y de salud</h2>
+    <p><strong>Educación primaria:</strong> Escuela N°6 José de San Martín, colectora con jardín de infantes incluido.</p>
+    <p><strong>Educación primaria y secundaria:</strong> Escuela Gerardo Yoya, con nivel primario y secundario, incluyendo educación de adultos.</p>
+    <p><strong>Salud:</strong> Los vecinos acuden al SAP San Agustín y al SAP Nebel como centros de atención más cercanos. No existe establecimiento de salud dentro del barrio.</p>
+  </div>
+
+  <div class="card">
+    <h2>Información de las familias</h2>
+    <p>Se trata de un barrio con mayor consolidación que los asentamientos informales relevados. La mayoría de las viviendas son de material noble, adjudicadas originalmente por el IAPV en los años 90. Sin embargo, la densificación posterior generó pasillos internos con viviendas precarias sin acceso adecuado a servicios.</p>
+    <p><strong>Composición familiar:</strong> Promedio de 4,8 personas por hogar, ligeramente superior al promedio de los demás barrios.</p>
+    <p><strong>Edad promedio:</strong> 32,6 años, lo que indica una población algo más adulta comparada con los asentamientos más nuevos.</p>
+    <p><strong>Ingresos:</strong> Promedio declarado de $772.353. Predominan changas, trabajos informales y la Asignación Universal por Hijo como ingreso fijo en muchos hogares.</p>
+    <p><strong>Material de construcción:</strong> Aproximadamente el 90% de las viviendas son de material noble. El 10% restante corresponde a construcciones precarias en los pasillos interiores.</p>
+    <p><strong>Nivel educativo:</strong> Medio-bajo, con predominio de educación primaria completa o incompleta entre los jefes de hogar.</p>
+  </div>
+
+  <div class="conclusion">
+    <h2 style="color:#7b2d8b;margin-bottom:10px">Conclusión</h2>
+    <p>Villa Busti / General Lamadrid es el barrio con mayor nivel de consolidación entre los relevados, con viviendas mayoritariamente de material noble y acceso a servicios básicos en las calles principales. Sin embargo, los pasillos interiores presentan condiciones similares a las de los asentamientos informales: conexiones eléctricas irregulares, falta de pavimento, dificultades con el agua y acumulación de residuos. La regularización del servicio eléctrico en esas zonas internas representa la principal demanda de los vecinos y la intervención más urgente para la Cooperativa Eléctrica.</p>
+  </div>
+
+  <div class="galeria">
+    <h2>Registro fotográfico — Villa Busti</h2>
+    <div class="galeria-grid">
+      <div class="galeria-item"><img src="villa_busti_1.jpg" alt="Villa Busti"></div>
+      <div class="galeria-item"><img src="villa_busti_2.jpg" alt="Villa Busti"></div>
+      <div class="galeria-item"><img src="villa_busti_3.jpg" alt="Villa Busti"></div>
+      <div class="galeria-item"><img src="villa_busti_4.jpg" alt="Villa Busti"></div>
+      <div class="galeria-item"><img src="villa_busti_5.jpg" alt="Villa Busti"></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  var overlay = document.createElement('div');
+  overlay.id = 'lightbox-overlay';
+  var closeBtn = document.createElement('span');
+  closeBtn.id = 'lightbox-close-btn';
+  closeBtn.innerHTML = '&times;';
+  var imgEl = document.createElement('img');
+  imgEl.alt = 'Foto ampliada';
+  overlay.appendChild(closeBtn);
+  overlay.appendChild(imgEl);
+  document.body.appendChild(overlay);
+
+  document.querySelectorAll('.galeria-item img').forEach(function(img) {
+    img.addEventListener('click', function(e) {
+      e.stopPropagation();
+      imgEl.src = this.src;
+      overlay.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    });
+  });
+
+  function cerrar() {
+    overlay.classList.remove('active');
+    document.body.style.overflow = '';
+  }
+
+  overlay.addEventListener('click', cerrar);
+  closeBtn.addEventListener('click', cerrar);
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') cerrar();
+  });
+});
+</script>
+
+</body>
+</html>

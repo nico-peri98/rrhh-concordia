@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Relevamiento Barrio Nebel — Cooperativa Eléctrica</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Source+Sans+3:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #0077a8;
+      --primary-dark: #005580;
+      --primary-light: #e6f4fa;
+      --accent: #00a651;
+      --text: #1a2433;
+      --text-muted: #5a6a7a;
+      --border: #d8e4ec;
+      --bg: #f7f9fb;
+      --white: #ffffff;
+      --danger: #c62828;
+      --warning: #e65100;
+      --success: #2e7d32;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Source Sans 3', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      font-size: 15px;
+      line-height: 1.65;
+    }
+
+    /* ── HEADER ── */
+    .header {
+      background: linear-gradient(135deg, #005580 0%, #0077a8 60%, #00a0d6 100%);
+      color: white;
+      padding: 0;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .header::before {
+      content: '';
+      position: absolute;
+      top: -60px; right: -60px;
+      width: 300px; height: 300px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.06);
+    }
+
+    .header::after {
+      content: '';
+      position: absolute;
+      bottom: -80px; left: 40%;
+      width: 200px; height: 200px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.04);
+    }
+
+    .header-inner {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      padding: 28px 48px;
+    }
+
+    .logo-wrap img { width: 64px; filter: drop-shadow(0 2px 6px rgba(0,0,0,0.2)); }
+
+    .header-text h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 26px;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+      margin-bottom: 4px;
+    }
+
+    .header-text .subtitulo { font-size: 13px; opacity: 0.82; font-weight: 300; }
+    .header-text .fecha { font-size: 12px; opacity: 0.65; margin-top: 2px; font-weight: 300; }
+
+    .header-badge {
+      margin-left: auto;
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.3);
+      border-radius: 8px;
+      padding: 10px 18px;
+      text-align: center;
+      backdrop-filter: blur(4px);
+    }
+
+    .header-badge .zona-label { font-size: 10px; opacity: 0.75; text-transform: uppercase; letter-spacing: 1px; }
+    .header-badge .zona-val { font-size: 15px; font-weight: 600; margin-top: 2px; }
+
+    /* ── NAV VOLVER ── */
+    .nav-back {
+      background: var(--white);
+      border-bottom: 1px solid var(--border);
+      padding: 10px 48px;
+    }
+
+    .nav-back a {
+      color: var(--primary);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: gap 0.2s;
+    }
+
+    .nav-back a:hover { gap: 10px; }
+
+    /* ── LAYOUT ── */
+    .contenido {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 40px 24px 60px;
+    }
+
+    /* ── SECCIÓN KPIs PRINCIPALES ── */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+
+    .kpi-card {
+      background: var(--white);
+      border-radius: 10px;
+      padding: 18px 16px;
+      border-top: 3px solid var(--primary);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      text-align: center;
+    }
+
+    .kpi-card .kpi-icono { font-size: 22px; margin-bottom: 6px; }
+    .kpi-card .kpi-val {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--primary);
+      line-height: 1.1;
+      margin-bottom: 4px;
+    }
+    .kpi-card .kpi-lbl { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.4px; font-weight: 600; }
+
+    /* ── SECCIONES ── */
+    .seccion {
+      background: var(--white);
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      margin-bottom: 24px;
+      overflow: hidden;
+    }
+
+    .seccion-header {
+      background: var(--primary);
+      color: white;
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .seccion-header .icono { font-size: 16px; }
+    .seccion-header h2 { font-size: 14px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+
+    .seccion-body { padding: 20px; }
+
+    /* ── PÁRRAFOS ── */
+    .seccion-body p { margin-bottom: 12px; font-size: 14.5px; color: var(--text); }
+    .seccion-body p:last-child { margin-bottom: 0; }
+
+    /* ── ALERTA ── */
+    .alerta {
+      background: #fff3e0;
+      border-left: 4px solid var(--warning);
+      border-radius: 0 6px 6px 0;
+      padding: 12px 16px;
+      margin: 14px 0;
+      font-size: 13.5px;
+      color: #5d2f00;
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+    }
+    .alerta .alerta-icono { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+
+    /* ── SERVICIOS GRID ── */
+    .servicios-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    .servicio-item {
+      border-radius: 8px;
+      padding: 12px 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .servicio-si { background: #e8f5e9; color: #1b5e20; border: 1px solid #a5d6a7; }
+    .servicio-parcial { background: #fff8e1; color: #e65100; border: 1px solid #ffcc80; }
+    .servicio-no { background: #fce4ec; color: #880e4f; border: 1px solid #f48fb1; }
+
+    .servicio-item .srv-icono { font-size: 18px; flex-shrink: 0; }
+
+    /* ── ELECTRICIDAD ── */
+    .elec-container { display: flex; align-items: center; gap: 20px; padding: 8px 0; }
+
+    .elec-gauge {
+      width: 80px; height: 80px; flex-shrink: 0;
+      position: relative; display: flex; align-items: center; justify-content: center;
+    }
+
+    .elec-gauge svg { position: absolute; top: 0; left: 0; transform: rotate(-90deg); }
+
+    .elec-gauge .elec-pct {
+      font-size: 17px; font-weight: 700; color: var(--warning); z-index: 1;
+    }
+
+    .elec-info { flex: 1; }
+    .elec-info .elec-titulo { font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 6px; }
+    .elec-info .elec-desc { font-size: 13px; color: var(--text-muted); line-height: 1.5; }
+
+    .elec-barra-wrap { margin-top: 12px; }
+    .elec-barra-label {
+      display: flex; justify-content: space-between;
+      font-size: 11px; color: var(--text-muted); margin-bottom: 4px; font-weight: 600;
+    }
+    .elec-barra { height: 8px; background: #e0e0e0; border-radius: 4px; overflow: hidden; }
+    .elec-barra-fill { height: 100%; border-radius: 4px; background: linear-gradient(90deg, #e65100, #f9a825); }
+
+    /* ── TABLA DATOS ── */
+    .tabla-datos { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+    .tabla-datos tr { border-bottom: 1px solid var(--border); }
+    .tabla-datos tr:last-child { border-bottom: none; }
+    .tabla-datos td { padding: 9px 12px; }
+    .tabla-datos td:first-child { color: var(--text-muted); font-weight: 600; width: 45%; }
+    .tabla-datos td:last-child { color: var(--text); font-weight: 400; }
+    .tabla-datos tr:hover td { background: var(--primary-light); }
+
+    /* ── TAG ESTADO ── */
+    .tag {
+      display: inline-block; padding: 2px 8px; border-radius: 4px;
+      font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.3px;
+    }
+    .tag-parcial { background: #fff8e1; color: #e65100; }
+    .tag-si { background: #e8f5e9; color: #1b5e20; }
+    .tag-no { background: #fce4ec; color: #880e4f; }
+
+    /* ── EQUIPO ── */
+    .equipo-grid {
+      display: flex; gap: 12px; flex-wrap: wrap;
+    }
+
+    .equipo-chip {
+      background: var(--primary-light);
+      border: 1px solid #b3d9ea;
+      color: var(--primary-dark);
+      border-radius: 20px;
+      padding: 6px 14px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    /* ── CANASTA ── */
+    .canasta-card {
+      background: #fff3e0;
+      border-radius: 8px;
+      padding: 16px 20px;
+      border-left: 4px solid var(--warning);
+    }
+    .canasta-card .can-titulo { font-size: 12px; font-weight: 700; color: var(--warning); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+    .canasta-vals { display: flex; gap: 24px; align-items: center; flex-wrap: wrap; }
+    .canasta-val .cv-label { font-size: 11px; color: #7a4100; font-weight: 600; text-transform: uppercase; }
+    .canasta-val .cv-num { font-size: 20px; font-weight: 700; color: var(--warning); }
+    .canasta-brecha {
+      background: #ffccbc; border-radius: 6px; padding: 6px 12px;
+      font-size: 12px; font-weight: 700; color: #bf360c;
+    }
+
+    /* ── FOOTER ── */
+    .footer {
+      background: var(--primary-dark);
+      color: rgba(255,255,255,0.7);
+      text-align: center;
+      padding: 18px 24px;
+      font-size: 12px;
+    }
+
+    @media (max-width: 680px) {
+      .kpi-grid { grid-template-columns: 1fr 1fr; }
+      .servicios-grid { grid-template-columns: 1fr 1fr; }
+      .header-inner { flex-wrap: wrap; padding: 20px 20px; }
+      .contenido { padding: 24px 16px 40px; }
+      .nav-back { padding: 10px 16px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-inner">
+    <div class="logo-wrap">
+      <img src="logo_cooperativa_transparente.png" alt="Cooperativa Eléctrica">
+    </div>
+    <div class="header-text">
+      <h1>Relevamiento Barrio Nebel</h1>
+      <div class="subtitulo">Cooperativa Eléctrica · Concordia, Entre Ríos</div>
+      <div class="fecha">Relevamiento realizado: 13 al 15 de mayo de 2026</div>
+    </div>
+    <div class="header-badge">
+      <div class="zona-label">Zona</div>
+      <div class="zona-val">Sureste</div>
+    </div>
+  </div>
+</div>
+
+<!-- NAV -->
+<div class="nav-back">
+  <a href="Mapa Relevamiento Asentamientos.html">← Volver al mapa</a>
+</div>
+
+<div class="contenido">
+
+  <!-- KPIs PRINCIPALES -->
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <div class="kpi-icono">👤</div>
+      <div class="kpi-val">30,8</div>
+      <div class="kpi-lbl">Edad promedio</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-icono">🏠</div>
+      <div class="kpi-val">3,6</div>
+      <div class="kpi-lbl">Pers. por hogar</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-icono">⚡</div>
+      <div class="kpi-val">~40%</div>
+      <div class="kpi-lbl">Conexión legal</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-icono">📉</div>
+      <div class="kpi-val">42%</div>
+      <div class="kpi-lbl">Bajo canasta básica</div>
+    </div>
+  </div>
+
+  <!-- INFORMACIÓN GENERAL -->
+  <div class="seccion">
+    <div class="seccion-header">
+      <span class="icono">📍</span>
+      <h2>Información General del Barrio</h2>
+    </div>
+    <div class="seccion-body">
+      <p>Barrio Nebel se encuentra ubicado en la zona sureste de la ciudad de Concordia, próximo al Río Uruguay. El sector estudiado comprende el perímetro delimitado por las calles <strong>Los Vascos, Av. Castro y Asunción</strong>.</p>
+      <p>El asentamiento comenzó a formarse con posterioridad al año 2001. Si bien existen viviendas construidas en material, en las calles más cercanas al río se han conformado asentamientos sobre trazados abiertos por los propios vecinos a medida que fueron ocupando lotes. Estas vías presentan trazados irregulares que dificultan el tendido de líneas eléctricas y el acceso vehicular.</p>
+      <p>En las áreas más próximas al río se concentra la mayor cantidad de viviendas precarias, sin acceso a servicios formales, y se registra la presencia de basurales.</p>
+      <div class="alerta">
+        <span class="alerta-icono">⚠️</span>
+        <span>La totalidad de la zona se encuentra bajo <strong>cota 14</strong>, con excepción de las viviendas linderas a Av. Castro, lo que representa un factor de riesgo hídrico significativo.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SITUACIÓN SOCIO-ECONÓMICA -->
+  <div class="seccion">
+    <div class="seccion-header">
+      <span class="icono">📊</span>
+      <h2>Situación Socio-Económica</h2>
+    </div>
+    <div class="seccion-body">
+      <p>La población relevada exhibe un perfil etario joven, con una edad promedio de <strong>30,8 años</strong> y un promedio de <strong>3,6 personas por hogar</strong>. Los grupos familiares presentan ingresos bajos que no alcanzan a cubrir la canasta básica.</p>
+
+      <div class="canasta-card" style="margin: 14px 0;">
+        <div class="can-titulo">Análisis Canasta Básica · Mayo 2026</div>
+        <div class="canasta-vals">
+          <div class="canasta-val">
+            <div class="cv-label">Canasta básica</div>
+            <div class="cv-num">$1.469.000</div>
+          </div>
+          <div class="canasta-val">
+            <div class="cv-label">Ingreso prom. hogar</div>
+            <div class="cv-num">$807.533</div>
+          </div>
+          <div class="canasta-brecha">⚠ 42% por debajo de la canasta</div>
+        </div>
+      </div>
+
+      <p>La falta de cobertura de necesidades básicas se ve parcialmente mitigada por el acceso a comedores escolares en la población infantil, aunque esta alternativa resulta insuficiente para el conjunto familiar.</p>
+      <p>Se observa una marcada diferenciación interna: mientras algunos sectores del barrio cuentan con situaciones más regularizadas, otros presentan condiciones de alta precariedad en todos los indicadores relevados.</p>
+    </div>
+  </div>
+
+  <!-- SITUACIÓN ELÉCTRICA -->
+  <div class="seccion">
+    <div class="seccion-header">
+      <span class="icono">⚡</span>
+      <h2>Situación Eléctrica</h2>
+    </div>
+    <div class="seccion-body">
+      <div class="elec-container">
+        <div class="elec-gauge">
+          <svg width="80" height="80" viewBox="0 0 80 80">
+            <circle cx="40" cy="40" r="32" fill="none" stroke="#e0e0e0" stroke-width="8"/>
+            <circle cx="40" cy="40" r="32" fill="none" stroke="#e65100" stroke-width="8"
+              stroke-dasharray="80.4 200.96" stroke-linecap="round"/>
+          </svg>
+          <span class="elec-pct">~40%</span>
+        </div>
+        <div class="elec-info">
+          <div class="elec-titulo">Conexión legal estimada</div>
+          <div class="elec-desc">La zona presenta una problemática de hurto de energía similar a la observada en el primer cordón fuera del área céntrica. Existen sectores con tendido regular y otros sin cobertura.</div>
+          <div class="elec-barra-wrap">
+            <div class="elec-barra-label"><span>Legal</span><span>Irregular / Sin servicio</span></div>
+            <div class="elec-barra"><div class="elec-barra-fill" style="width: 40%;"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="alerta" style="margin-top: 14px;">
+        <span class="alerta-icono">⚠️</span>
+        <span>Se identifican conexiones precarias desde <strong>medidores comunitarios municipales</strong> (llaves térmicas en postes) desde los cuales múltiples viviendas toman energía mediante cables de baja sección, representando un riesgo eléctrico concreto. Algunos de estos medidores fueron retirados recientemente en el marco de trabajos coordinados con el municipio.</span>
+      </div>
+
+      <p style="margin-top: 14px;">La situación expone la falta de registro de consumo en las viviendas beneficiadas por el esquema municipal, generando un contraste marcado con quienes intentan regularizar su situación con la CEC. Asimismo, se detecta escaso recupero de materiales de la cooperativa, observándose elementos de la empresa utilizados en enganches clandestinos.</p>
+      <p>La zona cuenta con <strong>alumbrado público</strong>, aunque los vecinos refieren demoras habituales en la reparación de fallas.</p>
+    </div>
+  </div>
+
+  <!-- SERVICIOS E INFRAESTRUCTURA -->
+  <div class="seccion">
+    <div class="seccion-header">
+      <span class="icono">🔧</span>
+      <h2>Servicios e Infraestructura</h2>
+    </div>
+    <div class="seccion-body">
+      <div class="servicios-grid" style="margin-bottom: 16px;">
+        <div class="servicio-item servicio-parcial">
+          <span class="srv-icono">💧</span>Agua corriente <span class="tag tag-parcial">Parcial</span>
+        </div>
+        <div class="servicio-item servicio-parcial">
+          <span class="srv-icono">🚿</span>Cloaca <span class="tag tag-parcial">Parcial</span>
+        </div>
+        <div class="servicio-item servicio-no">
+          <span class="srv-icono">🔥</span>Gas natural <span class="tag tag-no">Sin conectar</span>
+        </div>
+        <div class="servicio-item servicio-si">
+          <span class="srv-icono">🌐</span>Internet <span class="tag tag-si">Megacable</span>
+        </div>
+        <div class="servicio-item servicio-parcial">
+          <span class="srv-icono">🗑️</span>Residuos <span class="tag tag-parcial">Irregular</span>
+        </div>
+        <div class="servicio-item servicio-si">
+          <span class="srv-icono">🚌</span>Transporte <span class="tag tag-si">Línea 4</span>
+        </div>
+      </div>
+
+      <table class="tabla-datos">
+        <tr><td>Agua corriente</td><td>Red presente, distribución mixta: domiciliaria en algunos sectores, traslado con mangueras en otros.</td></tr>
+        <tr><td>Cloacas</td><td>Presentes y conectadas en sectores; otros sin cobertura.</td></tr>
+        <tr><td>Gas</td><td>Se utiliza gas en garrafa. Según Gas Nea, la red pasaría por la zona llegando hasta el Río Uruguay, pero sin conexión domiciliaria.</td></tr>
+        <tr><td>Internet</td><td>Servicio de Megacable presente en todo el sector recorrido.</td></tr>
+        <tr><td>Recolección de residuos</td><td>Recorrido establecido aproximado de 3 veces por semana; los vecinos refieren que frecuentemente no se cumple. Se observan basurales.</td></tr>
+        <tr><td>Transporte público</td><td>Línea 4 por Av. Castro.</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- EDUCACIÓN Y SALUD -->
+  <div class="seccion">
+    <div class="seccion-header">
+      <span class="icono">🏫</span>
+      <h2>Educación y Salud</h2>
+    </div>
+    <div class="seccion-body">
+      <table class="tabla-datos">
+        <tr>
+          <td>Establecimiento educativo</td>
+          <td>Escuela N° 34 «Esteban Echeverría» (educación primaria y talleres educativos), sobre Av. Isaac Castro.</td>
+        </tr>
+        <tr>
+          <td>Establecimiento de salud</td>
+          <td>Centro de Salud Nebel, Av. Isaac Castro. Cuenta con pediatría, clínica general, ginecología y obstetricia.</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- MATERIAL Y VIVIENDA -->
+  <div class="seccion">
+    <div class="seccion-header">
+      <span class="icono">🏠</span>
+      <h2>Condiciones de Vivienda</h2>
+    </div>
+    <div class="seccion-body">
+      <p>El barrio presenta una composición heterogénea en cuanto al material de construcción. Las viviendas sobre las arterias principales tienden a ser de material noble, mientras que en los sectores más cercanos al río predominan las construcciones precarias de madera u otros materiales.</p>
+      <table class="tabla-datos" style="margin-top: 10px;">
+        <tr><td>Material noble (material)</td><td><span class="tag tag-si">Predominante en arteria principal</span></td></tr>
+        <tr><td>Madera / mixto</td><td><span class="tag tag-parcial">Predominante en sectores costeros</span></td></tr>
+        <tr><td>Promedio personas/hogar</td><td><strong>3,6</strong></td></tr>
+        <tr><td>Riesgo hídrico</td><td><span class="tag tag-no">Zona bajo cota 14 (salvo Av. Castro)</span></td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- EQUIPO -->
+  <div class="seccion">
+    <div class="seccion-header">
+      <span class="icono">👥</span>
+      <h2>Equipo de Trabajo</h2>
+    </div>
+    <div class="seccion-body">
+      <div class="equipo-grid">
+        <div class="equipo-chip">Tito Lampazzi</div>
+        <div class="equipo-chip">Agostina Rettori</div>
+        <div class="equipo-chip">Laura Canali</div>
+        <div class="equipo-chip">Nicolas Peri</div>
+        <div class="equipo-chip">Lucas Masso</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">
+  Cooperativa Eléctrica · Relevamiento Estratégico de Asentamientos · Concordia, Entre Ríos · 2026
+</div>
+
+</body>
+</html>

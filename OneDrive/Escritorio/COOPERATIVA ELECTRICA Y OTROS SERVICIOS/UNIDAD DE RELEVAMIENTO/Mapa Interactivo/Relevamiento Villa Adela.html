@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Relevamiento Villa Adela — Cooperativa Eléctrica</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Source+Sans+3:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #b34000;
+      --primary-dark: #7a2c00;
+      --primary-light: #fbe9e7;
+      --accent: #E65100;
+      --text: #1a2433;
+      --text-muted: #5a6a7a;
+      --border: #f0d8d0;
+      --bg: #f7f9fb;
+      --white: #ffffff;
+      --danger: #c62828;
+      --warning: #e65100;
+      --success: #2e7d32;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Source Sans 3', sans-serif; background: var(--bg); color: var(--text); font-size: 15px; line-height: 1.65; }
+
+    .header { background: linear-gradient(135deg, #7a2c00 0%, #b34000 60%, #E65100 100%); color: white; padding: 0; position: relative; overflow: hidden; }
+    .header::before { content: ''; position: absolute; top: -60px; right: -60px; width: 300px; height: 300px; border-radius: 50%; background: rgba(255,255,255,0.06); }
+    .header::after { content: ''; position: absolute; bottom: -80px; left: 40%; width: 200px; height: 200px; border-radius: 50%; background: rgba(255,255,255,0.04); }
+    .header-inner { position: relative; z-index: 1; display: flex; align-items: center; gap: 24px; padding: 28px 48px; }
+    .logo-wrap img { width: 64px; filter: drop-shadow(0 2px 6px rgba(0,0,0,0.2)); }
+    .header-text h1 { font-family: 'Playfair Display', serif; font-size: 26px; font-weight: 700; letter-spacing: 0.3px; margin-bottom: 4px; }
+    .header-text .subtitulo { font-size: 13px; opacity: 0.82; font-weight: 300; }
+    .header-text .fecha { font-size: 12px; opacity: 0.65; margin-top: 2px; font-weight: 300; }
+    .header-badge { margin-left: auto; background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); border-radius: 8px; padding: 10px 18px; text-align: center; backdrop-filter: blur(4px); }
+    .header-badge .zona-label { font-size: 10px; opacity: 0.75; text-transform: uppercase; letter-spacing: 1px; }
+    .header-badge .zona-val { font-size: 15px; font-weight: 600; margin-top: 2px; }
+
+    .nav-back { background: var(--white); border-bottom: 1px solid var(--border); padding: 10px 48px; }
+    .nav-back a { color: var(--primary); text-decoration: none; font-size: 13px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; transition: gap 0.2s; }
+    .nav-back a:hover { gap: 10px; }
+
+    .contenido { max-width: 960px; margin: 0 auto; padding: 40px 24px 60px; }
+
+    .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 32px; }
+    .kpi-card { background: var(--white); border-radius: 10px; padding: 18px 16px; border-top: 3px solid var(--primary); box-shadow: 0 2px 8px rgba(0,0,0,0.06); text-align: center; }
+    .kpi-card .kpi-icono { font-size: 22px; margin-bottom: 6px; }
+    .kpi-card .kpi-val { font-size: 22px; font-weight: 700; color: var(--primary); line-height: 1.1; margin-bottom: 4px; }
+    .kpi-card .kpi-lbl { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.4px; font-weight: 600; }
+
+    .seccion { background: var(--white); border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); margin-bottom: 24px; overflow: hidden; }
+    .seccion-header { background: var(--primary); color: white; padding: 12px 20px; display: flex; align-items: center; gap: 10px; }
+    .seccion-header .icono { font-size: 16px; }
+    .seccion-header h2 { font-size: 14px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+    .seccion-body { padding: 20px; }
+    .seccion-body p { margin-bottom: 12px; font-size: 14.5px; color: var(--text); }
+    .seccion-body p:last-child { margin-bottom: 0; }
+
+    .alerta { background: #fff3e0; border-left: 4px solid var(--warning); border-radius: 0 6px 6px 0; padding: 12px 16px; margin: 14px 0; font-size: 13.5px; color: #5d2f00; display: flex; gap: 10px; align-items: flex-start; }
+    .alerta .alerta-icono { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+    .alerta-roja { background: #fce8e6; border-left: 4px solid #c62828; border-radius: 0 6px 6px 0; padding: 12px 16px; margin: 14px 0; font-size: 13.5px; color: #5d0000; display: flex; gap: 10px; align-items: flex-start; }
+    .info-box { background: #e3f2fd; border-left: 4px solid #1976d2; border-radius: 0 6px 6px 0; padding: 12px 16px; margin: 14px 0; font-size: 13.5px; color: #0d2d4a; }
+
+    .tabla-datos { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+    .tabla-datos tr { border-bottom: 1px solid var(--border); }
+    .tabla-datos tr:last-child { border-bottom: none; }
+    .tabla-datos td { padding: 9px 12px; }
+    .tabla-datos td:first-child { color: var(--text-muted); font-weight: 600; width: 30%; }
+    .tabla-datos tr:hover td { background: var(--primary-light); }
+
+    .svc-table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+    .svc-table th { background: var(--primary-light); color: var(--primary); font-size: 11px; text-transform: uppercase; padding: 10px 12px; text-align: left; letter-spacing: 0.4px; font-weight: 700; }
+    .svc-table td { padding: 9px 12px; border-bottom: 1px solid var(--border); }
+    .svc-table tr:last-child td { border-bottom: none; }
+    .svc-table tr:hover td { background: var(--primary-light); }
+
+    .badge { display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 12px; font-weight: 600; }
+    .badge.si { background: #e6f4ea; color: #2e7d32; }
+    .badge.no { background: #fce8e6; color: #c62828; }
+    .badge.parcial { background: #fff8e1; color: #f57f17; }
+
+    .conclusion { background: var(--primary-light); border-radius: 10px; padding: 20px 24px; border-left: 5px solid var(--accent); margin-bottom: 24px; }
+    .conclusion h2 { font-size: 14px; font-weight: 700; color: var(--primary); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px; }
+    .conclusion p { font-size: 14.5px; line-height: 1.75; color: var(--text); }
+
+    .equipo-grid { display: flex; gap: 12px; flex-wrap: wrap; }
+    .equipo-chip { background: var(--primary-light); border: 1px solid #e0b0a0; color: var(--primary-dark); border-radius: 20px; padding: 6px 14px; font-size: 13px; font-weight: 600; }
+
+    .galeria { background: white; border-radius: 10px; padding: 24px; margin-bottom: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+    .galeria h2 { font-size: 14px; font-weight: 700; color: var(--primary); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 16px; }
+    .galeria-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
+    .galeria-item { border-radius: 8px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1); transition: transform 0.2s, box-shadow 0.2s; }
+    .galeria-item:hover { transform: translateY(-4px); box-shadow: 0 6px 20px rgba(0,0,0,0.18); }
+    .galeria-item img { width: 100%; height: 240px; object-fit: cover; display: block; cursor: zoom-in; }
+
+    #lightbox-overlay { display: none; position: fixed; z-index: 99999; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.92); justify-content: center; align-items: center; cursor: zoom-out; }
+    #lightbox-overlay.active { display: flex; }
+    #lightbox-overlay img { max-width: 92vw; max-height: 92vh; object-fit: contain; border-radius: 8px; box-shadow: 0 20px 60px rgba(0,0,0,0.5); }
+    #lightbox-close-btn { position: fixed; top: 20px; right: 30px; color: white; font-size: 36px; font-weight: 300; cursor: pointer; line-height: 1; z-index: 100000; background: rgba(0,0,0,0.4); width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: background 0.2s; user-select: none; }
+    #lightbox-close-btn:hover { background: rgba(0,0,0,0.7); }
+
+    .footer { background: var(--primary-dark); color: rgba(255,255,255,0.7); text-align: center; padding: 18px 24px; font-size: 12px; }
+    @media (max-width: 680px) { .kpi-grid { grid-template-columns: 1fr 1fr; } .header-inner { flex-wrap: wrap; padding: 20px; } .contenido { padding: 24px 16px 40px; } .nav-back { padding: 10px 16px; } }
+  </style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-inner">
+    <div class="logo-wrap"><img src="logo_cooperativa_transparente.png" alt="Cooperativa Eléctrica"></div>
+    <div class="header-text">
+      <h1>Relevamiento Villa Adela</h1>
+      <div class="subtitulo">Cooperativa Eléctrica · Concordia, Entre Ríos</div>
+      <div class="fecha">Relevamiento realizado: 25 al 27 de marzo de 2026</div>
+    </div>
+    <div class="header-badge">
+      <div class="zona-label">Zona</div>
+      <div class="zona-val">Sur Oeste</div>
+    </div>
+  </div>
+</div>
+
+<div class="nav-back">
+  <a href="Mapa Relevamiento Asentamientos.html">← Volver al mapa</a>
+</div>
+
+<div class="contenido">
+
+  <div class="kpi-grid">
+    <div class="kpi-card"><div class="kpi-icono">👤</div><div class="kpi-val">31,24</div><div class="kpi-lbl">Edad promedio</div></div>
+    <div class="kpi-card"><div class="kpi-icono">💼</div><div class="kpi-val">41,30%</div><div class="kpi-lbl">Trabajadores activos</div></div>
+    <div class="kpi-card"><div class="kpi-icono">⚡</div><div class="kpi-val">34%</div><div class="kpi-lbl">Conexión legal</div></div>
+    <div class="kpi-card"><div class="kpi-icono">📚</div><div class="kpi-val">Primario</div><div class="kpi-lbl">Nivel educ. predominante</div></div>
+  </div>
+
+  <div class="seccion">
+    <div class="seccion-header"><span class="icono">📍</span><h2>Introducción</h2></div>
+    <div class="seccion-body">
+      <p>El relevamiento se realizó entre los días 25 al 27 de marzo. Abarcó el sector delimitado por las calles <strong>San Miguel al oeste, San José al este, Canadá al sur y Dr. Fagalde al norte</strong>.</p>
+      <p>En la zona es notorio el desnivel del terreno entre las calles San Miguel y San José. Hay pasajes internos donde se observan viviendas habitadas, accesibles solo a pie, lo que dificulta la llegada de vehículos de servicios y ambulancias.</p>
+      <p>Las calles son todas de tierra y arena, con sectores de difícil acceso tanto para vehículos pequeños como para los de empresas de servicios. Las manzanas no están delimitadas y los pasajes fueron abiertos por los propios vecinos a medida que se instalaban.</p>
+    </div>
+  </div>
+
+  <div class="seccion">
+    <div class="seccion-header"><span class="icono">⚡</span><h2>Servicio Eléctrico</h2></div>
+    <div class="seccion-body">
+      <div class="alerta-roja"><span class="alerta-icono">🚨</span><span>Solo el <strong>34%</strong> de las familias relevadas cuenta con una conexión estable y legal. Es alarmante la cantidad de conexiones clandestinas a baja altura, lo que representa un riesgo para las personas y las viviendas.</span></div>
+      <p>En la esquina de Canadá y San Miguel existe un medidor comunitario del que se obtiene electricidad. En Idelfonso Cuadrado al 400 hay otro medidor comunitario. Sobre calle San José no existe línea eléctrica que permita conexión regular. Solo se observaron dos conexiones regulares con coaxiles, una de ellas para un familiar electrodependiente.</p>
+      <p>Muchos vecinos se quejan de bajas de tensión y electrodomésticos dañados. Algunas familias que tenían medidor propio tuvieron que desconectarse por el costo de la electricidad, quedando incluso con deudas pendientes.</p>
+      <div class="info-box">ℹ️ Internet Cooperativa no tiene redes en esta zona. Los vecinos utilizan servicios de otras empresas locales.</div>
+    </div>
+  </div>
+
+  <div class="seccion">
+    <div class="seccion-header"><span class="icono">🔧</span><h2>Servicios Públicos y Comunicación</h2></div>
+    <div class="seccion-body">
+      <table class="svc-table">
+        <thead><tr><th>Servicio</th><th>Estado</th><th>Detalle</th></tr></thead>
+        <tbody>
+          <tr><td>Cloacas</td><td><span class="badge no">Sin red</span></td><td>Utilizan pozos negros para tratamiento de desechos sanitarios</td></tr>
+          <tr><td>Agua corriente</td><td><span class="badge parcial">Limitada</span></td><td>Provista por la Cooperativa de Agua Potable de Villa Adela. Muchos vecinos la comparten por el costo de instalación</td></tr>
+          <tr><td>Alumbrado público</td><td><span class="badge parcial">Insuficiente</span></td><td>Existe sobre Idelfonso Cuadrado y San Miguel, una unidad por cuadra</td></tr>
+          <tr><td>Transporte público</td><td><span class="badge parcial">Alejado</span></td><td>Entra una línea pero queda a 4-5 cuadras del sector relevado</td></tr>
+          <tr><td>Recolección residuos</td><td><span class="badge no">Deficiente</span></td><td>Contenedor retirado. Camión pasa 3 veces/semana por esquina de Idelfonso Cuadrado y San Antonio de Padua. Se generaron basurales</td></tr>
+          <tr><td>Telefonía celular</td><td><span class="badge si">Disponible</span></td><td>Principal medio de comunicación</td></tr>
+          <tr><td>TV</td><td><span class="badge si">Disponible</span></td><td>DirecTV prepago, cargado según disponibilidad económica</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="seccion">
+    <div class="seccion-header"><span class="icono">🏫</span><h2>Educación y Salud</h2></div>
+    <div class="seccion-body">
+      <table class="tabla-datos">
+        <tr><td>Educación primaria</td><td>Escuela Almirante Guillermo Brown (colectora), con jardín de infantes. Jardín de infantes de gestión privada sobre Idelfonso Cuadrado.</td></tr>
+        <tr><td>Educación secundaria</td><td>Escuela Damian P. Garat (colectora), con tres turnos incluyendo educación de adultos nocturna.</td></tr>
+        <tr><td>Salud</td><td>Centro de Atención de la Salud sobre Idelfonso Cuadrado, funciona las 24 horas con ambulancia permanente.</td></tr>
+        <tr><td>Otros</td><td>Salón comunitario, Club San Lorenzo, parroquia y Cooperativa de Agua Potable. Comisaría en Dr. Fagalde y Pablo VI.</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="seccion">
+    <div class="seccion-header"><span class="icono">👨‍👩‍👧</span><h2>Información de las Familias</h2></div>
+    <div class="seccion-body">
+      <p>La mayoría no posee ingresos estables: predominan los trabajos irregulares, changas y comercios instalados en viviendas. El ingreso estable más frecuente es la Asignación Universal por Hijo.</p>
+      <p>Los que declararon monto de ingresos se encuentran <strong>por debajo de la canasta básica total de $1.397.000</strong> (INDEC, marzo 2026). La mayoría no tiene las necesidades básicas satisfechas y presenta carencias alimentarias.</p>
+      <p>Los terrenos son ocupados sin título claro — algunos privados, otros municipales — aunque en mayoría han sido censados y regularizados vía RENABAP.</p>
+      <p>La actividad comercial se compone de almacenes y quioscos instalados en las propias viviendas.</p>
+    </div>
+  </div>
+
+  <div class="conclusion">
+    <h2>Conclusión</h2>
+    <p>Todo lo detallado en el presente informe deja en evidencia que el barrio relevado presenta carencias estructurales y que las familias residentes tienen privación de determinados derechos sociales. La situación eléctrica es crítica, con el 66% de las familias sin conexión legal, y la infraestructura de acceso y saneamiento representa riesgos concretos para la salud y la seguridad de sus habitantes.</p>
+  </div>
+
+  <div class="seccion">
+    <div class="seccion-header"><span class="icono">👥</span><h2>Equipo de Trabajo</h2></div>
+    <div class="seccion-body">
+      <div class="equipo-grid">
+        <div class="equipo-chip">Peri Nicolás</div>
+        <div class="equipo-chip">Masso Lucas</div>
+        <div class="equipo-chip">Agostina Rettori</div>
+        <div class="equipo-chip">Laura Canali</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="galeria">
+    <h2>📷 Registro Fotográfico — Villa Adela</h2>
+    <div class="galeria-grid">
+      <div class="galeria-item"><img src="villa_adela_1.jpg" alt="Foto del relevamiento"></div>
+      <div class="galeria-item"><img src="villa_adela_2.jpg" alt="Foto del relevamiento"></div>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">Cooperativa Eléctrica · Relevamiento Estratégico de Asentamientos · Concordia, Entre Ríos · 2026</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  var overlay = document.createElement('div'); overlay.id = 'lightbox-overlay';
+  var closeBtn = document.createElement('span'); closeBtn.id = 'lightbox-close-btn'; closeBtn.innerHTML = '&times;';
+  var imgEl = document.createElement('img'); imgEl.alt = 'Foto ampliada';
+  overlay.appendChild(closeBtn); overlay.appendChild(imgEl); document.body.appendChild(overlay);
+  var imgs = document.querySelectorAll('.galeria-item img');
+  for (var i = 0; i < imgs.length; i++) { imgs[i].addEventListener('click', function(e) { e.stopPropagation(); imgEl.src = this.src; overlay.classList.add('active'); document.body.style.overflow = 'hidden'; }); }
+  function cerrar() { overlay.classList.remove('active'); document.body.style.overflow = ''; }
+  overlay.addEventListener('click', cerrar); closeBtn.addEventListener('click', cerrar);
+  document.addEventListener('keydown', function(e) { if (e.key === 'Escape') cerrar(); });
+});
+</script>
+</body>
+</html>

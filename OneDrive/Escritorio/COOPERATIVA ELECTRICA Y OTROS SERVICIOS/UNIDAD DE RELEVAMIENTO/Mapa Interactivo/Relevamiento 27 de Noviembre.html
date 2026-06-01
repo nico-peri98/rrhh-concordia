@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Relevamiento 27 de Noviembre — Cooperativa Eléctrica</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Source+Sans+3:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #1e6fa8;
+      --primary-dark: #0d4a75;
+      --primary-light: #e8f1fb;
+      --accent: #4ea0d8;
+      --text: #1a2433;
+      --text-muted: #5a6a7a;
+      --border: #b8d4ee;
+      --bg: #f7f9fb;
+      --white: #ffffff;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Source Sans 3', sans-serif; background: var(--bg); color: var(--text); font-size: 15px; line-height: 1.65; }
+
+    .header { background: linear-gradient(135deg, #0d4a75 0%, #1e6fa8 60%, #4ea0d8 100%); color: white; padding: 0; position: relative; overflow: hidden; }
+    .header::before { content: ''; position: absolute; top: -60px; right: -60px; width: 300px; height: 300px; border-radius: 50%; background: rgba(255,255,255,0.06); }
+    .header::after { content: ''; position: absolute; bottom: -80px; left: 40%; width: 200px; height: 200px; border-radius: 50%; background: rgba(255,255,255,0.04); }
+    .header-inner { position: relative; z-index: 1; display: flex; align-items: center; gap: 24px; padding: 28px 48px; }
+    .logo-wrap img { width: 64px; filter: drop-shadow(0 2px 6px rgba(0,0,0,0.2)); }
+    .header-text h1 { font-family: 'Playfair Display', serif; font-size: 26px; font-weight: 700; letter-spacing: 0.3px; margin-bottom: 4px; }
+    .header-text .subtitulo { font-size: 13px; opacity: 0.82; font-weight: 300; }
+    .header-text .fecha { font-size: 12px; opacity: 0.65; margin-top: 2px; font-weight: 300; }
+    .header-badge { margin-left: auto; background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); border-radius: 8px; padding: 10px 18px; text-align: center; backdrop-filter: blur(4px); }
+    .header-badge .zona-label { font-size: 10px; opacity: 0.75; text-transform: uppercase; letter-spacing: 1px; }
+    .header-badge .zona-val { font-size: 15px; font-weight: 600; margin-top: 2px; }
+
+    .nav-back { background: var(--white); border-bottom: 1px solid var(--border); padding: 10px 48px; }
+    .nav-back a { color: var(--primary); text-decoration: none; font-size: 13px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; transition: gap 0.2s; }
+    .nav-back a:hover { gap: 10px; }
+
+    .contenido { max-width: 960px; margin: 0 auto; padding: 40px 24px 60px; }
+
+    .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 32px; }
+    .kpi-card { background: var(--white); border-radius: 10px; padding: 18px 16px; border-top: 3px solid var(--primary); box-shadow: 0 2px 8px rgba(0,0,0,0.06); text-align: center; }
+    .kpi-card .kpi-icono { font-size: 22px; margin-bottom: 6px; }
+    .kpi-card .kpi-val { font-size: 22px; font-weight: 700; color: var(--primary); line-height: 1.1; margin-bottom: 4px; }
+    .kpi-card .kpi-lbl { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.4px; font-weight: 600; }
+
+    .seccion { background: var(--white); border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); margin-bottom: 24px; overflow: hidden; }
+    .seccion-header { background: var(--primary); color: white; padding: 12px 20px; display: flex; align-items: center; gap: 10px; }
+    .seccion-header .icono { font-size: 16px; }
+    .seccion-header h2 { font-size: 14px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+    .seccion-body { padding: 20px; }
+    .seccion-body p { margin-bottom: 12px; font-size: 14.5px; color: var(--text); }
+    .seccion-body p:last-child { margin-bottom: 0; }
+
+    .alerta { background: #fff8e1; border-left: 4px solid #f9a825; border-radius: 0 6px 6px 0; padding: 12px 16px; margin: 14px 0; font-size: 13.5px; color: #5d3f00; display: flex; gap: 10px; align-items: flex-start; }
+    .alerta-roja { background: #fce8e6; border-left: 4px solid #c62828; border-radius: 0 6px 6px 0; padding: 12px 16px; margin: 14px 0; font-size: 13.5px; color: #5d0000; display: flex; gap: 10px; align-items: flex-start; }
+
+    .tabla-datos { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+    .tabla-datos tr { border-bottom: 1px solid var(--border); }
+    .tabla-datos tr:last-child { border-bottom: none; }
+    .tabla-datos td { padding: 9px 12px; }
+    .tabla-datos td:first-child { color: var(--text-muted); font-weight: 600; width: 30%; }
+    .tabla-datos tr:hover td { background: var(--primary-light); }
+
+    .svc-table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+    .svc-table th { background: var(--primary-light); color: var(--primary-dark); font-size: 11px; text-transform: uppercase; padding: 10px 12px; text-align: left; letter-spacing: 0.4px; font-weight: 700; }
+    .svc-table td { padding: 9px 12px; border-bottom: 1px solid var(--border); }
+    .svc-table tr:last-child td { border-bottom: none; }
+    .svc-table tr:hover td { background: var(--primary-light); }
+
+    .badge { display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 12px; font-weight: 600; }
+    .badge.si { background: #e6f4ea; color: #2e7d32; }
+    .badge.no { background: #fce8e6; color: #c62828; }
+    .badge.parcial { background: #fff8e1; color: #f57f17; }
+
+    .conclusion { background: var(--primary-light); border-radius: 10px; padding: 20px 24px; border-left: 5px solid var(--accent); margin-bottom: 24px; }
+    .conclusion h2 { font-size: 14px; font-weight: 700; color: var(--primary); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px; }
+    .conclusion p { font-size: 14.5px; line-height: 1.75; color: var(--text); }
+
+    .equipo-grid { display: flex; gap: 12px; flex-wrap: wrap; }
+    .equipo-chip { background: var(--primary-light); border: 1px solid #90bce0; color: var(--primary-dark); border-radius: 20px; padding: 6px 14px; font-size: 13px; font-weight: 600; }
+
+    .galeria { background: white; border-radius: 10px; padding: 24px; margin-bottom: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+    .galeria h2 { font-size: 14px; font-weight: 700; color: var(--primary); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 16px; }
+    .galeria-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
+    .galeria-item { border-radius: 8px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1); transition: transform 0.2s, box-shadow 0.2s; }
+    .galeria-item:hover { transform: translateY(-4px); box-shadow: 0 6px 20px rgba(0,0,0,0.18); }
+    .galeria-item img { width: 100%; height: 240px; object-fit: cover; display: block; cursor: zoom-in; }
+
+    #lightbox-overlay { display: none; position: fixed; z-index: 99999; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.92); justify-content: center; align-items: center; cursor: zoom-out; }
+    #lightbox-overlay.active { display: flex; }
+    #lightbox-overlay img { max-width: 92vw; max-height: 92vh; object-fit: contain; border-radius: 8px; box-shadow: 0 20px 60px rgba(0,0,0,0.5); }
+    #lightbox-close-btn { position: fixed; top: 20px; right: 30px; color: white; font-size: 36px; font-weight: 300; cursor: pointer; z-index: 100000; background: rgba(0,0,0,0.4); width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: background 0.2s; user-select: none; }
+    #lightbox-close-btn:hover { background: rgba(0,0,0,0.7); }
+
+    .footer { background: var(--primary-dark); color: rgba(255,255,255,0.7); text-align: center; padding: 18px 24px; font-size: 12px; }
+    @media (max-width: 680px) { .kpi-grid { grid-template-columns: 1fr 1fr; } .header-inner { flex-wrap: wrap; padding: 20px; } .contenido { padding: 24px 16px 40px; } .nav-back { padding: 10px 16px; } }
+  </style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-inner">
+    <div class="logo-wrap"><img src="logo_cooperativa_transparente.png" alt="Cooperativa Eléctrica"></div>
+    <div class="header-text">
+      <h1>Relevamiento 27 de Noviembre</h1>
+      <div class="subtitulo">Cooperativa Eléctrica · Concordia, Entre Ríos</div>
+      <div class="fecha">Sector Noroeste · Nogueira (S), Vía del ferrocarril (N), Pbro. J. Odiard (E), Bv. Yuquerí (O)</div>
+    </div>
+    <div class="header-badge">
+      <div class="zona-label">Zona</div>
+      <div class="zona-val">Noroeste</div>
+    </div>
+  </div>
+</div>
+
+<div class="nav-back">
+  <a href="Mapa Relevamiento Asentamientos.html">← Volver al mapa</a>
+</div>
+
+<div class="contenido">
+
+  <div class="kpi-grid">
+    <div class="kpi-card"><div class="kpi-icono">👤</div><div class="kpi-val">22,41</div><div class="kpi-lbl">Edad promedio</div></div>
+    <div class="kpi-card"><div class="kpi-icono">🏠</div><div class="kpi-val">3,92</div><div class="kpi-lbl">Pers. por hogar</div></div>
+    <div class="kpi-card"><div class="kpi-icono">⚡</div><div class="kpi-val">0%</div><div class="kpi-lbl">Conexión legal</div></div>
+    <div class="kpi-card"><div class="kpi-icono">📅</div><div class="kpi-val">Pandemia</div><div class="kpi-lbl">Origen del asentamiento</div></div>
+  </div>
+
+  <div class="seccion">
+    <div class="seccion-header"><span class="icono">📍</span><h2>Introducción</h2></div>
+    <div class="seccion-body">
+      <p>El asentamiento está ubicado en el sector noroeste de la ciudad. Lo delimitan las calles Nogueira al sur, la vía del ferrocarril al norte, al este la calle Presbítero Jorge Odiard y al oeste el Boulevard Yuquerí.</p>
+      <p>Sus inicios datan desde la época de pandemia, donde se empezaron a ocupar las primeras manzanas al sur, pegado al asentamiento La Roca, y luego se fue extendiendo hacia el norte hasta limitar con la vía. Probablemente se siga extendiendo hacia el mismo sentido, pues son terrenos baldíos.</p>
+    </div>
+  </div>
+
+  <div class="seccion">
+    <div class="seccion-header"><span class="icono">⚡</span><h2>Servicio Eléctrico</h2></div>
+    <div class="seccion-body">
+      <div class="alerta-roja"><span>⚠️ El <strong>100%</strong> de las familias relevadas tiene conexión irregular de energía. Todas las familias del sector están enganchadas.</span></div>
+      <p>Los enganches vienen desde el asentamiento La Roca, donde existen líneas en altura, específicamente desde la calle 53 Este. Los cables se van pasando de casa en casa, a escasa altura, con postaciones realizadas por los mismos vecinos con postes obtenidos de aserraderos, sin grosor apto para ser firmes.</p>
+      <p>No se observaron transformadores cercanos. Los vecinos han concurrido en varias oportunidades a la Cooperativa Eléctrica y al municipio solicitando una conexión reglamentaria, pero se encuentran con el inconveniente de que no existen líneas para brindar el servicio en la zona.</p>
+      <p>Los pobladores manifiestan gran entusiasmo con la posibilidad de regularizar el servicio, ya que entienden la importancia de una conexión formal y segura. Surge la inquietud sobre la capacidad de afrontar económicamente los costos asociados.</p>
+    </div>
+  </div>
+
+  <div class="seccion">
+    <div class="seccion-header"><span class="icono">🔧</span><h2>Servicios Públicos y Comunicación</h2></div>
+    <div class="seccion-body">
+      <table class="svc-table">
+        <thead><tr><th>Servicio</th><th>Estado</th><th>Detalle</th></tr></thead>
+        <tbody>
+          <tr><td>Cloacas</td><td><span class="badge no">Sin red</span></td><td>El barrio no posee red cloacal</td></tr>
+          <tr><td>Agua corriente</td><td><span class="badge si">Parcial</span></td><td>En el lote pero no dentro de las viviendas. Mangueras por la calle, propensas a roturas</td></tr>
+          <tr><td>Alumbrado público</td><td><span class="badge no">Sin red</span></td><td>No hay líneas. Vecinos colocan reflectores en las puertas de sus viviendas</td></tr>
+          <tr><td>Calles</td><td><span class="badge no">Sin pavimentar</span></td><td>Calles de arena</td></tr>
+          <tr><td>Transporte público</td><td><span class="badge no">Alejado</span></td><td>Deben trasladarse a Av. Paula Albarracin de Sarmiento o Bv. Yuquerí</td></tr>
+          <tr><td>Recolección residuos</td><td><span class="badge no">Deficiente</span></td><td>Múltiples basurales. Vecinos recurren a la quema de basura</td></tr>
+          <tr><td>Telefonía celular</td><td><span class="badge si">Disponible</span></td><td>Utilizada por la mayoría de los relevados</td></tr>
+          <tr><td>TV / Internet</td><td><span class="badge si">Parcial</span></td><td>Antenas DIRECTV y fibra óptica de Megacable</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="seccion">
+    <div class="seccion-header"><span class="icono">🏫</span><h2>Educación y Salud</h2></div>
+    <div class="seccion-body">
+      <table class="tabla-datos">
+        <tr><td>Educación</td><td>Escuela N°76 "Madre Teresa de Calcuta" o Escuela N°71 "Independencia". Algunos hijos menores concurren al Hogar Nueva Vida (Bv. Yuquerí), con talleres y actividades recreativas.</td></tr>
+        <tr><td>Salud</td><td>Centro de Atención Primaria del barrio Constitución. Para situaciones complejas acuden al Hospital Masvernat.</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="seccion">
+    <div class="seccion-header"><span class="icono">👨‍👩‍👧</span><h2>Información de las Familias</h2></div>
+    <div class="seccion-body">
+      <p>Los habitantes son por lo general personas jóvenes con hijos menores. Han ido ocupando los terrenos y trazando los lotes a medida que fueron formando sus propias familias. La totalidad de los entrevistados manifiestan que la casa es propia y el terreno municipal. <strong>No tienen certificado de RENABAP</strong>.</p>
+      <div class="alerta"><span>📊 Los ingresos declarados son bajos e inestables. <strong>No alcanzan el monto de la canasta básica alimentaria de $1.434.464</strong> (INDEC, calculada para grupo familiar de cuatro personas).</span></div>
+      <table class="tabla-datos" style="margin-top:12px">
+        <tr><td>Ocupación</td><td>Changas, aserraderos o trabajo en la fruta. Muchos tienen caballos y carros con los que recogen basura para reciclado.</td></tr>
+        <tr><td>Ingresos</td><td>La mayoría de las mujeres cobra la AUH como entrada fija. Las changas masculinas dejan entre $15.000 y $25.000 diarios cuando se concretan.</td></tr>
+        <tr><td>Nivel educativo</td><td>80% nivel primario · 18,67% secundario · 1,33% terciario</td></tr>
+        <tr><td>Material de viviendas</td><td>22 viviendas de madera (precarias, una habitación, cocina-comedor y baño exterior) · 4 de material noble</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="conclusion">
+    <h2>Conclusión</h2>
+    <p>Se trata de un asentamiento nuevo y en continua expansión, con hogares muy precarios y dificultades para acceder a los servicios básicos. Todos los vecinos entrevistados han manifestado gran entusiasmo respecto a la posibilidad de regularizar el servicio eléctrico en su barrio, ya que entienden la importancia de contar con una conexión formal y segura. Sin embargo, surge la inquietud compartida sobre la capacidad de afrontar económicamente los costos asociados.</p>
+  </div>
+
+  <div class="seccion">
+    <div class="seccion-header"><span class="icono">👥</span><h2>Equipo de Trabajo</h2></div>
+    <div class="seccion-body">
+      <div class="equipo-grid">
+        <div class="equipo-chip">Lucas Masso</div>
+        <div class="equipo-chip">Agostina Rettori</div>
+        <div class="equipo-chip">Nicolás Peri</div>
+        <div class="equipo-chip">Laura Canali</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="galeria">
+    <h2>📷 Registro Fotográfico — 27 de Noviembre</h2>
+    <div class="galeria-grid">
+      <div class="galeria-item"><img src="27nov_1.jpg" alt="Foto del relevamiento"></div>
+      <div class="galeria-item"><img src="27nov_2.jpg" alt="Foto del relevamiento"></div>
+      <div class="galeria-item"><img src="27nov_3.jpg" alt="Foto del relevamiento"></div>
+      <div class="galeria-item"><img src="27nov_4.jpg" alt="Foto del relevamiento"></div>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">Cooperativa Eléctrica · Relevamiento Estratégico de Asentamientos · Concordia, Entre Ríos · 2026</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  var overlay = document.createElement('div'); overlay.id = 'lightbox-overlay';
+  var closeBtn = document.createElement('span'); closeBtn.id = 'lightbox-close-btn'; closeBtn.innerHTML = '&times;';
+  var imgEl = document.createElement('img'); imgEl.alt = 'Foto ampliada';
+  overlay.appendChild(closeBtn); overlay.appendChild(imgEl); document.body.appendChild(overlay);
+  var imgs = document.querySelectorAll('.galeria-item img');
+  for (var i = 0; i < imgs.length; i++) { imgs[i].addEventListener('click', function(e) { e.stopPropagation(); imgEl.src = this.src; overlay.classList.add('active'); document.body.style.overflow = 'hidden'; }); }
+  function cerrar() { overlay.classList.remove('active'); document.body.style.overflow = ''; }
+  overlay.addEventListener('click', cerrar); closeBtn.addEventListener('click', cerrar);
+  document.addEventListener('keydown', function(e) { if (e.key === 'Escape') cerrar(); });
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cooperativa Eléctrica — Relevamiento de Asentamientos</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, sans-serif;
+      background: linear-gradient(135deg, #f5f0e1 0%, #e8dfc9 100%);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+    
+    .container {
+      max-width: 700px;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      padding: 50px 40px;
+      text-align: center;
+    }
+    
+    .logo {
+      width: 180px;
+      height: auto;
+      margin: 0 auto 30px;
+    }
+    
+    h1 {
+      font-size: 32px;
+      font-weight: 700;
+      color: #1a3d2e;
+      margin-bottom: 12px;
+    }
+    
+    .subtitle {
+      font-size: 16px;
+      color: #00a651;
+      font-weight: 600;
+      margin-bottom: 30px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    p {
+      font-size: 15px;
+      color: #555;
+      line-height: 1.8;
+      margin-bottom: 20px;
+    }
+    
+    .features {
+      background: #f4f6f9;
+      border-radius: 8px;
+      padding: 25px;
+      margin: 30px 0;
+      text-align: left;
+    }
+    
+    .features h3 {
+      color: #1a3d2e;
+      font-size: 16px;
+      margin-bottom: 15px;
+      text-align: center;
+    }
+    
+    .feature-item {
+      display: flex;
+      align-items: flex-start;
+      margin-bottom: 12px;
+      font-size: 14px;
+      color: #444;
+    }
+    
+    .feature-item::before {
+      content: "✓";
+      color: #00a651;
+      font-weight: 700;
+      margin-right: 12px;
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+    
+    .cta-button {
+      display: inline-block;
+      background: linear-gradient(135deg, #1a3d2e, #00a651);
+      color: white;
+      padding: 16px 40px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 16px;
+      transition: transform 0.2s, box-shadow 0.2s;
+      margin-top: 20px;
+      box-shadow: 0 4px 12px rgba(0, 166, 81, 0.3);
+    }
+    
+    .cta-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(0, 166, 81, 0.4);
+    }
+    
+    .footer {
+      margin-top: 40px;
+      padding-top: 20px;
+      border-top: 1px solid #e0e0e0;
+      font-size: 13px;
+      color: #888;
+    }
+    
+    .footer a {
+      color: #00a651;
+      text-decoration: none;
+      font-weight: 500;
+    }
+    
+    .footer a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <img src="logo_cooperativa_transparente.png" alt="Cooperativa Eléctrica" class="logo">
+  
+  <h1>Relevamiento de Asentamientos</h1>
+  <div class="subtitle">Concordia, Entre Ríos</div>
+  
+  <p>Proyecto de mapeo y análisis de las condiciones de vida en los asentamientos urbanos de la ciudad, con enfoque en acceso a servicios básicos, infraestructura eléctrica y situación socioeconómica de las familias.</p>
+  
+  <div class="features">
+    <h3>Contenido del relevamiento</h3>
+    <div class="feature-item">Mapas georreferenciados de asentamientos en Concordia</div>
+    <div class="feature-item">Informes detallados con datos demográficos</div>
+    <div class="feature-item">Análisis de cobertura de servicios públicos</div>
+    <div class="feature-item">Evaluación de situación eléctrica</div>
+    <div class="feature-item">Documentación de necesidades básicas</div>
+  </div>
+  
+  <p style="font-weight: 500; color: #1a3d2e; margin-top: 25px;">
+    Asentamientos incluidos:
+  </p>
+  <p style="margin-bottom: 30px;">
+    <strong>Villa Adela</strong> · <strong>Carretera La Cruz</strong> · <strong>Barrio Golf</strong> · <strong>27 de Noviembre</strong> · <strong>Villa Busti</strong> · <strong>Barrio Nebel</strong> · <strong>Barrio Sarmiento</strong>
+  </p>
+  
+  <a href="Mapa Relevamiento Asentamientos.html" class="cta-button">Ver Mapa Interactivo</a>
+  
+  <div class="footer">
+    <p style="margin-bottom: 10px;">Equipo de Relevamiento</p>
+    <p>Lucas Masso · Agostina Rettori · Nicolás Peri · Laura Canali · Tito Lampazzi</p>
+    <p style="margin-top: 15px;">
+      <a href="https://github.com/relevamientoestrategico/Mapa-Cooperativa">GitHub Repository</a>
+    </p>
+  </div>
+</div>
+
+</body>
+</html>

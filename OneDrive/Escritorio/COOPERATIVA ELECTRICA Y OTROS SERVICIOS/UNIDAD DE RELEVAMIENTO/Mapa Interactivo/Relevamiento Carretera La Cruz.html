@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Relevamiento Carretera La Cruz — Cooperativa Eléctrica</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Source+Sans+3:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #c8a800;
+      --primary-dark: #8a7200;
+      --primary-light: #fffde7;
+      --accent: #f9a825;
+      --text: #1a2433;
+      --text-muted: #5a6a7a;
+      --border: #f0e8b0;
+      --bg: #f7f9fb;
+      --white: #ffffff;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Source Sans 3', sans-serif; background: var(--bg); color: var(--text); font-size: 15px; line-height: 1.65; }
+
+    .header { background: linear-gradient(135deg, #8a7200 0%, #c8a800 60%, #f9d000 100%); color: #2a1f00; padding: 0; position: relative; overflow: hidden; }
+    .header::before { content: ''; position: absolute; top: -60px; right: -60px; width: 300px; height: 300px; border-radius: 50%; background: rgba(255,255,255,0.08); }
+    .header::after { content: ''; position: absolute; bottom: -80px; left: 40%; width: 200px; height: 200px; border-radius: 50%; background: rgba(255,255,255,0.05); }
+    .header-inner { position: relative; z-index: 1; display: flex; align-items: center; gap: 24px; padding: 28px 48px; }
+    .logo-wrap img { width: 64px; filter: drop-shadow(0 2px 6px rgba(0,0,0,0.15)); }
+    .header-text h1 { font-family: 'Playfair Display', serif; font-size: 26px; font-weight: 700; letter-spacing: 0.3px; margin-bottom: 4px; color: #1a1000; }
+    .header-text .subtitulo { font-size: 13px; opacity: 0.75; font-weight: 300; color: #2a1f00; }
+    .header-text .fecha { font-size: 12px; opacity: 0.6; margin-top: 2px; font-weight: 300; color: #2a1f00; }
+    .header-badge { margin-left: auto; background: rgba(0,0,0,0.12); border: 1px solid rgba(0,0,0,0.15); border-radius: 8px; padding: 10px 18px; text-align: center; }
+    .header-badge .zona-label { font-size: 10px; opacity: 0.65; text-transform: uppercase; letter-spacing: 1px; color: #2a1f00; }
+    .header-badge .zona-val { font-size: 15px; font-weight: 600; margin-top: 2px; color: #1a1000; }
+
+    .nav-back { background: var(--white); border-bottom: 1px solid var(--border); padding: 10px 48px; }
+    .nav-back a { color: var(--primary-dark); text-decoration: none; font-size: 13px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; transition: gap 0.2s; }
+    .nav-back a:hover { gap: 10px; }
+
+    .contenido { max-width: 960px; margin: 0 auto; padding: 40px 24px 60px; }
+
+    .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 32px; }
+    .kpi-card { background: var(--white); border-radius: 10px; padding: 18px 16px; border-top: 3px solid var(--primary); box-shadow: 0 2px 8px rgba(0,0,0,0.06); text-align: center; }
+    .kpi-card .kpi-icono { font-size: 22px; margin-bottom: 6px; }
+    .kpi-card .kpi-val { font-size: 22px; font-weight: 700; color: var(--primary-dark); line-height: 1.1; margin-bottom: 4px; }
+    .kpi-card .kpi-lbl { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.4px; font-weight: 600; }
+
+    .seccion { background: var(--white); border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); margin-bottom: 24px; overflow: hidden; }
+    .seccion-header { background: var(--primary); color: #1a1000; padding: 12px 20px; display: flex; align-items: center; gap: 10px; }
+    .seccion-header .icono { font-size: 16px; }
+    .seccion-header h2 { font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+    .seccion-body { padding: 20px; }
+    .seccion-body p { margin-bottom: 12px; font-size: 14.5px; color: var(--text); }
+    .seccion-body p:last-child { margin-bottom: 0; }
+
+    .alerta { background: #fff8e1; border-left: 4px solid #f9a825; border-radius: 0 6px 6px 0; padding: 12px 16px; margin: 14px 0; font-size: 13.5px; color: #5d3f00; display: flex; gap: 10px; align-items: flex-start; }
+    .info-box { background: #e3f2fd; border-left: 4px solid #1976d2; border-radius: 0 6px 6px 0; padding: 12px 16px; margin: 14px 0; font-size: 13.5px; color: #0d2d4a; }
+
+    .tabla-datos { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+    .tabla-datos tr { border-bottom: 1px solid var(--border); }
+    .tabla-datos tr:last-child { border-bottom: none; }
+    .tabla-datos td { padding: 9px 12px; }
+    .tabla-datos td:first-child { color: var(--text-muted); font-weight: 600; width: 30%; }
+    .tabla-datos tr:hover td { background: var(--primary-light); }
+
+    .svc-table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+    .svc-table th { background: var(--primary-light); color: var(--primary-dark); font-size: 11px; text-transform: uppercase; padding: 10px 12px; text-align: left; letter-spacing: 0.4px; font-weight: 700; }
+    .svc-table td { padding: 9px 12px; border-bottom: 1px solid var(--border); }
+    .svc-table tr:last-child td { border-bottom: none; }
+    .svc-table tr:hover td { background: var(--primary-light); }
+
+    .badge { display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 12px; font-weight: 600; }
+    .badge.si { background: #e6f4ea; color: #2e7d32; }
+    .badge.no { background: #fce8e6; color: #c62828; }
+    .badge.parcial { background: #fff8e1; color: #f57f17; }
+
+    .conclusion { background: var(--primary-light); border-radius: 10px; padding: 20px 24px; border-left: 5px solid var(--primary); margin-bottom: 24px; }
+    .conclusion h2 { font-size: 14px; font-weight: 700; color: var(--primary-dark); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px; }
+    .conclusion p { font-size: 14.5px; line-height: 1.75; color: var(--text); }
+
+    .equipo-grid { display: flex; gap: 12px; flex-wrap: wrap; }
+    .equipo-chip { background: var(--primary-light); border: 1px solid #e0cc60; color: var(--primary-dark); border-radius: 20px; padding: 6px 14px; font-size: 13px; font-weight: 600; }
+
+    .galeria { background: white; border-radius: 10px; padding: 24px; margin-bottom: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+    .galeria h2 { font-size: 14px; font-weight: 700; color: var(--primary-dark); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 16px; }
+    .galeria-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
+    .galeria-item { border-radius: 8px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1); transition: transform 0.2s, box-shadow 0.2s; }
+    .galeria-item:hover { transform: translateY(-4px); box-shadow: 0 6px 20px rgba(0,0,0,0.18); }
+    .galeria-item img { width: 100%; height: 240px; object-fit: cover; display: block; cursor: zoom-in; }
+
+    #lightbox-overlay { display: none; position: fixed; z-index: 99999; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.92); justify-content: center; align-items: center; cursor: zoom-out; }
+    #lightbox-overlay.active { display: flex; }
+    #lightbox-overlay img { max-width: 92vw; max-height: 92vh; object-fit: contain; border-radius: 8px; box-shadow: 0 20px 60px rgba(0,0,0,0.5); }
+    #lightbox-close-btn { position: fixed; top: 20px; right: 30px; color: white; font-size: 36px; font-weight: 300; cursor: pointer; z-index: 100000; background: rgba(0,0,0,0.4); width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: background 0.2s; user-select: none; }
+    #lightbox-close-btn:hover { background: rgba(0,0,0,0.7); }
+
+    .footer { background: var(--primary-dark); color: rgba(255,255,255,0.7); text-align: center; padding: 18px 24px; font-size: 12px; }
+    @media (max-width: 680px) { .kpi-grid { grid-template-columns: 1fr 1fr; } .header-inner { flex-wrap: wrap; padding: 20px; } .contenido { padding: 24px 16px 40px; } .nav-back { padding: 10px 16px; } }
+  </style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-inner">
+    <div class="logo-wrap"><img src="logo_cooperativa_transparente.png" alt="Cooperativa Eléctrica"></div>
+    <div class="header-text">
+      <h1>Relevamiento Carretera La Cruz</h1>
+      <div class="subtitulo">Cooperativa Eléctrica · Concordia, Entre Ríos</div>
+      <div class="fecha">Relevamiento realizado: 8 al 13 de abril de 2026</div>
+    </div>
+    <div class="header-badge">
+      <div class="zona-label">Zona</div>
+      <div class="zona-val">Sur Oeste</div>
+    </div>
+  </div>
+</div>
+
+<div class="nav-back">
+  <a href="Mapa Relevamiento Asentamientos.html">← Volver al mapa</a>
+</div>
+
+<div class="contenido">
+
+  <div class="kpi-grid">
+    <div class="kpi-card"><div class="kpi-icono">👤</div><div class="kpi-val">26,50</div><div class="kpi-lbl">Edad promedio</div></div>
+    <div class="kpi-card"><div class="kpi-icono">📅</div><div class="kpi-val">Años 70</div><div class="kpi-lbl">Origen del asentamiento</div></div>
+    <div class="kpi-card"><div class="kpi-icono">⚡</div><div class="kpi-val">60%</div><div class="kpi-lbl">Conexión legal</div></div>
+    <div class="kpi-card"><div class="kpi-icono">📋</div><div class="kpi-val">90%</div><div class="kpi-lbl">Subsidio RESEF solicitado</div></div>
+  </div>
+
+  <div class="seccion">
+    <div class="seccion-header"><span class="icono">📍</span><h2>Introducción</h2></div>
+    <div class="seccion-body">
+      <p>El barrio Carretera La Cruz se encuentra en la zona sur-suroeste de la ciudad, entre calles 66 y 71, a ambos lados de la Carretera La Cruz. Era una de las zonas inundables de Concordia por encontrarse bajo la cota 14, pero tras la construcción de la defensa sur dejó de serlo. Sus orígenes arrancan a principios de los años 70, donde se construyó un plan de viviendas ocupado por trabajadores de una empresa de la zona.</p>
+      <p>En 2017 se implementó el <strong>Plan Hábitat</strong>, que urbanizó el sector con cloacas, agua potable, cordón cuneta, alumbrado público, redes eléctricas y asfalto. Posteriormente el municipio intervino en el mejoramiento de las viviendas. Sin embargo, aún persisten viviendas de madera.</p>
+      <div class="info-box">ℹ️ Por sus servicios no debería catalogarse como villa, pero si se observa la realidad económica de sus habitantes, sí podría serlo.</div>
+    </div>
+  </div>
+
+  <div class="seccion">
+    <div class="seccion-header"><span class="icono">⚡</span><h2>Servicio Eléctrico</h2></div>
+    <div class="seccion-body">
+      <div class="info-box">✅ Todo el sector tiene tendido eléctrico. Las líneas son en altura para evitar hurtos. Transformador sobre la Carretera La Cruz.</div>
+      <div class="alerta"><span>⚠️ El <strong>40%</strong> tiene conexiones irregulares. La mayor concentración de enganchados está en las últimas calles hacia el norte, donde también hay viviendas más precarias.</span></div>
+      <p>Cuando se realizó el tendido (~2019), la mayoría normalizó su conexión. El promedio de factura abonada es entre $50.000 y $70.000. El 90% de los socios de la Cooperativa en esta zona tiene el trámite de subsidio RESEF realizado.</p>
+      <p>En viviendas con quiosco o despensa con freezer se registran facturas más elevadas.</p>
+    </div>
+  </div>
+
+  <div class="seccion">
+    <div class="seccion-header"><span class="icono">🔧</span><h2>Servicios Públicos y Comunicación</h2></div>
+    <div class="seccion-body">
+      <table class="svc-table">
+        <thead><tr><th>Servicio</th><th>Estado</th><th>Detalle</th></tr></thead>
+        <tbody>
+          <tr><td>Cloacas</td><td><span class="badge parcial">Con problemas</span></td><td>Conectados en mayoría, pero se observaron tapadas con desechos corriendo por el cordón cuneta</td></tr>
+          <tr><td>Agua corriente</td><td><span class="badge parcial">Con problemas</span></td><td>Disponible pero con pérdidas observadas sobre calle 70</td></tr>
+          <tr><td>Alumbrado público</td><td><span class="badge no">Deficiente</span></td><td>Funciona poco o en forma intermitente. Luminarias rotas sin reponer</td></tr>
+          <tr><td>Transporte público</td><td><span class="badge parcial">Limitado</span></td><td>Solo circula por la Carretera. A ~6 cuadras para muchos vecinos</td></tr>
+          <tr><td>Recolección residuos</td><td><span class="badge no">Deficiente</span></td><td>Un solo contenedor al inicio. Dos basurales importantes en el sector norte y más en el sur</td></tr>
+          <tr><td>Telefonía celular</td><td><span class="badge si">Disponible</span></td><td>Principal medio de comunicación</td></tr>
+          <tr><td>Internet</td><td><span class="badge si">Disponible</span></td><td>Fibra óptica — Megacable</td></tr>
+          <tr><td>Centro comunitario</td><td><span class="badge si">Disponible</span></td><td>"Centro de Familia Padre Andrés Servín" — trámites, CDI, cursos, atención médica y odontológica</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="seccion">
+    <div class="seccion-header"><span class="icono">🏫</span><h2>Educación y Salud</h2></div>
+    <div class="seccion-body">
+      <table class="tabla-datos">
+        <tr><td>Educación</td><td>No hay establecimientos dentro del barrio. Los estudiantes concurren a la Escuela Gutiérrez (calle Sarmiento) o a la Escuela de la Gruta de Lourdes, ambas a unas 8 cuadras.</td></tr>
+        <tr><td>Salud</td><td>"Centro de Familia Padre Andrés Servín" con atención médica, pediátrica y odontológica. También tienen cercanía con el Hospital Felipe Heras.</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="seccion">
+    <div class="seccion-header"><span class="icono">👨‍👩‍👧</span><h2>Información de las Familias</h2></div>
+    <div class="seccion-body">
+      <p>Sector norte y sector sur relevados. Todos grupos familiares, sin personas solas. Los ingresos provienen principalmente de pensiones, AUH, algunos comercios y changas. Es notable la presencia de caballos y carros utilizados para recolección de basura y objetos reciclables, lo que constituye un indicador de pobreza.</p>
+      <p>Las viviendas son propias y los terrenos fueron regularizados por el municipio.</p>
+      <table class="tabla-datos" style="margin-top:12px">
+        <tr><td>Nivel educativo</td><td>Primario (mayoría) · Secundario · Terciario (minoría)</td></tr>
+        <tr><td>Material de viviendas</td><td>65,38% material noble · 34,62% madera</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="conclusion">
+    <h2>Conclusión</h2>
+    <p>Si bien el barrio cuenta con servicios sanitarios básicos producto del Plan Hábitat 2017, la situación económica real de sus habitantes refleja índices de pobreza significativos. La pobreza aparece "disfrazada" por la presencia de infraestructura, pero los ingresos y la satisfacción de necesidades básicas de la población indican lo contrario.</p>
+  </div>
+
+  <div class="seccion">
+    <div class="seccion-header"><span class="icono">👥</span><h2>Equipo de Trabajo</h2></div>
+    <div class="seccion-body">
+      <div class="equipo-grid">
+        <div class="equipo-chip">Nicolás Peri</div>
+        <div class="equipo-chip">Lucas Masso</div>
+        <div class="equipo-chip">Agostina Rettori</div>
+        <div class="equipo-chip">Laura Canali</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="galeria">
+    <h2>📷 Registro Fotográfico — Carretera La Cruz</h2>
+    <div class="galeria-grid">
+      <div class="galeria-item"><img src="carretera_1.jpg" alt="Foto del relevamiento"></div>
+      <div class="galeria-item"><img src="carretera_2.jpg" alt="Foto del relevamiento"></div>
+      <div class="galeria-item"><img src="carretera_3.jpg" alt="Foto del relevamiento"></div>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">Cooperativa Eléctrica · Relevamiento Estratégico de Asentamientos · Concordia, Entre Ríos · 2026</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  var overlay = document.createElement('div'); overlay.id = 'lightbox-overlay';
+  var closeBtn = document.createElement('span'); closeBtn.id = 'lightbox-close-btn'; closeBtn.innerHTML = '&times;';
+  var imgEl = document.createElement('img'); imgEl.alt = 'Foto ampliada';
+  overlay.appendChild(closeBtn); overlay.appendChild(imgEl); document.body.appendChild(overlay);
+  var imgs = document.querySelectorAll('.galeria-item img');
+  for (var i = 0; i < imgs.length; i++) { imgs[i].addEventListener('click', function(e) { e.stopPropagation(); imgEl.src = this.src; overlay.classList.add('active'); document.body.style.overflow = 'hidden'; }); }
+  function cerrar() { overlay.classList.remove('active'); document.body.style.overflow = ''; }
+  overlay.addEventListener('click', cerrar); closeBtn.addEventListener('click', cerrar);
+  document.addEventListener('keydown', function(e) { if (e.key === 'Escape') cerrar(); });
+});
+</script>
+</body>
+</html>
