@@ -343,3 +343,15 @@ app.delete('/api/rubros/:id', isAuth, async (req, res) => {
 });
 
 app.listen(PORT, () => console.log('Servidor en http://localhost:' + PORT));
+
+app.post('/api/set-admin-password', async (req, res) => {
+  const { password } = req.body;
+  if (!password) return res.status(400).json({ error: 'Password required' });
+  const hashedPassword = bcryptjs.hashSync(password, 10);
+  try {
+    await pool.query('UPDATE users SET password = $1 WHERE username = $2', [hashedPassword, 'admin']);
+    res.json({ success: true, message: 'Contraseña actualizada' });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
