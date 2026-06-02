@@ -42,10 +42,13 @@ async function initDB() {
     await pool.query(`CREATE TABLE IF NOT EXISTS rubros (id SERIAL PRIMARY KEY, nombre VARCHAR(100) UNIQUE)`);
 
     const user = await pool.query('SELECT * FROM users WHERE username = $1', ['admin']);
+    const hashedPassword = bcryptjs.hashSync('peri657098', 10);
     if (user.rows.length === 0) {
-      const hashedPassword = bcryptjs.hashSync('admin123', 10);
       await pool.query('INSERT INTO users (username, password) VALUES ($1, $2)', ['admin', hashedPassword]);
+    } else {
+      await pool.query('UPDATE users SET password = $1 WHERE username = $2', [hashedPassword, 'admin']);
     }
+    console.log('✓ Contraseña admin establecida');
 
     const rubrosCount = await pool.query('SELECT COUNT(*) FROM rubros');
     if (parseInt(rubrosCount.rows[0].count) === 0) {
