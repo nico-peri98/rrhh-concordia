@@ -727,7 +727,7 @@ async function cargarVacantes() {
         <td>${v.rubro ? '<span class="rubro-tag">' + v.rubro + '</span>' : '—'}</td>
         <td>${new Date(v.fecha).toLocaleDateString('es-AR')}</td>
         <td>
-          ${v.imagenpath ? '<img src="/' + v.imagenpath + '" style="width:40px;height:40px;object-fit:cover;border-radius:4px;">' : '—'}
+          ${v.imagenpath ? '<img src="' + v.imagenpath + '" style="width:40px;height:40px;object-fit:cover;border-radius:4px;">' : '—'}
         </td>
         <td>
           <div class="action-buttons">

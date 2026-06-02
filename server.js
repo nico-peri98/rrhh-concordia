@@ -5,6 +5,7 @@ const multer = require('multer');
 const fs = require('fs');
 const path = require('path');
 const { Pool } = require('pg');
+const cloudinary = require('cloudinary').v2;
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -15,6 +16,13 @@ const pool = new Pool({
 });
 
 pool.on('error', (err) => console.error('Error en BD:', err));
+
+// Configurar Cloudinary
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME || 'dzkksmoa5',
+  api_key: process.env.CLOUDINARY_API_KEY || '254636728317521',
+  api_secret: process.env.CLOUDINARY_API_SECRET || 'uWXEqv56LjxuSs_iu9N17O9tZRc'
+});
 
 if (!fs.existsSync('uploads')) fs.mkdirSync('uploads');
 
@@ -126,8 +134,13 @@ app.post('/api/vacantes', isAuth, upload.single('imagen'), async (req, res) => {
   const { titulo, ubicacion, tipo, rubro, descripcion } = req.body;
   const id = Date.now();
   const fecha = new Date().toISOString();
-  const imagenPath = req.file ? req.file.path : null;
+  let imagenPath = null;
   try {
+    if (req.file) {
+      const result = await cloudinary.uploader.upload(req.file.path, { folder: 'rrhh-vacantes' });
+      imagenPath = result.secure_url;
+      fs.unlinkSync(req.file.path);
+    }
     await pool.query('INSERT INTO vacantes (id, titulo, ubicacion, tipo, rubro, descripcion, imagenPath, fecha) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)', [id, titulo, ubicacion, tipo, rubro, descripcion, imagenPath, fecha]);
     res.json({ id, titulo, ubicacion, tipo, rubro, descripcion, imagenPath, fecha });
   } catch (err) {
@@ -138,8 +151,13 @@ app.post('/api/vacantes', isAuth, upload.single('imagen'), async (req, res) => {
 app.put('/api/vacantes/:id', isAuth, upload.single('imagen'), async (req, res) => {
   const { id } = req.params;
   const { titulo, ubicacion, tipo, rubro, descripcion } = req.body;
-  const imagenPath = req.file ? req.file.path : undefined;
+  let imagenPath = undefined;
   try {
+    if (req.file) {
+      const result = await cloudinary.uploader.upload(req.file.path, { folder: 'rrhh-vacantes' });
+      imagenPath = result.secure_url;
+      fs.unlinkSync(req.file.path);
+    }
     if (imagenPath) {
       await pool.query('UPDATE vacantes SET titulo = $1, ubicacion = $2, tipo = $3, rubro = $4, descripcion = $5, imagenPath = $6 WHERE id = $7', [titulo, ubicacion, tipo, rubro, descripcion, imagenPath, id]);
     } else {

@@ -1791,10 +1791,10 @@ orbBuild('svc', SVC_ITEMS, false);
     const VAC_ITEMS = activas.map((v, i) => ({
       n: '—',
       t: v.titulo || v.title || 'Vacante',
-      d: v.empresa ? v.empresa + (v.modalidad ? ' · ' + v.modalidad : '') : (v.modalidad || 'Concordia, Entre Ríos'),
-      i: v.imagen || 'https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=600&q=80&fit=crop',
-      m0: v.titulo || v.title || 'Vacante',
-      m1: (v.empresa || 'Concordia') + (v.modalidad ? ' · ' + v.modalidad : '')
+      d: v.ubicacion || 'Concordia, Entre Ríos',
+      i: v.imagenpath || 'https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=600&q=80&fit=crop',
+      m0: v.titulo || 'Vacante',
+      m1: v.ubicacion || 'Concordia, Entre Ríos'
     }));
     orbBuild('vac', VAC_ITEMS, true);
   } catch(e) {
