@@ -41,6 +41,10 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static('.'));
 app.use(session({ secret: 'rrhh', resave: false, saveUninitialized: false }));
 
+app.get('/admin', (req, res) => {
+  res.sendFile(path.join(__dirname, 'admin.html'));
+});
+
 const isAuth = (req, res, next) => {
   if (!req.session.authenticated) return res.status(401).json({ error: 'No autorizado' });
   next();
