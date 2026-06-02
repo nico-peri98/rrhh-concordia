@@ -89,6 +89,15 @@ app.delete('/api/vacantes/:id', isAuth, (req, res) => {
   res.json({ success: true });
 });
 
+app.put('/api/vacantes/:id', isAuth, (req, res) => {
+  const db = loadDB();
+  const vacante = db.vacantes.find(v => v.id == req.params.id);
+  if (!vacante) return res.status(404).json({ error: 'Vacante no encontrada' });
+  Object.assign(vacante, req.body);
+  saveDB(db);
+  res.json(vacante);
+});
+
 app.post('/api/candidatos', upload.single('cv'), (req, res) => {
   const db = loadDB();
   const candidato = {
@@ -139,6 +148,20 @@ app.delete('/api/candidatos/:id', isAuth, (req, res) => {
   db.candidatos = db.candidatos.filter(c => c.id != req.params.id);
   saveDB(db);
   res.json({ success: true });
+});
+
+app.put('/api/candidatos/:id', isAuth, (req, res) => {
+  const db = loadDB();
+  const candidato = db.candidatos.find(c => c.id == req.params.id);
+  if (!candidato) return res.status(404).json({ error: 'Candidato no encontrado' });
+  const { nombre, email, telefono, rubro, vacanteId } = req.body;
+  if (nombre !== undefined) candidato.nombre = nombre;
+  if (email !== undefined) candidato.email = email;
+  if (telefono !== undefined) candidato.telefono = telefono;
+  if (rubro !== undefined) candidato.rubro = rubro;
+  if (vacanteId !== undefined) candidato.vacanteId = vacanteId;
+  saveDB(db);
+  res.json(candidato);
 });
 
 app.listen(PORT, () => console.log('Servidor en http://localhost:' + PORT));

@@ -31,6 +31,10 @@
   --border-mid: rgba(17,17,17,0.14);
   --font-d: 'DM Serif Display', Georgia, serif;
   --font-b: 'Inter Tight', sans-serif;
+  --r-sm: 10px;
+  --r-md: 14px;
+  --r-lg: 20px;
+  --r-xl: 28px;
 }
 
 body{
@@ -47,7 +51,7 @@ body::before{
   content:'';
   position:fixed; inset:0;
   background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.72' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
-  opacity:0.038;
+  opacity:0.035;
   pointer-events:none;
   z-index:999;
 }
@@ -61,19 +65,12 @@ body::before{
   border:1px solid var(--border);
   padding:56px 48px;
   width:100%; max-width:440px;
-  border-radius:2px;
-  position:relative;
-}
-.login-box::before{
-  content:''; position:absolute; top:24px; right:24px;
-  width:20px; height:20px;
-  border-right:1px solid var(--ink4);
-  border-top:1px solid var(--ink4);
-  opacity:0.4;
+  border-radius:var(--r-xl);
+  box-shadow:0 4px 24px rgba(17,17,17,0.04);
 }
 .login-tag{
   font-size:11px; letter-spacing:0.2em; text-transform:uppercase;
-  color:var(--blue); font-weight:500; margin-bottom:8px;
+  color:var(--blue); font-weight:500; margin-bottom:10px;
 }
 .login-title{
   font-family:var(--font-d); font-size:34px; line-height:1.1;
@@ -83,13 +80,12 @@ body::before{
 
 /* ─── HEADER ─── */
 .header{
-  background:var(--cream);
+  background:rgba(246,241,234,0.92);
   border-bottom:1px solid var(--border);
-  padding:24px 40px;
+  padding:22px 40px;
   display:flex; justify-content:space-between; align-items:center;
   position:sticky; top:0; z-index:50;
   backdrop-filter:blur(12px);
-  background-color:rgba(246,241,234,0.92);
 }
 .brand{ display:flex; flex-direction:column; gap:2px; }
 .brand-tag{
@@ -119,7 +115,7 @@ body::before{
   font-weight:500;
   letter-spacing:0.02em;
   cursor:pointer;
-  border-radius:2px;
+  border-radius:999px;
   transition:all 0.18s ease;
   display:inline-flex; align-items:center; gap:8px;
 }
@@ -128,20 +124,25 @@ body::before{
 .btn-primary:hover{ background:#3651a8; }
 .btn-success{ background:var(--green); color:#fff; }
 .btn-success:hover{ background:#2e8848; }
+.btn-warning{ background:var(--orange); color:#fff; }
+.btn-warning:hover{ background:#e88420; }
 .btn-danger{ background:transparent; color:var(--red); border:1px solid var(--red); }
 .btn-danger:hover{ background:var(--red); color:#fff; }
 .btn-ghost{ background:transparent; color:var(--ink2); border:1px solid var(--border-mid); }
 .btn-ghost:hover{ background:var(--cream3); border-color:var(--ink3); }
-.btn-sm{ padding:6px 12px; font-size:11px; }
+.btn-sm{ padding:6px 14px; font-size:11px; }
 
 /* ─── TABS ─── */
 .tabs{
-  display:flex; gap:0;
+  display:flex; gap:6px;
   margin-bottom:32px;
-  border-bottom:1px solid var(--border-mid);
+  background:var(--cream2);
+  padding:6px;
+  border-radius:999px;
+  width:fit-content;
 }
 .tab{
-  padding:14px 28px;
+  padding:10px 24px;
   cursor:pointer;
   background:transparent;
   border:none;
@@ -149,17 +150,12 @@ body::before{
   color:var(--ink4);
   font-size:13px;
   font-weight:500;
-  letter-spacing:0.04em;
-  text-transform:uppercase;
-  position:relative;
-  transition:color 0.15s;
+  letter-spacing:0.02em;
+  border-radius:999px;
+  transition:all 0.18s;
 }
 .tab:hover{ color:var(--ink2); }
-.tab.active{ color:var(--ink); }
-.tab.active::after{
-  content:''; position:absolute; bottom:-1px; left:0; right:0;
-  height:2px; background:var(--blue);
-}
+.tab.active{ color:#fff; background:var(--ink); }
 .tab-content{ display:none; }
 .tab-content.active{ display:block; }
 
@@ -169,7 +165,7 @@ body::before{
   border:1px solid var(--border);
   padding:32px;
   margin-bottom:20px;
-  border-radius:2px;
+  border-radius:var(--r-lg);
 }
 .card h3{
   font-family:var(--font-d);
@@ -192,13 +188,13 @@ body::before{
 .form-group textarea,
 .form-group select{
   width:100%;
-  padding:12px 14px;
+  padding:13px 16px;
   border:1px solid var(--border-mid);
   background:var(--cream);
   color:var(--ink);
   font-family:var(--font-b);
   font-size:14px;
-  border-radius:2px;
+  border-radius:var(--r-md);
   transition:border 0.15s;
 }
 .form-group input:focus,
@@ -206,6 +202,7 @@ body::before{
 .form-group select:focus{
   outline:none;
   border-color:var(--blue);
+  background:#fff;
 }
 textarea{ min-height:90px; resize:vertical; }
 
@@ -216,7 +213,7 @@ textarea{ min-height:90px; resize:vertical; }
   padding:24px;
   margin-bottom:24px;
   display:flex; gap:20px; flex-wrap:wrap;
-  border-radius:2px;
+  border-radius:var(--r-lg);
 }
 .filters > div{ flex:1; min-width:220px; }
 
@@ -224,9 +221,10 @@ textarea{ min-height:90px; resize:vertical; }
 .table-wrapper{
   background:var(--cream2);
   border:1px solid var(--border);
-  overflow-x:auto;
-  border-radius:2px;
+  overflow:hidden;
+  border-radius:var(--r-lg);
 }
+.table-scroll{ overflow-x:auto; }
 .table{
   width:100%;
   border-collapse:collapse;
@@ -244,6 +242,7 @@ textarea{ min-height:90px; resize:vertical; }
   text-transform:uppercase;
   color:var(--ink3);
   font-weight:600;
+  white-space:nowrap;
 }
 .table td{
   padding:16px 18px;
@@ -263,11 +262,11 @@ textarea{ min-height:90px; resize:vertical; }
 /* ─── BADGES ─── */
 .score-badge{
   display:inline-flex; align-items:center; gap:6px;
-  padding:5px 11px;
+  padding:5px 12px;
   font-size:11px;
   font-weight:600;
   letter-spacing:0.04em;
-  border-radius:20px;
+  border-radius:999px;
 }
 .score-high{ background:var(--green-muted); color:var(--green); border:1px solid rgba(57,160,90,0.3); }
 .score-medium{ background:var(--orange-muted); color:#d97a18; border:1px solid rgba(252,151,56,0.3); }
@@ -281,10 +280,10 @@ textarea{ min-height:90px; resize:vertical; }
 .rubro-tag{
   display:inline-block;
   font-size:11px;
-  padding:3px 9px;
+  padding:4px 10px;
   background:var(--blue-muted);
   color:var(--blue);
-  border-radius:2px;
+  border-radius:999px;
   font-weight:500;
 }
 
@@ -305,8 +304,8 @@ textarea{ min-height:90px; resize:vertical; }
   padding:40px;
   width:100%; max-width:760px;
   margin:auto;
-  border-radius:2px;
-  position:relative;
+  border-radius:var(--r-xl);
+  box-shadow:0 16px 48px rgba(17,17,17,0.12);
 }
 .modal-content h2{
   font-family:var(--font-d);
@@ -314,6 +313,7 @@ textarea{ min-height:90px; resize:vertical; }
   margin-bottom:28px;
   line-height:1.15;
 }
+.modal-content h2 em{ color:var(--blue); font-style:italic; font-weight:400; }
 .modal-section{
   margin-bottom:28px;
   padding-bottom:24px;
@@ -339,13 +339,22 @@ textarea{ min-height:90px; resize:vertical; }
 
 .hidden{ display:none; }
 
-/* Empty state */
 .empty{
   padding:60px 20px;
   text-align:center;
   color:var(--ink4);
 }
 .empty p{ font-family:var(--font-d); font-size:20px; font-style:italic; }
+
+.section-head{
+  display:flex; justify-content:space-between; align-items:center;
+  margin-bottom:24px; flex-wrap:wrap; gap:14px;
+}
+.section-title{
+  font-family:var(--font-d);
+  font-size:26px;
+}
+.section-title em{ color:var(--blue); font-style:italic; font-weight:400; }
 
 @media (max-width: 768px){
   .container{ padding:0 20px; margin:20px auto; }
@@ -354,7 +363,7 @@ textarea{ min-height:90px; resize:vertical; }
   .login-title{ font-size:28px; }
   .modal-content{ padding:28px 24px; }
   .modal-content h2{ font-size:24px; }
-  .tab{ padding:12px 18px; font-size:11px; }
+  .tab{ padding:9px 16px; font-size:11px; }
 }
 </style>
 </head>
@@ -369,7 +378,7 @@ textarea{ min-height:90px; resize:vertical; }
 <label>Contraseña</label>
 <input type="password" id="password" required>
 </div>
-<button type="submit" class="btn btn-primary" style="width:100%;">Acceder</button>
+<button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;">Acceder</button>
 </form>
 </div>
 </div>
@@ -392,10 +401,12 @@ textarea{ min-height:90px; resize:vertical; }
 </div>
 
 <div id="tabVacantes" class="tab-content active">
-<div style="margin-bottom:24px;">
+<div class="section-head">
+<h2 class="section-title">Tus <em>vacantes</em> activas</h2>
 <button class="btn btn-success" onclick="abrirModalVacante()">+ Nueva vacante</button>
 </div>
 <div class="table-wrapper">
+<div class="table-scroll">
 <table class="table">
 <thead>
 <tr>
@@ -411,8 +422,12 @@ textarea{ min-height:90px; resize:vertical; }
 </table>
 </div>
 </div>
+</div>
 
 <div id="tabCandidatos" class="tab-content">
+<div class="section-head">
+<h2 class="section-title">Base de <em>candidatos</em></h2>
+</div>
 <div class="filters">
 <div>
 <label>Filtrar por rubro</label>
@@ -433,6 +448,7 @@ textarea{ min-height:90px; resize:vertical; }
 </div>
 
 <div class="table-wrapper">
+<div class="table-scroll">
 <table class="table">
 <thead>
 <tr>
@@ -448,6 +464,7 @@ textarea{ min-height:90px; resize:vertical; }
 </thead>
 <tbody id="listaCandidatos"></tbody>
 </table>
+</div>
 </div>
 </div>
 
@@ -466,21 +483,23 @@ textarea{ min-height:90px; resize:vertical; }
 </div>
 </div>
 
+<!-- Modal Vacante (crear/editar) -->
 <div class="modal" id="modalVacante">
 <div class="modal-content">
-<h2>Nueva <em style="color:var(--blue);font-style:italic;">vacante</em></h2>
+<h2 id="modalVacanteTitulo">Nueva <em>vacante</em></h2>
 <form id="formVacante">
+<input type="hidden" name="id" id="vacanteEditId">
 <div class="form-group">
 <label>Título del puesto</label>
-<input type="text" name="titulo" required>
+<input type="text" name="titulo" id="vacanteTitulo" required>
 </div>
 <div class="form-group">
 <label>Ubicación</label>
-<input type="text" name="ubicacion" required>
+<input type="text" name="ubicacion" id="vacanteUbicacion" required>
 </div>
 <div class="form-group">
 <label>Rubro</label>
-<select name="rubro" required>
+<select name="rubro" id="vacanteRubro" required>
 <option value="Trade Marketing">Trade Marketing</option>
 <option value="Operario Polivalente">Operario Polivalente</option>
 <option value="Administrativo">Administrativo</option>
@@ -489,7 +508,7 @@ textarea{ min-height:90px; resize:vertical; }
 </div>
 <div class="form-group">
 <label>Tipo de contrato</label>
-<select name="tipo" required>
+<select name="tipo" id="vacanteTipo" required>
 <option value="Full-time">Full-time</option>
 <option value="Part-time">Part-time</option>
 <option value="Contrato">Contrato</option>
@@ -498,30 +517,46 @@ textarea{ min-height:90px; resize:vertical; }
 </div>
 <div class="form-group">
 <label>Descripción</label>
-<textarea name="descripcion" required rows="5"></textarea>
+<textarea name="descripcion" id="vacanteDescripcion" required rows="5"></textarea>
 </div>
 <div class="btn-group">
-<button type="submit" class="btn btn-success">Publicar</button>
+<button type="submit" class="btn btn-success" id="vacanteSubmitBtn">Publicar</button>
 <button type="button" class="btn btn-ghost" onclick="cerrarModal('modalVacante')">Cancelar</button>
 </div>
 </form>
 </div>
 </div>
 
+<!-- Modal Detalle Candidato -->
 <div class="modal" id="modalCandidato">
 <div class="modal-content">
 <h2 id="modalCandidatoNombre"></h2>
 <div id="modalCandidatoBody"></div>
 <div class="btn-group">
+<button type="button" class="btn btn-warning" onclick="abrirEditarCandidato(candidatoActualId)">Editar datos</button>
+<button type="button" class="btn btn-primary" onclick="abrirScoring(candidatoActualId)">Evaluar</button>
 <button type="button" class="btn btn-danger" onclick="eliminarCandidatoConfirm()">Eliminar</button>
 <button type="button" class="btn btn-ghost" onclick="cerrarModal('modalCandidato')">Cerrar</button>
 </div>
 </div>
 </div>
 
+<!-- Modal Editar Candidato -->
+<div class="modal" id="modalEditarCandidato">
+<div class="modal-content">
+<h2>Editar <em>candidato</em></h2>
+<div id="modalEditarCandidatoBody"></div>
+<div class="btn-group">
+<button type="button" class="btn btn-success" onclick="guardarEdicionCandidato()">Guardar cambios</button>
+<button type="button" class="btn btn-ghost" onclick="cerrarModal('modalEditarCandidato')">Cancelar</button>
+</div>
+</div>
+</div>
+
+<!-- Modal Scoring -->
 <div class="modal" id="modalScoring">
 <div class="modal-content">
-<h2>Evaluación del <em style="color:var(--blue);font-style:italic;">candidato</em></h2>
+<h2>Evaluación del <em>candidato</em></h2>
 <div id="modalScoringBody"></div>
 <div class="btn-group">
 <button type="button" class="btn btn-success" onclick="guardarScoring()">Guardar evaluación</button>
@@ -532,6 +567,7 @@ textarea{ min-height:90px; resize:vertical; }
 
 <script>
 let candidatoActualId = null;
+let vacanteEditandoId = null;
 
 document.getElementById('loginForm').addEventListener('submit', async (e) => {
   e.preventDefault();
@@ -564,6 +600,26 @@ function cambiarTab(tab, event) {
 }
 
 function abrirModalVacante() {
+  vacanteEditandoId = null;
+  document.getElementById('modalVacanteTitulo').innerHTML = 'Nueva <em>vacante</em>';
+  document.getElementById('vacanteSubmitBtn').textContent = 'Publicar';
+  document.getElementById('formVacante').reset();
+  document.getElementById('modalVacante').classList.add('active');
+}
+
+async function abrirEditarVacante(id) {
+  const res = await fetch('/api/vacantes');
+  const vacantes = await res.json();
+  const v = vacantes.find(x => x.id == id);
+  if (!v) return;
+  vacanteEditandoId = id;
+  document.getElementById('modalVacanteTitulo').innerHTML = 'Editar <em>vacante</em>';
+  document.getElementById('vacanteSubmitBtn').textContent = 'Guardar cambios';
+  document.getElementById('vacanteTitulo').value = v.titulo || '';
+  document.getElementById('vacanteUbicacion').value = v.ubicacion || '';
+  document.getElementById('vacanteRubro').value = v.rubro || 'Otro';
+  document.getElementById('vacanteTipo').value = v.tipo || 'Full-time';
+  document.getElementById('vacanteDescripcion').value = v.descripcion || '';
   document.getElementById('modalVacante').classList.add('active');
 }
 
@@ -575,13 +631,24 @@ document.getElementById('formVacante').addEventListener('submit', async (e) => {
   e.preventDefault();
   const formData = new FormData(e.target);
   const data = Object.fromEntries(formData);
-  await fetch('/api/vacantes', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(data)
-  });
+  delete data.id;
+
+  if (vacanteEditandoId) {
+    await fetch('/api/vacantes/' + vacanteEditandoId, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+  } else {
+    await fetch('/api/vacantes', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+  }
   cerrarModal('modalVacante');
   e.target.reset();
+  vacanteEditandoId = null;
   cargarVacantes();
 });
 
@@ -613,7 +680,12 @@ async function cargarVacantes() {
         <td>${v.tipo}</td>
         <td>${v.rubro ? '<span class="rubro-tag">' + v.rubro + '</span>' : '—'}</td>
         <td>${new Date(v.fecha).toLocaleDateString('es-AR')}</td>
-        <td><button class="btn btn-danger btn-sm" onclick="eliminarVacante(${v.id})">Eliminar</button></td>
+        <td>
+          <div class="action-buttons">
+            <button class="btn btn-warning btn-sm" onclick="abrirEditarVacante(${v.id})">Editar</button>
+            <button class="btn btn-danger btn-sm" onclick="eliminarVacante(${v.id})">Eliminar</button>
+          </div>
+        </td>
       </tr>
     `).join('');
   }
@@ -653,7 +725,7 @@ async function cargarCandidatos() {
     const vacante = vacantes.find(v => v.id == c.vacanteId);
     const score = c.scoring ? c.scoring.score : null;
     let scoreBadge = '<span class="score-badge score-none">Sin evaluar</span>';
-    if (score !== null) {
+    if (score !== null && !isNaN(score)) {
       if (score >= 70) {
         scoreBadge = '<span class="score-badge score-high">' + score + '</span>';
       } else if (score >= 50) {
@@ -669,7 +741,7 @@ async function cargarCandidatos() {
         <td>${c.email}</td>
         <td>${c.telefono}</td>
         <td>${c.rubro ? '<span class="rubro-tag">' + c.rubro + '</span>' : '—'}</td>
-        <td>${vacante ? vacante.titulo : '<em style="color:var(--ink4);">N/A</em>'}</td>
+        <td>${vacante ? vacante.titulo : '<em style="color:var(--ink4);">—</em>'}</td>
         <td>${scoreBadge}</td>
         <td>${new Date(c.fecha).toLocaleDateString('es-AR')}</td>
         <td>
@@ -725,7 +797,69 @@ async function abrirDetalleCandidato(id) {
   document.getElementById('modalCandidato').classList.add('active');
 }
 
+async function abrirEditarCandidato(id) {
+  cerrarModal('modalCandidato');
+  const res = await fetch('/api/candidatos');
+  const candidatos = await res.json();
+  const c = candidatos.find(x => x.id == id);
+  candidatoActualId = id;
+
+  const resV = await fetch('/api/vacantes');
+  const vacantes = await resV.json();
+  const vacOpts = vacantes.map(v => `<option value="${v.id}" ${v.id == c.vacanteId ? 'selected' : ''}>${v.titulo}</option>`).join('');
+
+  document.getElementById('modalEditarCandidatoBody').innerHTML = `
+    <div class="form-group">
+      <label>Nombre completo</label>
+      <input type="text" id="editNombre" value="${c.nombre || ''}">
+    </div>
+    <div class="form-group">
+      <label>Email</label>
+      <input type="email" id="editEmail" value="${c.email || ''}">
+    </div>
+    <div class="form-group">
+      <label>Teléfono</label>
+      <input type="text" id="editTelefono" value="${c.telefono || ''}">
+    </div>
+    <div class="form-group">
+      <label>Rubro</label>
+      <select id="editRubro">
+        <option value="Trade Marketing" ${c.rubro === 'Trade Marketing' ? 'selected' : ''}>Trade Marketing</option>
+        <option value="Operario Polivalente" ${c.rubro === 'Operario Polivalente' ? 'selected' : ''}>Operario Polivalente</option>
+        <option value="Administrativo" ${c.rubro === 'Administrativo' ? 'selected' : ''}>Administrativo</option>
+        <option value="Otro" ${c.rubro === 'Otro' ? 'selected' : ''}>Otro</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Vacante asociada</label>
+      <select id="editVacanteId">
+        <option value="">— Sin asociar —</option>
+        ${vacOpts}
+      </select>
+    </div>
+  `;
+  document.getElementById('modalEditarCandidato').classList.add('active');
+}
+
+async function guardarEdicionCandidato() {
+  const data = {
+    nombre: document.getElementById('editNombre').value,
+    email: document.getElementById('editEmail').value,
+    telefono: document.getElementById('editTelefono').value,
+    rubro: document.getElementById('editRubro').value,
+    vacanteId: document.getElementById('editVacanteId').value || null
+  };
+  await fetch('/api/candidatos/' + candidatoActualId, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data)
+  });
+  cerrarModal('modalEditarCandidato');
+  cargarCandidatos();
+}
+
 async function abrirScoring(id) {
+  cerrarModal('modalCandidato');
   const res = await fetch('/api/candidatos');
   const candidatos = await res.json();
   const c = candidatos.find(x => x.id == id);
