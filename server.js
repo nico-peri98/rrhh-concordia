@@ -4,12 +4,31 @@ const bcrypt = require('bcryptjs');
 const multer = require('multer');
 const fs = require('fs');
 const path = require('path');
+const { Pool } = require('pg');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// PostgreSQL Pool
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: { rejectUnauthorized: false }
+});
+
+// Verificar conexión a la BD
+pool.on('error', (err) => {
+  console.error('Error en el pool de PostgreSQL:', err);
+});
+
+pool.query('SELECT NOW()', (err, result) => {
+  if (err) {
+    console.error('Error conectando a PostgreSQL:', err);
+  } else {
+    console.log('✓ Conectado a PostgreSQL');
+  }
+});
+
 if (!fs.existsSync('uploads')) fs.mkdirSync('uploads');
-if (!fs.existsSync('data')) fs.mkdirSync('data');
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => cb(null, 'uploads/'),
@@ -19,40 +38,80 @@ const upload = multer({ storage });
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(express.static('.'));
 app.use(session({ secret: 'rrhh', resave: false, saveUninitialized: false }));
-app.use('/uploads', express.static('uploads'));
 
-const DB_FILE = './data/db.json';
+const isAuth = (req, res, next) => {
+  if (!req.session.authenticated) return res.status(401).json({ error: 'No autorizado' });
+  next();
+};
 
-function loadDB() {
-  if (!fs.existsSync(DB_FILE)) {
-    const data = { users: [{ username: 'admin', password: bcrypt.hashSync('admin123', 10) }], vacantes: [], candidatos: [] };
-    fs.writeFileSync(DB_FILE, JSON.stringify(data));
+// Inicializar BD
+async function initDB() {
+  try {
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS users (
+        id SERIAL PRIMARY KEY,
+        username VARCHAR(50),
+        password VARCHAR(255)
+      )
+    `);
+
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS vacantes (
+        id BIGINT PRIMARY KEY,
+        titulo VARCHAR(255),
+        ubicacion VARCHAR(255),
+        tipo VARCHAR(50),
+        rubro VARCHAR(100),
+        descripcion TEXT,
+        fecha TIMESTAMP
+      )
+    `);
+
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS candidatos (
+        id BIGINT PRIMARY KEY,
+        nombre VARCHAR(255),
+        email VARCHAR(255),
+        telefono VARCHAR(20),
+        rubro VARCHAR(100),
+        vacanteId BIGINT,
+        cvPath VARCHAR(255),
+        cvOriginal VARCHAR(255),
+        fecha TIMESTAMP,
+        scoring JSONB
+      )
+    `);
+
+    // Insertar usuario admin si no existe
+    const user = await pool.query('SELECT * FROM users WHERE username = $1', ['admin']);
+    if (user.rows.length === 0) {
+      const hashedPassword = bcrypt.hashSync('admin123', 10);
+      await pool.query('INSERT INTO users (username, password) VALUES ($1, $2)', ['admin', hashedPassword]);
+      console.log('✓ Usuario admin creado');
+    }
+  } catch (err) {
+    console.error('Error inicializando BD:', err);
   }
-  return JSON.parse(fs.readFileSync(DB_FILE, 'utf8'));
 }
 
-function saveDB(data) {
-  fs.writeFileSync(DB_FILE, JSON.stringify(data, null, 2));
-}
+initDB();
 
-function isAuth(req, res, next) {
-  if (req.session.user) return next();
-  res.status(401).json({ error: 'No autorizado' });
-}
-
-app.get('/', (req, res) => res.sendFile(__dirname + '/index.html'));
-app.get('/admin', (req, res) => res.sendFile(__dirname + '/admin.html'));
-
-app.post('/api/login', (req, res) => {
+// LOGIN
+app.post('/api/login', async (req, res) => {
   const { username, password } = req.body;
-  const db = loadDB();
-  const user = db.users.find(u => u.username === username);
-  if (user && bcrypt.compareSync(password, user.password)) {
-    req.session.user = username;
-    res.json({ success: true });
-  } else {
-    res.status(401).json({ error: 'Credenciales invalidas' });
+  try {
+    const result = await pool.query('SELECT * FROM users WHERE username = $1', [username]);
+    const user = result.rows[0];
+    if (user && bcrypt.compareSync(password, user.password)) {
+      req.session.authenticated = true;
+      res.json({ success: true });
+    } else {
+      res.status(401).json({ error: 'Credenciales inválidas' });
+    }
+  } catch (err) {
+    res.status(500).json({ error: err.message });
   }
 });
 
@@ -61,107 +120,144 @@ app.post('/api/logout', (req, res) => {
   res.json({ success: true });
 });
 
-app.post('/api/change-password', isAuth, (req, res) => {
+app.post('/api/change-password', isAuth, async (req, res) => {
   const { newPassword } = req.body;
-  const db = loadDB();
-  db.users[0].password = bcrypt.hashSync(newPassword, 10);
-  saveDB(db);
-  res.json({ success: true });
-});
-
-app.get('/api/vacantes', (req, res) => {
-  const db = loadDB();
-  res.json(db.vacantes);
-});
-
-app.post('/api/vacantes', isAuth, (req, res) => {
-  const db = loadDB();
-  const vacante = { id: Date.now(), ...req.body, fecha: new Date().toISOString() };
-  db.vacantes.push(vacante);
-  saveDB(db);
-  res.json(vacante);
-});
-
-app.delete('/api/vacantes/:id', isAuth, (req, res) => {
-  const db = loadDB();
-  db.vacantes = db.vacantes.filter(v => v.id != req.params.id);
-  saveDB(db);
-  res.json({ success: true });
-});
-
-app.put('/api/vacantes/:id', isAuth, (req, res) => {
-  const db = loadDB();
-  const vacante = db.vacantes.find(v => v.id == req.params.id);
-  if (!vacante) return res.status(404).json({ error: 'Vacante no encontrada' });
-  Object.assign(vacante, req.body);
-  saveDB(db);
-  res.json(vacante);
-});
-
-app.post('/api/candidatos', upload.single('cv'), (req, res) => {
-  const db = loadDB();
-  const candidato = {
-    id: Date.now(),
-    ...req.body,
-    cvPath: req.file.path,
-    cvOriginal: req.file.originalname,
-    fecha: new Date().toISOString(),
-    scoring: null
-  };
-  db.candidatos.push(candidato);
-  saveDB(db);
-  res.json({ success: true });
-});
-
-app.get('/api/candidatos', isAuth, (req, res) => {
-  const db = loadDB();
-  const rubro = req.query.rubro;
-  let candidatos = db.candidatos;
-  if (rubro) {
-    candidatos = candidatos.filter(c => c.rubro === rubro);
+  const hashedPassword = bcrypt.hashSync(newPassword, 10);
+  try {
+    await pool.query('UPDATE users SET password = $1', [hashedPassword]);
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
   }
-  res.json(candidatos);
 });
 
-app.post('/api/candidatos/:id/scoring', isAuth, (req, res) => {
-  const db = loadDB();
-  const candidato = db.candidatos.find(c => c.id == req.params.id);
-  if (!candidato) return res.status(404).json({ error: 'Candidato no encontrado' });
-  
-  candidato.scoring = {
-    score: req.body.score,
-    fortalezas: req.body.fortalezas,
-    debilidades: req.body.debilidades,
-    recomendacion: req.body.recomendacion,
-    fechaEvaluacion: new Date().toISOString()
-  };
-  saveDB(db);
-  res.json({ success: true });
-});
-
-app.delete('/api/candidatos/:id', isAuth, (req, res) => {
-  const db = loadDB();
-  const candidato = db.candidatos.find(c => c.id == req.params.id);
-  if (candidato && fs.existsSync(candidato.cvPath)) {
-    fs.unlinkSync(candidato.cvPath);
+// VACANTES
+app.get('/api/vacantes', async (req, res) => {
+  try {
+    const result = await pool.query('SELECT * FROM vacantes ORDER BY fecha DESC');
+    res.json(result.rows);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
   }
-  db.candidatos = db.candidatos.filter(c => c.id != req.params.id);
-  saveDB(db);
-  res.json({ success: true });
 });
 
-app.put('/api/candidatos/:id', isAuth, (req, res) => {
-  const db = loadDB();
-  const candidato = db.candidatos.find(c => c.id == req.params.id);
-  if (!candidato) return res.status(404).json({ error: 'Candidato no encontrado' });
+app.post('/api/vacantes', isAuth, async (req, res) => {
+  const { titulo, ubicacion, tipo, rubro, descripcion } = req.body;
+  const id = Date.now();
+  const fecha = new Date().toISOString();
+  try {
+    await pool.query(
+      'INSERT INTO vacantes (id, titulo, ubicacion, tipo, rubro, descripcion, fecha) VALUES ($1, $2, $3, $4, $5, $6, $7)',
+      [id, titulo, ubicacion, tipo, rubro, descripcion, fecha]
+    );
+    res.json({ id, titulo, ubicacion, tipo, rubro, descripcion, fecha });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.put('/api/vacantes/:id', isAuth, async (req, res) => {
+  const { id } = req.params;
+  const { titulo, ubicacion, tipo, rubro, descripcion } = req.body;
+  try {
+    await pool.query(
+      'UPDATE vacantes SET titulo = $1, ubicacion = $2, tipo = $3, rubro = $4, descripcion = $5 WHERE id = $6',
+      [titulo, ubicacion, tipo, rubro, descripcion, id]
+    );
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.delete('/api/vacantes/:id', isAuth, async (req, res) => {
+  const { id } = req.params;
+  try {
+    await pool.query('DELETE FROM vacantes WHERE id = $1', [id]);
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// CANDIDATOS
+app.post('/api/candidatos', upload.single('cv'), async (req, res) => {
   const { nombre, email, telefono, rubro, vacanteId } = req.body;
-  if (nombre !== undefined) candidato.nombre = nombre;
-  if (email !== undefined) candidato.email = email;
-  if (telefono !== undefined) candidato.telefono = telefono;
-  if (rubro !== undefined) candidato.rubro = rubro;
-  if (vacanteId !== undefined) candidato.vacanteId = vacanteId;
-  saveDB(db);
-  res.json(candidato);
+  const id = Date.now();
+  const fecha = new Date().toISOString();
+  const cvPath = req.file ? req.file.path : null;
+  const cvOriginal = req.file ? req.file.originalname : null;
+  
+  try {
+    await pool.query(
+      'INSERT INTO candidatos (id, nombre, email, telefono, rubro, vacanteId, cvPath, cvOriginal, fecha, scoring) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)',
+      [id, nombre, email, telefono, rubro, vacanteId || null, cvPath, cvOriginal, fecha, null]
+    );
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.get('/api/candidatos', isAuth, async (req, res) => {
+  const { rubro } = req.query;
+  try {
+    let query = 'SELECT * FROM candidatos ORDER BY fecha DESC';
+    let params = [];
+    if (rubro) {
+      query = 'SELECT * FROM candidatos WHERE rubro = $1 ORDER BY fecha DESC';
+      params = [rubro];
+    }
+    const result = await pool.query(query, params);
+    res.json(result.rows);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.put('/api/candidatos/:id', isAuth, async (req, res) => {
+  const { id } = req.params;
+  const { nombre, email, telefono, rubro, vacanteId } = req.body;
+  try {
+    await pool.query(
+      'UPDATE candidatos SET nombre = $1, email = $2, telefono = $3, rubro = $4, vacanteId = $5 WHERE id = $6',
+      [nombre, email, telefono, rubro, vacanteId || null, id]
+    );
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.post('/api/candidatos/:id/scoring', isAuth, async (req, res) => {
+  const { id } = req.params;
+  const { score, fortalezas, debilidades, recomendacion } = req.body;
+  const scoring = { score, fortalezas, debilidades, recomendacion, fechaEvaluacion: new Date().toISOString() };
+  
+  try {
+    await pool.query(
+      'UPDATE candidatos SET scoring = $1 WHERE id = $2',
+      [JSON.stringify(scoring), id]
+    );
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.delete('/api/candidatos/:id', isAuth, async (req, res) => {
+  const { id } = req.params;
+  try {
+    const result = await pool.query('SELECT cvPath FROM candidatos WHERE id = $1', [id]);
+    if (result.rows.length > 0 && result.rows[0].cvpath) {
+      const cvPath = result.rows[0].cvpath;
+      if (fs.existsSync(cvPath)) fs.unlinkSync(cvPath);
+    }
+    await pool.query('DELETE FROM candidatos WHERE id = $1', [id]);
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
 app.listen(PORT, () => console.log('Servidor en http://localhost:' + PORT));
