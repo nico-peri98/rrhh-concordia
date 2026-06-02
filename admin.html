@@ -3,92 +3,404 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Panel Admin - RRHH Concordia</title>
+<title>Panel — RRHH Concordia</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
 <style>
-* { margin: 0; padding: 0; box-sizing: border-box; }
-body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #1a1a1a; color: #fff; }
-.header { background: #2c3e50; padding: 20px; display: flex; justify-content: space-between; align-items: center; }
-.container { max-width: 1400px; margin: 20px auto; padding: 20px; }
-.login-container { display: flex; justify-content: center; align-items: center; height: 100vh; }
-.login-box { background: #2c3e50; padding: 40px; border-radius: 10px; width: 100%; max-width: 400px; }
-.login-box h2 { margin-bottom: 20px; text-align: center; }
-.form-group { margin-bottom: 20px; }
-.form-group label { display: block; margin-bottom: 8px; }
-.form-group input, .form-group textarea, .form-group select { width: 100%; padding: 12px; border: 1px solid #444; border-radius: 5px; background: #333; color: #fff; font-family: inherit; }
-.btn { background: #3498db; color: white; padding: 12px 24px; border: none; border-radius: 5px; cursor: pointer; font-size: 14px; }
-.btn:hover { background: #2980b9; }
-.btn-danger { background: #e74c3c; }
-.btn-danger:hover { background: #c0392b; }
-.btn-success { background: #27ae60; }
-.btn-success:hover { background: #229954; }
-.btn-primary { background: #3498db; }
-.btn-primary:hover { background: #2980b9; }
-.tabs { display: flex; gap: 10px; margin-bottom: 30px; border-bottom: 2px solid #444; }
-.tab { padding: 15px 30px; cursor: pointer; background: transparent; border: none; color: #999; font-size: 16px; }
-.tab.active { color: #3498db; border-bottom: 3px solid #3498db; }
-.tab-content { display: none; }
-.tab-content.active { display: block; }
-.card { background: #2c3e50; padding: 20px; border-radius: 8px; margin-bottom: 20px; }
-.card h3 { margin-bottom: 15px; }
-.filters { background: #2c3e50; padding: 20px; border-radius: 8px; margin-bottom: 20px; display: flex; gap: 15px; align-items: flex-end; flex-wrap: wrap; }
-.filters div { flex: 1; min-width: 200px; }
-.filters label { display: block; margin-bottom: 8px; font-size: 12px; color: #aaa; }
-.filters select { width: 100%; padding: 8px 12px; background: #333; border: 1px solid #444; color: #fff; border-radius: 5px; }
-.table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 13px; }
-.table th, .table td { padding: 12px; text-align: left; border-bottom: 1px solid #444; }
-.table th { background: #34495e; font-weight: 600; }
-.table tr:hover { background: #34495e; }
-.score-badge { display: inline-block; padding: 4px 12px; border-radius: 20px; font-weight: bold; font-size: 11px; }
-.score-high { background: #27ae60; color: white; }
-.score-medium { background: #f39c12; color: white; }
-.score-low { background: #e74c3c; color: white; }
-.score-none { background: #555; color: white; }
-.modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); justify-content: center; align-items: center; z-index: 1000; overflow-y: auto; }
-.modal.active { display: flex; }
-.modal-content { background: #2c3e50; padding: 30px; border-radius: 10px; width: 90%; max-width: 800px; max-height: 90vh; overflow-y: auto; margin: auto; }
-.btn-group { display: flex; gap: 10px; margin-top: 20px; flex-wrap: wrap; }
-.hidden { display: none; }
-.modal-section { margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid #444; }
-.modal-section h4 { margin-bottom: 15px; color: #3498db; }
-textarea { min-height: 80px; resize: vertical; }
-.score-input { width: 100%; padding: 8px; border: 1px solid #444; border-radius: 5px; background: #333; color: #fff; }
-.action-buttons { display: flex; gap: 5px; }
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+
+:root{
+  --cream: #F6F1EA;
+  --cream2: #EEE8DF;
+  --cream3: #E8E0D4;
+  --ink: #111111;
+  --ink2: #3A3832;
+  --ink3: #5C564F;
+  --ink4: #8A8178;
+  --blue: #4260C0;
+  --blue-muted: rgba(66,96,192,0.12);
+  --blue-line: rgba(66,96,192,0.22);
+  --orange: #FC9738;
+  --orange-muted: rgba(252,151,56,0.15);
+  --red: #FF5E57;
+  --red-muted: rgba(255,94,87,0.12);
+  --green: #39A05A;
+  --green-muted: rgba(57,160,90,0.15);
+  --border: rgba(17,17,17,0.09);
+  --border-mid: rgba(17,17,17,0.14);
+  --font-d: 'DM Serif Display', Georgia, serif;
+  --font-b: 'Inter Tight', sans-serif;
+}
+
+body{
+  background:var(--cream);
+  color:var(--ink);
+  font-family:var(--font-b);
+  font-size:15px;
+  line-height:1.6;
+  min-height:100vh;
+  -webkit-font-smoothing:antialiased;
+}
+
+body::before{
+  content:'';
+  position:fixed; inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.72' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
+  opacity:0.038;
+  pointer-events:none;
+  z-index:999;
+}
+
+/* ─── LOGIN ─── */
+.login-container{
+  display:flex; justify-content:center; align-items:center; min-height:100vh; padding:24px;
+}
+.login-box{
+  background:var(--cream2);
+  border:1px solid var(--border);
+  padding:56px 48px;
+  width:100%; max-width:440px;
+  border-radius:2px;
+  position:relative;
+}
+.login-box::before{
+  content:''; position:absolute; top:24px; right:24px;
+  width:20px; height:20px;
+  border-right:1px solid var(--ink4);
+  border-top:1px solid var(--ink4);
+  opacity:0.4;
+}
+.login-tag{
+  font-size:11px; letter-spacing:0.2em; text-transform:uppercase;
+  color:var(--blue); font-weight:500; margin-bottom:8px;
+}
+.login-title{
+  font-family:var(--font-d); font-size:34px; line-height:1.1;
+  margin-bottom:32px;
+}
+.login-title em{ color:var(--blue); font-style:italic; font-weight:400; }
+
+/* ─── HEADER ─── */
+.header{
+  background:var(--cream);
+  border-bottom:1px solid var(--border);
+  padding:24px 40px;
+  display:flex; justify-content:space-between; align-items:center;
+  position:sticky; top:0; z-index:50;
+  backdrop-filter:blur(12px);
+  background-color:rgba(246,241,234,0.92);
+}
+.brand{ display:flex; flex-direction:column; gap:2px; }
+.brand-tag{
+  font-size:10px; letter-spacing:0.2em; text-transform:uppercase;
+  color:var(--blue); font-weight:500;
+}
+.brand-title{
+  font-family:var(--font-d); font-size:22px; line-height:1.1;
+}
+.brand-title em{ color:var(--blue); font-style:italic; font-weight:400; }
+
+/* ─── CONTAINER ─── */
+.container{
+  max-width:1400px;
+  margin:32px auto;
+  padding:0 40px;
+}
+
+/* ─── BUTTONS ─── */
+.btn{
+  background:var(--ink);
+  color:var(--cream);
+  padding:11px 22px;
+  border:none;
+  font-family:var(--font-b);
+  font-size:13px;
+  font-weight:500;
+  letter-spacing:0.02em;
+  cursor:pointer;
+  border-radius:2px;
+  transition:all 0.18s ease;
+  display:inline-flex; align-items:center; gap:8px;
+}
+.btn:hover{ background:var(--ink2); transform:translateY(-1px); }
+.btn-primary{ background:var(--blue); color:#fff; }
+.btn-primary:hover{ background:#3651a8; }
+.btn-success{ background:var(--green); color:#fff; }
+.btn-success:hover{ background:#2e8848; }
+.btn-danger{ background:transparent; color:var(--red); border:1px solid var(--red); }
+.btn-danger:hover{ background:var(--red); color:#fff; }
+.btn-ghost{ background:transparent; color:var(--ink2); border:1px solid var(--border-mid); }
+.btn-ghost:hover{ background:var(--cream3); border-color:var(--ink3); }
+.btn-sm{ padding:6px 12px; font-size:11px; }
+
+/* ─── TABS ─── */
+.tabs{
+  display:flex; gap:0;
+  margin-bottom:32px;
+  border-bottom:1px solid var(--border-mid);
+}
+.tab{
+  padding:14px 28px;
+  cursor:pointer;
+  background:transparent;
+  border:none;
+  font-family:var(--font-b);
+  color:var(--ink4);
+  font-size:13px;
+  font-weight:500;
+  letter-spacing:0.04em;
+  text-transform:uppercase;
+  position:relative;
+  transition:color 0.15s;
+}
+.tab:hover{ color:var(--ink2); }
+.tab.active{ color:var(--ink); }
+.tab.active::after{
+  content:''; position:absolute; bottom:-1px; left:0; right:0;
+  height:2px; background:var(--blue);
+}
+.tab-content{ display:none; }
+.tab-content.active{ display:block; }
+
+/* ─── CARDS ─── */
+.card{
+  background:var(--cream2);
+  border:1px solid var(--border);
+  padding:32px;
+  margin-bottom:20px;
+  border-radius:2px;
+}
+.card h3{
+  font-family:var(--font-d);
+  font-size:22px;
+  margin-bottom:20px;
+}
+
+/* ─── FORM ─── */
+.form-group{ margin-bottom:20px; }
+.form-group label{
+  display:block;
+  margin-bottom:8px;
+  font-size:11px;
+  letter-spacing:0.12em;
+  text-transform:uppercase;
+  color:var(--ink3);
+  font-weight:500;
+}
+.form-group input,
+.form-group textarea,
+.form-group select{
+  width:100%;
+  padding:12px 14px;
+  border:1px solid var(--border-mid);
+  background:var(--cream);
+  color:var(--ink);
+  font-family:var(--font-b);
+  font-size:14px;
+  border-radius:2px;
+  transition:border 0.15s;
+}
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus{
+  outline:none;
+  border-color:var(--blue);
+}
+textarea{ min-height:90px; resize:vertical; }
+
+/* ─── FILTERS ─── */
+.filters{
+  background:var(--cream2);
+  border:1px solid var(--border);
+  padding:24px;
+  margin-bottom:24px;
+  display:flex; gap:20px; flex-wrap:wrap;
+  border-radius:2px;
+}
+.filters > div{ flex:1; min-width:220px; }
+
+/* ─── TABLES ─── */
+.table-wrapper{
+  background:var(--cream2);
+  border:1px solid var(--border);
+  overflow-x:auto;
+  border-radius:2px;
+}
+.table{
+  width:100%;
+  border-collapse:collapse;
+  font-size:13px;
+}
+.table thead{
+  background:var(--cream3);
+  border-bottom:1px solid var(--border-mid);
+}
+.table th{
+  padding:14px 18px;
+  text-align:left;
+  font-size:10px;
+  letter-spacing:0.15em;
+  text-transform:uppercase;
+  color:var(--ink3);
+  font-weight:600;
+}
+.table td{
+  padding:16px 18px;
+  border-bottom:1px solid var(--border);
+  vertical-align:middle;
+}
+.table tbody tr{ transition:background 0.12s; }
+.table tbody tr:hover{ background:var(--cream3); }
+.table tbody tr:last-child td{ border-bottom:none; }
+
+.candidate-name{
+  font-family:var(--font-d);
+  font-size:16px;
+  color:var(--ink);
+}
+
+/* ─── BADGES ─── */
+.score-badge{
+  display:inline-flex; align-items:center; gap:6px;
+  padding:5px 11px;
+  font-size:11px;
+  font-weight:600;
+  letter-spacing:0.04em;
+  border-radius:20px;
+}
+.score-high{ background:var(--green-muted); color:var(--green); border:1px solid rgba(57,160,90,0.3); }
+.score-medium{ background:var(--orange-muted); color:#d97a18; border:1px solid rgba(252,151,56,0.3); }
+.score-low{ background:var(--red-muted); color:#d94840; border:1px solid rgba(255,94,87,0.3); }
+.score-none{
+  background:transparent; color:var(--ink4);
+  border:1px solid var(--border-mid);
+  font-style:italic; font-weight:500;
+}
+
+.rubro-tag{
+  display:inline-block;
+  font-size:11px;
+  padding:3px 9px;
+  background:var(--blue-muted);
+  color:var(--blue);
+  border-radius:2px;
+  font-weight:500;
+}
+
+/* ─── MODAL ─── */
+.modal{
+  display:none; position:fixed; inset:0;
+  background:rgba(17,17,17,0.5);
+  backdrop-filter:blur(8px);
+  z-index:1000;
+  justify-content:center; align-items:flex-start;
+  padding:40px 20px;
+  overflow-y:auto;
+}
+.modal.active{ display:flex; }
+.modal-content{
+  background:var(--cream);
+  border:1px solid var(--border-mid);
+  padding:40px;
+  width:100%; max-width:760px;
+  margin:auto;
+  border-radius:2px;
+  position:relative;
+}
+.modal-content h2{
+  font-family:var(--font-d);
+  font-size:30px;
+  margin-bottom:28px;
+  line-height:1.15;
+}
+.modal-section{
+  margin-bottom:28px;
+  padding-bottom:24px;
+  border-bottom:1px solid var(--border);
+}
+.modal-section:last-of-type{ border-bottom:none; }
+.modal-section h4{
+  font-size:10px;
+  letter-spacing:0.18em;
+  text-transform:uppercase;
+  color:var(--ink4);
+  font-weight:600;
+  margin-bottom:14px;
+}
+.modal-section p{ margin-bottom:6px; }
+.modal-section strong{ color:var(--ink); font-weight:500; }
+
+.btn-group{
+  display:flex; gap:10px; margin-top:24px; flex-wrap:wrap;
+}
+
+.action-buttons{ display:flex; gap:6px; flex-wrap:wrap; }
+
+.hidden{ display:none; }
+
+/* Empty state */
+.empty{
+  padding:60px 20px;
+  text-align:center;
+  color:var(--ink4);
+}
+.empty p{ font-family:var(--font-d); font-size:20px; font-style:italic; }
+
+@media (max-width: 768px){
+  .container{ padding:0 20px; margin:20px auto; }
+  .header{ padding:20px; }
+  .login-box{ padding:40px 28px; }
+  .login-title{ font-size:28px; }
+  .modal-content{ padding:28px 24px; }
+  .modal-content h2{ font-size:24px; }
+  .tab{ padding:12px 18px; font-size:11px; }
+}
 </style>
 </head>
 <body>
+
 <div id="loginScreen" class="login-container">
 <div class="login-box">
-<h2>Panel de Administracion</h2>
-<p style="text-align: center; margin-bottom: 20px; color: #999;">Ingresa tu contrasena</p>
+<div class="login-tag">RRHH Concordia</div>
+<h2 class="login-title">Panel de <em>administración</em></h2>
 <form id="loginForm">
 <div class="form-group">
-<label>Contrasena</label>
+<label>Contraseña</label>
 <input type="password" id="password" required>
 </div>
-<button type="submit" class="btn" style="width: 100%;">Acceder</button>
+<button type="submit" class="btn btn-primary" style="width:100%;">Acceder</button>
 </form>
 </div>
 </div>
 
 <div id="adminPanel" class="hidden">
 <div class="header">
-<h1>Panel de Administracion</h1>
-<button class="btn btn-danger" onclick="logout()">Cerrar sesion</button>
+<div class="brand">
+<div class="brand-tag">Panel interno</div>
+<div class="brand-title"><em>RRHH</em> Concordia</div>
 </div>
+<button class="btn btn-ghost" onclick="logout()">Cerrar sesión</button>
+</div>
+
 <div class="container">
+
 <div class="tabs">
-<button class="tab active" onclick="cambiarTab('vacantes')">Vacantes</button>
-<button class="tab" onclick="cambiarTab('candidatos')">Candidatos</button>
-<button class="tab" onclick="cambiarTab('config')">Configuracion</button>
+<button class="tab active" onclick="cambiarTab('vacantes', event)">Vacantes</button>
+<button class="tab" onclick="cambiarTab('candidatos', event)">Candidatos</button>
+<button class="tab" onclick="cambiarTab('config', event)">Configuración</button>
 </div>
 
 <div id="tabVacantes" class="tab-content active">
-<button class="btn btn-success" onclick="abrirModalVacante()">+ Nueva Vacante</button>
+<div style="margin-bottom:24px;">
+<button class="btn btn-success" onclick="abrirModalVacante()">+ Nueva vacante</button>
+</div>
+<div class="table-wrapper">
 <table class="table">
 <thead>
 <tr>
-<th>Titulo</th>
-<th>Ubicacion</th>
+<th>Título</th>
+<th>Ubicación</th>
 <th>Tipo</th>
 <th>Rubro</th>
 <th>Fecha</th>
@@ -98,11 +410,12 @@ textarea { min-height: 80px; resize: vertical; }
 <tbody id="listaVacantes"></tbody>
 </table>
 </div>
+</div>
 
 <div id="tabCandidatos" class="tab-content">
 <div class="filters">
 <div>
-<label>Filtrar por Rubro</label>
+<label>Filtrar por rubro</label>
 <select id="filtroRubro" onchange="cargarCandidatos()">
 <option value="">— Todos los rubros —</option>
 <option value="Trade Marketing">Trade Marketing</option>
@@ -112,19 +425,20 @@ textarea { min-height: 80px; resize: vertical; }
 </select>
 </div>
 <div>
-<label>Filtrar por Vacante</label>
+<label>Filtrar por vacante</label>
 <select id="filtroVacante" onchange="cargarCandidatos()">
 <option value="">— Todas las vacantes —</option>
 </select>
 </div>
 </div>
 
+<div class="table-wrapper">
 <table class="table">
 <thead>
 <tr>
 <th>Nombre</th>
 <th>Email</th>
-<th>Telefono</th>
+<th>Teléfono</th>
 <th>Rubro</th>
 <th>Vacante</th>
 <th>Score</th>
@@ -135,16 +449,17 @@ textarea { min-height: 80px; resize: vertical; }
 <tbody id="listaCandidatos"></tbody>
 </table>
 </div>
+</div>
 
 <div id="tabConfig" class="tab-content">
 <div class="card">
-<h3>Cambiar Contrasena</h3>
+<h3>Cambiar contraseña</h3>
 <form id="formPassword">
 <div class="form-group">
-<label>Nueva contrasena</label>
+<label>Nueva contraseña</label>
 <input type="password" id="newPassword" required minlength="6">
 </div>
-<button type="submit" class="btn">Actualizar</button>
+<button type="submit" class="btn btn-primary">Actualizar</button>
 </form>
 </div>
 </div>
@@ -153,14 +468,14 @@ textarea { min-height: 80px; resize: vertical; }
 
 <div class="modal" id="modalVacante">
 <div class="modal-content">
-<h2>Nueva Vacante</h2>
+<h2>Nueva <em style="color:var(--blue);font-style:italic;">vacante</em></h2>
 <form id="formVacante">
 <div class="form-group">
-<label>Titulo del puesto</label>
+<label>Título del puesto</label>
 <input type="text" name="titulo" required>
 </div>
 <div class="form-group">
-<label>Ubicacion</label>
+<label>Ubicación</label>
 <input type="text" name="ubicacion" required>
 </div>
 <div class="form-group">
@@ -178,16 +493,16 @@ textarea { min-height: 80px; resize: vertical; }
 <option value="Full-time">Full-time</option>
 <option value="Part-time">Part-time</option>
 <option value="Contrato">Contrato</option>
-<option value="Pasantia">Pasantia</option>
+<option value="Pasantía">Pasantía</option>
 </select>
 </div>
 <div class="form-group">
-<label>Descripcion</label>
+<label>Descripción</label>
 <textarea name="descripcion" required rows="5"></textarea>
 </div>
 <div class="btn-group">
 <button type="submit" class="btn btn-success">Publicar</button>
-<button type="button" class="btn btn-danger" onclick="cerrarModal('modalVacante')">Cancelar</button>
+<button type="button" class="btn btn-ghost" onclick="cerrarModal('modalVacante')">Cancelar</button>
 </div>
 </form>
 </div>
@@ -199,18 +514,18 @@ textarea { min-height: 80px; resize: vertical; }
 <div id="modalCandidatoBody"></div>
 <div class="btn-group">
 <button type="button" class="btn btn-danger" onclick="eliminarCandidatoConfirm()">Eliminar</button>
-<button type="button" class="btn btn-danger" onclick="cerrarModal('modalCandidato')">Cerrar</button>
+<button type="button" class="btn btn-ghost" onclick="cerrarModal('modalCandidato')">Cerrar</button>
 </div>
 </div>
 </div>
 
 <div class="modal" id="modalScoring">
 <div class="modal-content">
-<h2>Evaluar Candidato</h2>
+<h2>Evaluación del <em style="color:var(--blue);font-style:italic;">candidato</em></h2>
 <div id="modalScoringBody"></div>
 <div class="btn-group">
-<button type="button" class="btn btn-success" onclick="guardarScoring()">Guardar Evaluacion</button>
-<button type="button" class="btn btn-danger" onclick="cerrarModal('modalScoring')">Cancelar</button>
+<button type="button" class="btn btn-success" onclick="guardarScoring()">Guardar evaluación</button>
+<button type="button" class="btn btn-ghost" onclick="cerrarModal('modalScoring')">Cancelar</button>
 </div>
 </div>
 </div>
@@ -231,7 +546,7 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
     document.getElementById('adminPanel').classList.remove('hidden');
     cargarDatos();
   } else {
-    alert('Contrasena incorrecta');
+    alert('Contraseña incorrecta');
   }
 });
 
@@ -240,7 +555,7 @@ async function logout() {
   location.reload();
 }
 
-function cambiarTab(tab) {
+function cambiarTab(tab, event) {
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
   document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
   event.target.classList.add('active');
@@ -278,7 +593,7 @@ document.getElementById('formPassword').addEventListener('submit', async (e) => 
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ newPassword })
   });
-  alert('Contrasena actualizada');
+  alert('Contraseña actualizada');
   document.getElementById('newPassword').value = '';
 });
 
@@ -288,22 +603,26 @@ async function cargarVacantes() {
   const tbody = document.getElementById('listaVacantes');
   const select = document.getElementById('filtroVacante');
 
-  tbody.innerHTML = vacantes.map(v => `
-    <tr>
-      <td>${v.titulo}</td>
-      <td>${v.ubicacion}</td>
-      <td>${v.tipo}</td>
-      <td>${v.rubro || 'N/A'}</td>
-      <td>${new Date(v.fecha).toLocaleDateString()}</td>
-      <td><button class="btn btn-danger" onclick="eliminarVacante(${v.id})">Eliminar</button></td>
-    </tr>
-  `).join('');
+  if (vacantes.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="6" class="empty"><p>Sin vacantes activas</p></td></tr>';
+  } else {
+    tbody.innerHTML = vacantes.map(v => `
+      <tr>
+        <td><span class="candidate-name">${v.titulo}</span></td>
+        <td>${v.ubicacion}</td>
+        <td>${v.tipo}</td>
+        <td>${v.rubro ? '<span class="rubro-tag">' + v.rubro + '</span>' : '—'}</td>
+        <td>${new Date(v.fecha).toLocaleDateString('es-AR')}</td>
+        <td><button class="btn btn-danger btn-sm" onclick="eliminarVacante(${v.id})">Eliminar</button></td>
+      </tr>
+    `).join('');
+  }
 
   select.innerHTML = '<option value="">— Todas las vacantes —</option>' + vacantes.map(v => `<option value="${v.id}">${v.titulo}</option>`).join('');
 }
 
 async function eliminarVacante(id) {
-  if (!confirm('Eliminar esta vacante?')) return;
+  if (!confirm('¿Eliminar esta vacante?')) return;
   await fetch('/api/vacantes/' + id, { method: 'DELETE' });
   cargarVacantes();
 }
@@ -325,6 +644,11 @@ async function cargarCandidatos() {
   const vacantes = await resVacantes.json();
   const tbody = document.getElementById('listaCandidatos');
 
+  if (candidatos.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="8" class="empty"><p>Sin candidatos para mostrar</p></td></tr>';
+    return;
+  }
+
   tbody.innerHTML = candidatos.map(c => {
     const vacante = vacantes.find(v => v.id == c.vacanteId);
     const score = c.scoring ? c.scoring.score : null;
@@ -341,18 +665,17 @@ async function cargarCandidatos() {
 
     return `
       <tr>
-        <td>${c.nombre}</td>
+        <td><span class="candidate-name">${c.nombre}</span></td>
         <td>${c.email}</td>
         <td>${c.telefono}</td>
-        <td>${c.rubro || 'N/A'}</td>
-        <td>${vacante ? vacante.titulo : 'N/A'}</td>
+        <td>${c.rubro ? '<span class="rubro-tag">' + c.rubro + '</span>' : '—'}</td>
+        <td>${vacante ? vacante.titulo : '<em style="color:var(--ink4);">N/A</em>'}</td>
         <td>${scoreBadge}</td>
-        <td>${new Date(c.fecha).toLocaleDateString()}</td>
+        <td>${new Date(c.fecha).toLocaleDateString('es-AR')}</td>
         <td>
           <div class="action-buttons">
-            <button class="btn btn-primary" onclick="abrirDetalleCandidato(${c.id})">Ver</button>
-            <button class="btn btn-success" onclick="abrirScoring(${c.id})">Evaluar</button>
-            <button class="btn btn-danger" onclick="eliminarCandidatoAPI(${c.id})">Eliminar</button>
+            <button class="btn btn-ghost btn-sm" onclick="abrirDetalleCandidato(${c.id})">Ver</button>
+            <button class="btn btn-primary btn-sm" onclick="abrirScoring(${c.id})">Evaluar</button>
           </div>
         </td>
       </tr>
@@ -368,17 +691,18 @@ async function abrirDetalleCandidato(id) {
 
   let scoringHTML = '';
   if (c.scoring) {
+    let scoreColor = c.scoring.score >= 70 ? 'var(--green)' : c.scoring.score >= 50 ? 'var(--orange)' : 'var(--red)';
     scoringHTML = `
       <div class="modal-section">
         <h4>Evaluación</h4>
-        <p><strong>Score:</strong> ${c.scoring.score}/100</p>
-        <p><strong>Fortalezas:</strong></p>
-        <p>${c.scoring.fortalezas}</p>
-        <p><strong>Debilidades:</strong></p>
-        <p>${c.scoring.debilidades}</p>
-        <p><strong>Recomendacion:</strong></p>
-        <p>${c.scoring.recomendacion}</p>
-        <p style="font-size: 12px; color: #999;">Evaluado: ${new Date(c.scoring.fechaEvaluacion).toLocaleString()}</p>
+        <p style="margin-bottom:14px;"><strong>Score:</strong> <span style="font-family:var(--font-d);font-size:28px;color:${scoreColor};">${c.scoring.score}</span><span style="color:var(--ink4);">/100</span></p>
+        <p style="margin-top:16px;"><strong>Fortalezas:</strong></p>
+        <p style="white-space:pre-wrap;color:var(--ink2);">${c.scoring.fortalezas || '—'}</p>
+        <p style="margin-top:14px;"><strong>Debilidades:</strong></p>
+        <p style="white-space:pre-wrap;color:var(--ink2);">${c.scoring.debilidades || '—'}</p>
+        <p style="margin-top:14px;"><strong>Recomendación:</strong></p>
+        <p style="white-space:pre-wrap;color:var(--ink2);">${c.scoring.recomendacion || '—'}</p>
+        <p style="font-size:11px;color:var(--ink4);margin-top:14px;">Evaluado el ${new Date(c.scoring.fechaEvaluacion).toLocaleString('es-AR')}</p>
       </div>
     `;
   }
@@ -386,15 +710,15 @@ async function abrirDetalleCandidato(id) {
   document.getElementById('modalCandidatoNombre').innerHTML = c.nombre;
   document.getElementById('modalCandidatoBody').innerHTML = `
     <div class="modal-section">
-      <h4>Informacion Personal</h4>
+      <h4>Información personal</h4>
       <p><strong>Email:</strong> ${c.email}</p>
-      <p><strong>Telefono:</strong> ${c.telefono}</p>
-      <p><strong>Rubro:</strong> ${c.rubro || 'N/A'}</p>
-      <p><strong>Fecha de postulación:</strong> ${new Date(c.fecha).toLocaleString()}</p>
+      <p><strong>Teléfono:</strong> ${c.telefono}</p>
+      <p><strong>Rubro:</strong> ${c.rubro || '—'}</p>
+      <p><strong>Postulación:</strong> ${new Date(c.fecha).toLocaleString('es-AR')}</p>
     </div>
     <div class="modal-section">
-      <h4>CV</h4>
-      <a href="/${c.cvPath}" target="_blank" class="btn">Descargar CV</a>
+      <h4>Curriculum Vitae</h4>
+      <a href="/${c.cvPath}" target="_blank" class="btn btn-primary btn-sm">Descargar CV</a>
     </div>
     ${scoringHTML}
   `;
@@ -410,31 +734,29 @@ async function abrirScoring(id) {
   const scoring = c.scoring || { score: 0, fortalezas: '', debilidades: '', recomendacion: '' };
 
   document.getElementById('modalScoringBody').innerHTML = `
-    <div class="modal-section">
-      <h4>${c.nombre}</h4>
-      <div class="form-group">
-        <label>Score (0-100)</label>
-        <input type="number" id="scoringScore" min="0" max="100" value="${scoring.score}" class="score-input">
-      </div>
-      <div class="form-group">
-        <label>Fortalezas</label>
-        <textarea id="scoringFortalezas" class="score-input">${scoring.fortalezas}</textarea>
-      </div>
-      <div class="form-group">
-        <label>Debilidades</label>
-        <textarea id="scoringDebilidades" class="score-input">${scoring.debilidades}</textarea>
-      </div>
-      <div class="form-group">
-        <label>Recomendacion</label>
-        <textarea id="scoringRecomendacion" class="score-input">${scoring.recomendacion}</textarea>
-      </div>
+    <div style="font-family:var(--font-d);font-size:22px;margin-bottom:24px;color:var(--ink2);">${c.nombre}</div>
+    <div class="form-group">
+      <label>Score (0—100)</label>
+      <input type="number" id="scoringScore" min="0" max="100" value="${scoring.score}">
+    </div>
+    <div class="form-group">
+      <label>Fortalezas</label>
+      <textarea id="scoringFortalezas" placeholder="Liste las fortalezas detectadas...">${scoring.fortalezas}</textarea>
+    </div>
+    <div class="form-group">
+      <label>Debilidades</label>
+      <textarea id="scoringDebilidades" placeholder="Liste las debilidades o áreas de mejora...">${scoring.debilidades}</textarea>
+    </div>
+    <div class="form-group">
+      <label>Recomendación</label>
+      <textarea id="scoringRecomendacion" placeholder="Recomendación final sobre el candidato...">${scoring.recomendacion}</textarea>
     </div>
   `;
   document.getElementById('modalScoring').classList.add('active');
 }
 
 async function guardarScoring() {
-  const score = document.getElementById('scoringScore').value;
+  const score = parseInt(document.getElementById('scoringScore').value);
   const fortalezas = document.getElementById('scoringFortalezas').value;
   const debilidades = document.getElementById('scoringDebilidades').value;
   const recomendacion = document.getElementById('scoringRecomendacion').value;
@@ -447,11 +769,10 @@ async function guardarScoring() {
 
   cerrarModal('modalScoring');
   cargarCandidatos();
-  alert('Evaluacion guardada');
 }
 
 function eliminarCandidatoConfirm() {
-  if (!confirm('Eliminar este candidato?')) return;
+  if (!confirm('¿Eliminar este candidato?')) return;
   eliminarCandidatoAPI(candidatoActualId);
 }
 
