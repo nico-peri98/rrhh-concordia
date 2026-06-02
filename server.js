@@ -65,6 +65,7 @@ async function initDB() {
         tipo VARCHAR(50),
         rubro VARCHAR(100),
         descripcion TEXT,
+        imagenPath VARCHAR(255),
         fecha TIMESTAMP
       )
     `);
@@ -83,6 +84,32 @@ async function initDB() {
         scoring JSONB
       )
     `);
+
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS rubros (
+        id SERIAL PRIMARY KEY,
+        nombre VARCHAR(100) UNIQUE
+      )
+    `);
+
+    // Insertar rubros por defecto si la tabla está vacía
+    const rubrosCount = await pool.query('SELECT COUNT(*) FROM rubros');
+    if (parseInt(rubrosCount.rows[0].count) === 0) {
+      const rubrosDefault = [
+        'Administración y contabilidad',
+        'Comercial y ventas',
+        'Logística y operaciones',
+        'Recursos humanos',
+        'Tecnología e informática',
+        'Producción e industria',
+        'Salud y educación',
+        'Otro'
+      ];
+      for (const rubro of rubrosDefault) {
+        await pool.query('INSERT INTO rubros (nombre) VALUES ($1)', [rubro]);
+      }
+      console.log('✓ Rubros por defecto creados');
+    }
 
     // Insertar usuario admin si no existe
     const user = await pool.query('SELECT * FROM users WHERE username = $1', ['admin']);
@@ -145,25 +172,36 @@ app.post('/api/vacantes', isAuth, async (req, res) => {
   const { titulo, ubicacion, tipo, rubro, descripcion } = req.body;
   const id = Date.now();
   const fecha = new Date().toISOString();
+  const imagenPath = req.file ? req.file.path : null;
+  
   try {
     await pool.query(
-      'INSERT INTO vacantes (id, titulo, ubicacion, tipo, rubro, descripcion, fecha) VALUES ($1, $2, $3, $4, $5, $6, $7)',
-      [id, titulo, ubicacion, tipo, rubro, descripcion, fecha]
+      'INSERT INTO vacantes (id, titulo, ubicacion, tipo, rubro, descripcion, imagenPath, fecha) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)',
+      [id, titulo, ubicacion, tipo, rubro, descripcion, imagenPath, fecha]
     );
-    res.json({ id, titulo, ubicacion, tipo, rubro, descripcion, fecha });
+    res.json({ id, titulo, ubicacion, tipo, rubro, descripcion, imagenPath, fecha });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
 
-app.put('/api/vacantes/:id', isAuth, async (req, res) => {
+app.put('/api/vacantes/:id', isAuth, upload.single('imagen'), async (req, res) => {
   const { id } = req.params;
   const { titulo, ubicacion, tipo, rubro, descripcion } = req.body;
+  const imagenPath = req.file ? req.file.path : undefined;
+  
   try {
-    await pool.query(
-      'UPDATE vacantes SET titulo = $1, ubicacion = $2, tipo = $3, rubro = $4, descripcion = $5 WHERE id = $6',
-      [titulo, ubicacion, tipo, rubro, descripcion, id]
-    );
+    if (imagenPath) {
+      await pool.query(
+        'UPDATE vacantes SET titulo = $1, ubicacion = $2, tipo = $3, rubro = $4, descripcion = $5, imagenPath = $6 WHERE id = $7',
+        [titulo, ubicacion, tipo, rubro, descripcion, imagenPath, id]
+      );
+    } else {
+      await pool.query(
+        'UPDATE vacantes SET titulo = $1, ubicacion = $2, tipo = $3, rubro = $4, descripcion = $5 WHERE id = $6',
+        [titulo, ubicacion, tipo, rubro, descripcion, id]
+      );
+    }
     res.json({ success: true });
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -254,6 +292,46 @@ app.delete('/api/candidatos/:id', isAuth, async (req, res) => {
       if (fs.existsSync(cvPath)) fs.unlinkSync(cvPath);
     }
     await pool.query('DELETE FROM candidatos WHERE id = $1', [id]);
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.get('/api/rubros', async (req, res) => {
+  try {
+    const result = await pool.query('SELECT * FROM rubros ORDER BY id');
+    res.json(result.rows);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.post('/api/rubros', isAuth, async (req, res) => {
+  const { nombre } = req.body;
+  try {
+    const result = await pool.query('INSERT INTO rubros (nombre) VALUES ($1) RETURNING *', [nombre]);
+    res.json(result.rows[0]);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.put('/api/rubros/:id', isAuth, async (req, res) => {
+  const { id } = req.params;
+  const { nombre } = req.body;
+  try {
+    await pool.query('UPDATE rubros SET nombre = $1 WHERE id = $2', [nombre, id]);
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.delete('/api/rubros/:id', isAuth, async (req, res) => {
+  const { id } = req.params;
+  try {
+    await pool.query('DELETE FROM rubros WHERE id = $1', [id]);
     res.json({ success: true });
   } catch (err) {
     res.status(500).json({ error: err.message });

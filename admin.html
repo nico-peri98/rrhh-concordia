@@ -415,6 +415,7 @@ textarea{ min-height:90px; resize:vertical; }
 <th>Tipo</th>
 <th>Rubro</th>
 <th>Fecha</th>
+<th>Imagen</th>
 <th>Acciones</th>
 </tr>
 </thead>
@@ -479,6 +480,14 @@ textarea{ min-height:90px; resize:vertical; }
 <button type="submit" class="btn btn-primary">Actualizar</button>
 </form>
 </div>
+
+<div class="card">
+<h3>Gestionar <em>rubros</em></h3>
+<div style="margin-bottom:20px;">
+<button class="btn btn-success" onclick="abrirModalNuevoRubro()">+ Nuevo rubro</button>
+</div>
+<div id="listaRubros" style="display:grid;gap:10px;"></div>
+</div>
 </div>
 </div>
 </div>
@@ -487,8 +496,13 @@ textarea{ min-height:90px; resize:vertical; }
 <div class="modal" id="modalVacante">
 <div class="modal-content">
 <h2 id="modalVacanteTitulo">Nueva <em>vacante</em></h2>
-<form id="formVacante">
+<form id="formVacante" enctype="multipart/form-data">
 <input type="hidden" name="id" id="vacanteEditId">
+<div class="form-group">
+<label>Imagen de la vacante</label>
+<input type="file" name="imagen" id="vacanteImagen" accept="image/*">
+<small style="color:var(--ink4);">Formato: JPG, PNG. Tamaño recomendado: 600x400px</small>
+</div>
 <div class="form-group">
 <label>Título del puesto</label>
 <input type="text" name="titulo" id="vacanteTitulo" required>
@@ -500,10 +514,7 @@ textarea{ min-height:90px; resize:vertical; }
 <div class="form-group">
 <label>Rubro</label>
 <select name="rubro" id="vacanteRubro" required>
-<option value="Trade Marketing">Trade Marketing</option>
-<option value="Operario Polivalente">Operario Polivalente</option>
-<option value="Administrativo">Administrativo</option>
-<option value="Otro">Otro</option>
+<option value="">Cargando...</option>
 </select>
 </div>
 <div class="form-group">
@@ -565,6 +576,23 @@ textarea{ min-height:90px; resize:vertical; }
 </div>
 </div>
 
+<!-- Modal Rubro -->
+<div class="modal" id="modalRubro">
+<div class="modal-content">
+<h2 id="modalRubroTitulo">Nuevo <em>rubro</em></h2>
+<form id="formRubro">
+<div class="form-group">
+<label>Nombre del rubro</label>
+<input type="text" id="rubroNombre" required>
+</div>
+<div class="btn-group">
+<button type="submit" class="btn btn-success" id="rubroSubmitBtn">Guardar</button>
+<button type="button" class="btn btn-ghost" onclick="cerrarModal('modalRubro')">Cancelar</button>
+</div>
+</form>
+</div>
+</div>
+
 <script>
 let candidatoActualId = null;
 let vacanteEditandoId = null;
@@ -604,7 +632,19 @@ function abrirModalVacante() {
   document.getElementById('modalVacanteTitulo').innerHTML = 'Nueva <em>vacante</em>';
   document.getElementById('vacanteSubmitBtn').textContent = 'Publicar';
   document.getElementById('formVacante').reset();
+  cargarRubrosEnSelect('vacanteRubro');
   document.getElementById('modalVacante').classList.add('active');
+}
+
+async function cargarRubrosEnSelect(selectId) {
+  try {
+    const res = await fetch('/api/rubros');
+    const rubros = await res.json();
+    const select = document.getElementById(selectId);
+    select.innerHTML = rubros.map(r => `<option value="${r.nombre}">${r.nombre}</option>`).join('');
+  } catch (err) {
+    console.error('Error cargando rubros:', err);
+  }
 }
 
 async function abrirEditarVacante(id) {
@@ -617,9 +657,10 @@ async function abrirEditarVacante(id) {
   document.getElementById('vacanteSubmitBtn').textContent = 'Guardar cambios';
   document.getElementById('vacanteTitulo').value = v.titulo || '';
   document.getElementById('vacanteUbicacion').value = v.ubicacion || '';
-  document.getElementById('vacanteRubro').value = v.rubro || 'Otro';
   document.getElementById('vacanteTipo').value = v.tipo || 'Full-time';
   document.getElementById('vacanteDescripcion').value = v.descripcion || '';
+  await cargarRubrosEnSelect('vacanteRubro');
+  document.getElementById('vacanteRubro').value = v.rubro || 'Otro';
   document.getElementById('modalVacante').classList.add('active');
 }
 
@@ -630,21 +671,26 @@ function cerrarModal(id) {
 document.getElementById('formVacante').addEventListener('submit', async (e) => {
   e.preventDefault();
   const formData = new FormData(e.target);
-  const data = Object.fromEntries(formData);
-  delete data.id;
+  formData.delete('id');
 
   if (vacanteEditandoId) {
-    await fetch('/api/vacantes/' + vacanteEditandoId, {
+    const response = await fetch('/api/vacantes/' + vacanteEditandoId, {
       method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data)
+      body: formData
     });
+    if (!response.ok) {
+      alert('Error al actualizar vacante');
+      return;
+    }
   } else {
-    await fetch('/api/vacantes', {
+    const response = await fetch('/api/vacantes', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data)
+      body: formData
     });
+    if (!response.ok) {
+      alert('Error al crear vacante');
+      return;
+    }
   }
   cerrarModal('modalVacante');
   e.target.reset();
@@ -680,6 +726,9 @@ async function cargarVacantes() {
         <td>${v.tipo}</td>
         <td>${v.rubro ? '<span class="rubro-tag">' + v.rubro + '</span>' : '—'}</td>
         <td>${new Date(v.fecha).toLocaleDateString('es-AR')}</td>
+        <td>
+          ${v.imagenpath ? '<img src="/' + v.imagenpath + '" style="width:40px;height:40px;object-fit:cover;border-radius:4px;">' : '—'}
+        </td>
         <td>
           <div class="action-buttons">
             <button class="btn btn-warning btn-sm" onclick="abrirEditarVacante(${v.id})">Editar</button>
@@ -824,10 +873,7 @@ async function abrirEditarCandidato(id) {
     <div class="form-group">
       <label>Rubro</label>
       <select id="editRubro">
-        <option value="Trade Marketing" ${c.rubro === 'Trade Marketing' ? 'selected' : ''}>Trade Marketing</option>
-        <option value="Operario Polivalente" ${c.rubro === 'Operario Polivalente' ? 'selected' : ''}>Operario Polivalente</option>
-        <option value="Administrativo" ${c.rubro === 'Administrativo' ? 'selected' : ''}>Administrativo</option>
-        <option value="Otro" ${c.rubro === 'Otro' ? 'selected' : ''}>Otro</option>
+        <option value="">Cargando...</option>
       </select>
     </div>
     <div class="form-group">
@@ -916,9 +962,81 @@ async function eliminarCandidatoAPI(id) {
   cargarCandidatos();
 }
 
+function abrirModalNuevoRubro() {
+  document.getElementById('modalRubroTitulo').innerHTML = 'Nuevo <em>rubro</em>';
+  document.getElementById('rubroSubmitBtn').textContent = 'Crear';
+  document.getElementById('formRubro').reset();
+  document.getElementById('formRubro').dataset.rubroId = '';
+  document.getElementById('modalRubro').classList.add('active');
+}
+
+async function cargarRubros() {
+  try {
+    const res = await fetch('/api/rubros');
+    const rubros = await res.json();
+    const listaRubros = document.getElementById('listaRubros');
+    listaRubros.innerHTML = rubros.map(r => `
+      <div style="background:var(--cream2);border:1px solid var(--border);padding:14px;border-radius:var(--r-md);display:flex;justify-content:space-between;align-items:center;">
+        <span>${r.nombre}</span>
+        <div class="action-buttons">
+          <button class="btn btn-warning btn-sm" onclick="editarRubro(${r.id}, '${r.nombre}')">Editar</button>
+          <button class="btn btn-danger btn-sm" onclick="eliminarRubro(${r.id})">Eliminar</button>
+        </div>
+      </div>
+    `).join('');
+  } catch (err) {
+    console.error('Error cargando rubros:', err);
+  }
+}
+
+function editarRubro(id, nombre) {
+  document.getElementById('modalRubroTitulo').innerHTML = 'Editar <em>rubro</em>';
+  document.getElementById('rubroSubmitBtn').textContent = 'Guardar cambios';
+  document.getElementById('rubroNombre').value = nombre;
+  document.getElementById('formRubro').dataset.rubroId = id;
+  document.getElementById('modalRubro').classList.add('active');
+}
+
+async function eliminarRubro(id) {
+  if (!confirm('¿Eliminar este rubro?')) return;
+  try {
+    await fetch('/api/rubros/' + id, { method: 'DELETE' });
+    cargarRubros();
+  } catch (err) {
+    console.error('Error eliminando rubro:', err);
+  }
+}
+
+document.getElementById('formRubro').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const nombre = document.getElementById('rubroNombre').value;
+  const rubroId = e.target.dataset.rubroId;
+  
+  try {
+    if (rubroId) {
+      await fetch('/api/rubros/' + rubroId, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ nombre })
+      });
+    } else {
+      await fetch('/api/rubros', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ nombre })
+      });
+    }
+    cerrarModal('modalRubro');
+    cargarRubros();
+  } catch (err) {
+    console.error('Error guardando rubro:', err);
+  }
+});
+
 function cargarDatos() {
   cargarVacantes();
   cargarCandidatos();
+  cargarRubros();
 }
 </script>
 </body>
