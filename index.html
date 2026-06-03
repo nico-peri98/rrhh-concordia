@@ -178,9 +178,9 @@ nav.scrolled{
 }
 .nav-links a:hover{ color:var(--ink); }
 .nav-links a:hover::after{ width:100%; }
-nav:not(.scrolled) .nav-links a{ color:rgba(246,241,234,0.75); }
-nav:not(.scrolled) .nav-links a:hover{ color:#F6F1EA; }
-nav:not(.scrolled) .nav-links a::after{ background:#F6F1EA; }
+nav:not(.scrolled) .nav-links a{ color:var(--ink3); }
+nav:not(.scrolled) .nav-links a:hover{ color:var(--ink); }
+nav:not(.scrolled) .nav-links a::after{ background:var(--ink); }
 .nav-actions{ display:flex; gap:12px; align-items:center; }
 .btn-nav-ghost{
   background:transparent; border:1px solid var(--border-mid);
@@ -189,8 +189,8 @@ nav:not(.scrolled) .nav-links a::after{ background:#F6F1EA; }
   transition:all 0.25s; font-weight:400; letter-spacing:0.2px;
 }
 .btn-nav-ghost:hover{ border-color:var(--ink); color:var(--ink); }
-nav:not(.scrolled) .btn-nav-ghost{ border-color:rgba(246,241,234,0.4); color:rgba(246,241,234,0.85); }
-nav:not(.scrolled) .btn-nav-ghost:hover{ border-color:#F6F1EA; color:#F6F1EA; }
+nav:not(.scrolled) .btn-nav-ghost{ border-color:var(--border-mid); color:var(--ink2); }
+nav:not(.scrolled) .btn-nav-ghost:hover{ border-color:var(--ink); color:var(--ink); }
 .btn-nav-solid{
   background:var(--ink); color:var(--cream);
   border:none; padding:9px 22px; border-radius:100px;
@@ -1076,7 +1076,7 @@ footer{
 <!-- NAV -->
 <nav id="mainnav">
   <a href="#" class="nav-logo" aria-label="RRHH Concordia">
-    <svg style="height:26px;width:auto;color:#F6F1EA" aria-hidden="true"><use href="#logo-mark"/></svg>
+    <svg style="height:34px;width:auto;color:#111111" aria-hidden="true"><use href="#logo-mark"/></svg>
   </a>
   <div class="nav-links">
     <a href="#servicios">Servicios</a>
@@ -1285,7 +1285,7 @@ footer{
               <div class="nos-fact-l">Procesos<br>rápidos</div>
             </div>
             <div>
-              <div class="nos-fact-n" style="font-size:18px;padding-top:6px;font-family:var(--font-b);font-weight:400;font-style:normal">Confid.</div>
+              <div class="nos-fact-n">Confidencial</div>
               <div class="nos-fact-l">Datos<br>seguros</div>
             </div>
           </div>
