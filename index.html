@@ -972,6 +972,34 @@ footer{
 .modal .btn-submit:hover{ background:var(--ink2); }
 .modal-form{ display:flex; flex-direction:column; gap:12px; }
 .modal-success{ display:none; text-align:center; padding:20px 0; }
+.modal-detail{ display:none; flex-direction:column; gap:14px; }
+.modal-detail.active{ display:flex; }
+.modal-meta-pills{ display:flex; gap:8px; flex-wrap:wrap; margin-bottom:4px; }
+.modal-pill{
+  font-size:10px; letter-spacing:1.8px; text-transform:uppercase;
+  padding:4px 12px; border-radius:100px;
+  background:var(--blue-muted); color:var(--blue);
+  font-weight:500; border:1px solid var(--blue-line);
+}
+.modal-pill.orange{ background:var(--orange-muted); color:var(--orange); border-color:rgba(252,151,56,0.25); }
+.modal-desc{
+  font-size:13.5px; color:var(--ink3); line-height:1.78;
+  font-weight:300; white-space:pre-line;
+  max-height:300px; overflow-y:auto;
+  padding-right:6px;
+  scrollbar-width:thin;
+}
+.modal-desc::-webkit-scrollbar{ width:3px; }
+.modal-desc::-webkit-scrollbar-thumb{ background:var(--ink4); border-radius:2px; }
+.modal-divider{ height:1px; background:var(--border); margin:4px 0; }
+.btn-apply-primary{
+  background:var(--ink); color:var(--cream);
+  border:none; padding:14px 28px; border-radius:100px;
+  font-size:14px; font-family:var(--font-b); cursor:pointer;
+  transition:all 0.25s; font-weight:400; letter-spacing:0.1px;
+  width:100%; margin-top:4px;
+}
+.btn-apply-primary:hover{ background:var(--ink2); transform:translateY(-1px); }
 .modal-success .ms-icon{ font-size:36px; margin-bottom:12px; }
 .modal-success h3{
   font-family:var(--font-d); font-size:22px;
@@ -1449,8 +1477,23 @@ footer{
     <button class="modal-close" onclick="closeModal('jobModal')">×</button>
     <span class="modal-tag" id="jobModalTag">Vacante</span>
     <h2 id="jobModalTitle">Puesto</h2>
-    <p class="modal-sub" id="jobModalSub">Postulaciones confidenciales. Tus datos solo serán vistos por nuestro equipo.</p>
-    <div class="modal-form" id="jobForm">
+
+    <!-- PANTALLA 1: Descripción -->
+    <div class="modal-detail active" id="jobDetail">
+      <div class="modal-meta-pills">
+        <span class="modal-pill" id="jobModalTipo"></span>
+        <span class="modal-pill orange" id="jobModalRubro"></span>
+        <span class="modal-pill" id="jobModalUbic"></span>
+      </div>
+      <div class="modal-divider"></div>
+      <p class="modal-desc" id="jobModalDesc"></p>
+      <div class="confid"><span>🔒</span><span>Postulaciones confidenciales. Solo las verá nuestro equipo de selección.</span></div>
+      <button class="btn-apply-primary" onclick="showJobForm()">Quiero postularme →</button>
+    </div>
+
+    <!-- PANTALLA 2: Formulario -->
+    <div class="modal-form" id="jobForm" style="display:none">
+      <p class="modal-sub" style="margin-bottom:4px">Completá tus datos y adjuntá tu CV.</p>
       <input class="fi" type="text" placeholder="Nombre completo" required>
       <input class="fi" type="email" placeholder="Email" required>
       <input class="fi" type="tel" placeholder="Teléfono / WhatsApp">
@@ -1461,6 +1504,7 @@ footer{
       <div class="confid"><span>🔒</span><span>Tus datos son confidenciales y solo los verá nuestro equipo de selección.</span></div>
       <button class="btn-submit" onclick="submitJob(this)">Enviar postulación</button>
     </div>
+
     <div class="modal-success" id="jobSuccess">
       <div class="ms-icon">🎉</div>
       <h3>¡Postulación enviada!</h3>
@@ -1520,13 +1564,23 @@ const obs = new IntersectionObserver(entries => {
 document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
 
 /* ── Modals ── */
-function openJobModal(title, sub){
+function openJobModal(title, ubicacion, descripcion, tipo, rubro){
   document.getElementById('jobModalTitle').textContent = title;
-  document.getElementById('jobModalSub').textContent = sub + ' · Postulaciones confidenciales.';
-  document.getElementById('jobForm').style.display = 'flex';
+  document.getElementById('jobModalTag').textContent = rubro || 'Vacante';
+  document.getElementById('jobModalTipo').textContent = tipo || 'Full-time';
+  document.getElementById('jobModalRubro').textContent = rubro || '';
+  document.getElementById('jobModalUbic').textContent = ubicacion || '';
+  document.getElementById('jobModalDesc').textContent = descripcion || '';
+  // Reset: mostrar pantalla de descripción
+  document.getElementById('jobDetail').classList.add('active');
+  document.getElementById('jobForm').style.display = 'none';
   document.getElementById('jobSuccess').style.display = 'none';
   document.getElementById('jobModal').classList.add('open');
   document.body.style.overflow = 'hidden';
+}
+function showJobForm(){
+  document.getElementById('jobDetail').classList.remove('active');
+  document.getElementById('jobForm').style.display = 'flex';
 }
 function openCVModal(){
   document.getElementById('cvModalForm').style.display = 'flex';
@@ -1610,7 +1664,13 @@ function orbBuild(id, data, isV) {
     var el = document.createElement('div');
     el.className = 'hcar-card';
     var ctaHtml = isV
-      ? '<button class="hcar-cta" onclick="event.stopPropagation();openJobModal(\'' + d.m0 + '\',\'' + d.m1 + '\')">' + 'Ver vacante</button>'
+      ? '<button class="hcar-cta" onclick="event.stopPropagation();openJobModal(' +
+          JSON.stringify(d.m0) + ',' +
+          JSON.stringify(d.m1) + ',' +
+          JSON.stringify(d.m2) + ',' +
+          JSON.stringify(d.m3) + ',' +
+          JSON.stringify(d.m4) +
+        ')">Ver vacante</button>'
       : '';
     el.innerHTML =
       '<div class="hcar-img"><img src="'+d.i+'" alt="'+d.t+'" loading="lazy"></div>' +
@@ -1794,7 +1854,10 @@ orbBuild('svc', SVC_ITEMS, false);
       d: v.ubicacion || 'Concordia, Entre Ríos',
       i: v.imagenpath || 'https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=600&q=80&fit=crop',
       m0: v.titulo || 'Vacante',
-      m1: v.ubicacion || 'Concordia, Entre Ríos'
+      m1: v.ubicacion || 'Concordia, Entre Ríos',
+      m2: v.descripcion || '',
+      m3: v.tipo || 'Full-time',
+      m4: v.rubro || ''
     }));
     orbBuild('vac', VAC_ITEMS, true);
   } catch(e) {
