@@ -1664,13 +1664,7 @@ function orbBuild(id, data, isV) {
     var el = document.createElement('div');
     el.className = 'hcar-card';
     var ctaHtml = isV
-      ? '<button class="hcar-cta" onclick="event.stopPropagation();openJobModal(' +
-          JSON.stringify(d.m0) + ',' +
-          JSON.stringify(d.m1) + ',' +
-          JSON.stringify(d.m2) + ',' +
-          JSON.stringify(d.m3) + ',' +
-          JSON.stringify(d.m4) +
-        ')">Ver vacante</button>'
+      ? '<button class="hcar-cta" data-vacidx="'+i+'">Ver vacante</button>'
       : '';
     el.innerHTML =
       '<div class="hcar-img"><img src="'+d.i+'" alt="'+d.t+'" loading="lazy"></div>' +
@@ -1679,7 +1673,18 @@ function orbBuild(id, data, isV) {
         '<div class="hcar-title">'+d.t+'</div>' +
         '<div class="hcar-desc">'+d.d+'</div>' +
       '</div>' + ctaHtml;
-    (function(ii){ el.addEventListener('click', function(){ if(!dragging) goTo(ii); }); })(i);
+    (function(ii, vd){
+      el.addEventListener('click', function(){ if(!dragging) goTo(ii); });
+      if (isV) {
+        var btn = el.querySelector('.hcar-cta');
+        if (btn) {
+          btn.addEventListener('click', function(e){
+            e.stopPropagation();
+            openJobModal(vd.m0, vd.m1, vd.m2, vd.m3, vd.m4);
+          });
+        }
+      }
+    })(i, d);
     stage.appendChild(el);
     cards.push(el);
   }
