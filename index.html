@@ -1336,11 +1336,11 @@ footer{
       <div class="reveal reveal-d2">
         <div class="cv-form" id="cvFormInline">
           <div class="fi-row">
-            <input class="fi" type="text" placeholder="Nombre completo" required>
-            <input class="fi" type="email" placeholder="Email" required>
+            <input id="cvInlineNombre" class="fi" type="text" placeholder="Nombre completo" required>
+            <input id="cvInlineEmail" class="fi" type="email" placeholder="Email" required>
           </div>
-          <input class="fi" type="tel" placeholder="Teléfono / WhatsApp">
-          <select class="fi">
+          <input id="cvInlineTelefono" class="fi" type="tel" placeholder="Teléfono / WhatsApp">
+          <select id="cvInlineRubro" class="fi">
             <option value="">Área de interés...</option>
             <option>Administración y contabilidad</option>
             <option>Comercial y ventas</option>
@@ -1352,7 +1352,7 @@ footer{
             <option>Otro</option>
           </select>
           <div class="file-drop">
-            <input type="file" accept=".pdf,.doc,.docx,.jpg,.jpeg" onchange="handleFile(this,'cvFile')">
+            <input id="cvInlineFile" type="file" accept=".pdf,.doc,.docx,.jpg,.jpeg" onchange="handleFile(this,'cvFile')">
             <p><strong id="cvFile">Hacé clic para adjuntar CV</strong>PDF, Word, JPG · Máx. 5MB</p>
           </div>
           <button class="btn-submit" onclick="submitCV(this)">Enviar mi CV</button>
@@ -1521,10 +1521,10 @@ footer{
     <h2>No hay una vacante hoy.<br>Hay una oportunidad mañana.</h2>
     <p class="modal-sub">Dejá tu CV y te contactamos en cuanto aparezca una posición que se adapte a tu perfil.</p>
     <div class="modal-form" id="cvModalForm">
-      <input class="fi" type="text" placeholder="Nombre completo" required>
-      <input class="fi" type="email" placeholder="Email" required>
-      <input class="fi" type="tel" placeholder="Teléfono / WhatsApp">
-      <select class="fi">
+      <input id="cvModalNombre" class="fi" type="text" placeholder="Nombre completo" required>
+      <input id="cvModalEmail" class="fi" type="email" placeholder="Email" required>
+      <input id="cvModalTelefono" class="fi" type="tel" placeholder="Teléfono / WhatsApp">
+      <select id="cvModalRubro" class="fi">
         <option value="">Área de interés...</option>
         <option>Administración y contabilidad</option>
         <option>Comercial y ventas</option>
@@ -1536,8 +1536,8 @@ footer{
         <option>Otro</option>
       </select>
       <div class="file-drop">
-        <input type="file" accept=".pdf,.doc,.docx,.jpg,.jpeg" onchange="handleFile(this,'cvModalFile')">
-        <p><strong id="cvModalFile">Hacé clic para adjuntar CV</strong>PDF, Word, JPG · Máx. 5MB</p>
+        <input id="cvModalFile" type="file" accept=".pdf,.doc,.docx,.jpg,.jpeg" onchange="handleFile(this,'cvModalFile')">
+        <p><strong id="cvModalFileLabel">Hacé clic para adjuntar CV</strong>PDF, Word, JPG · Máx. 5MB</p>
       </div>
       <div class="confid"><span>🔒</span><span>Tus datos son confidenciales y solo los verá nuestro equipo.</span></div>
       <button class="btn-submit" onclick="submitCVModal(this)">Enviar mi CV</button>
@@ -1612,19 +1612,55 @@ function submitJob(btn){
     document.getElementById('jobSuccess').style.display = 'block';
   }, 1000);
 }
+async function enviarCV({ nombre, email, telefono, rubro, fileInput, formId, successId, btn }) {
+  if (!nombre) { alert('Por favor ingresá tu nombre.'); btn.textContent = 'Enviar mi CV'; btn.disabled = false; return; }
+  if (!email) { alert('Por favor ingresá tu email.'); btn.textContent = 'Enviar mi CV'; btn.disabled = false; return; }
+  const fd = new FormData();
+  fd.append('nombre', nombre);
+  fd.append('email', email);
+  fd.append('telefono', telefono || '');
+  fd.append('rubro', rubro || '');
+  if (fileInput && fileInput.files[0]) fd.append('cv', fileInput.files[0]);
+  try {
+    const res = await fetch('/api/candidatos', { method: 'POST', body: fd });
+    const data = await res.json();
+    if (res.ok && data.success) {
+      document.getElementById(formId).style.display = 'none';
+      document.getElementById(successId).style.display = 'block';
+    } else {
+      alert('Error al enviar: ' + (data.error || 'Intentá de nuevo.'));
+      btn.textContent = 'Enviar mi CV'; btn.disabled = false;
+    }
+  } catch (e) {
+    alert('Error de conexión. Intentá de nuevo.');
+    btn.textContent = 'Enviar mi CV'; btn.disabled = false;
+  }
+}
 function submitCVModal(btn){
   btn.textContent = 'Enviando...'; btn.disabled = true;
-  setTimeout(() => {
-    document.getElementById('cvModalForm').style.display = 'none';
-    document.getElementById('cvModalSuccess').style.display = 'block';
-  }, 1000);
+  enviarCV({
+    nombre: document.getElementById('cvModalNombre').value.trim(),
+    email: document.getElementById('cvModalEmail').value.trim(),
+    telefono: document.getElementById('cvModalTelefono').value.trim(),
+    rubro: document.getElementById('cvModalRubro').value,
+    fileInput: document.getElementById('cvModalFile'),
+    formId: 'cvModalForm',
+    successId: 'cvModalSuccess',
+    btn
+  });
 }
 function submitCV(btn){
   btn.textContent = 'Enviando...'; btn.disabled = true;
-  setTimeout(() => {
-    document.getElementById('cvFormInline').style.display = 'none';
-    document.getElementById('cvSuccessInline').style.display = 'block';
-  }, 1000);
+  enviarCV({
+    nombre: document.getElementById('cvInlineNombre').value.trim(),
+    email: document.getElementById('cvInlineEmail').value.trim(),
+    telefono: document.getElementById('cvInlineTelefono').value.trim(),
+    rubro: document.getElementById('cvInlineRubro').value,
+    fileInput: document.getElementById('cvInlineFile'),
+    formId: 'cvFormInline',
+    successId: 'cvSuccessInline',
+    btn
+  });
 }
 function submitContact(btn){
   btn.textContent = 'Enviando...'; btn.disabled = true;
