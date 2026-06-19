@@ -365,6 +365,13 @@ textarea{ min-height:90px; resize:vertical; }
   .modal-content h2{ font-size:24px; }
   .tab{ padding:9px 16px; font-size:11px; }
 }
+
+/* ── CHIPS SCORING ── */
+.chip-group { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:4px; }
+.chip-btn { font-family:var(--font-b); font-size:12px; padding:5px 12px; border:1.5px solid var(--border-mid); border-radius:100px; background:transparent; color:var(--ink3); cursor:pointer; transition:all 0.2s; }
+.chip-btn.active { background:var(--green); border-color:var(--green); color:#fff; }
+.chip-btn.chip-neg.active { background:var(--red); border-color:var(--red); color:#fff; }
+.chip-pts { font-size:10px; opacity:0.7; margin-left:2px; }
 </style>
 </head>
 <body>
@@ -797,6 +804,7 @@ async function cargarCandidatos() {
           <div class="action-buttons">
             <button class="btn btn-ghost btn-sm" onclick="abrirDetalleCandidato(${c.id})">Ver</button>
             <button class="btn btn-primary btn-sm" onclick="abrirScoring(${c.id})">Evaluar</button>
+            <button class="btn btn-sm" style="background:var(--red);color:#fff;" onclick="confirmarEliminarCandidato(${c.id}, '${c.nombre.replace(/'/g, '\\&#39;')}')">🗑</button>
           </div>
         </td>
       </tr>
@@ -913,32 +921,128 @@ async function abrirScoring(id) {
 
   const scoring = c.scoring || { score: 0, fortalezas: '', debilidades: '', recomendacion: '' };
 
+  const fortOpts = [
+    { label: 'Excelente experiencia del sector', pts: 20 },
+    { label: 'Muy buena formación académica', pts: 15 },
+    { label: 'Alta disponibilidad horaria', pts: 10 },
+    { label: 'Buena presentación personal', pts: 10 },
+    { label: 'Conocimiento del mercado local', pts: 10 },
+    { label: 'Dominio de herramientas digitales', pts: 10 },
+    { label: 'Habilidades de liderazgo', pts: 15 },
+    { label: 'Trabajo en equipo comprobado', pts: 10 },
+  ];
+  const debOpts = [
+    { label: 'Poca experiencia en el rubro', pts: -20 },
+    { label: 'Formación incompleta', pts: -15 },
+    { label: 'Disponibilidad reducida', pts: -10 },
+    { label: 'Sin referencias verificables', pts: -10 },
+    { label: 'Brecha laboral prolongada', pts: -15 },
+    { label: 'Perfil no alineado al puesto', pts: -20 },
+    { label: 'Escasa capacidad de comunicación', pts: -10 },
+  ];
+  const fortChips = fortOpts.map(o =>
+    `<button type="button" class="chip-btn" data-pts="${o.pts}" onclick="toggleChip(this)">${o.label} <span class="chip-pts">+${o.pts}</span></button>`
+  ).join('');
+  const debChips = debOpts.map(o =>
+    `<button type="button" class="chip-btn chip-neg" data-pts="${o.pts}" onclick="toggleChip(this)">${o.label} <span class="chip-pts">${o.pts}</span></button>`
+  ).join('');
+
   document.getElementById('modalScoringBody').innerHTML = `
     <div style="font-family:var(--font-d);font-size:22px;margin-bottom:24px;color:var(--ink2);">${c.nombre}</div>
+
     <div class="form-group">
-      <label>Score (0—100)</label>
-      <input type="number" id="scoringScore" min="0" max="100" value="${scoring.score}">
+      <label>Score calculado</label>
+      <div style="display:flex;align-items:center;gap:16px;margin-bottom:8px;">
+        <div id="scoreMeter" style="font-family:var(--font-d);font-size:52px;color:var(--green);line-height:1;">${scoring.score || 0}</div>
+        <div style="color:var(--ink4);font-size:13px;">/100<br><span id="scoreTip" style="font-size:11px;"></span></div>
+        <input type="hidden" id="scoringScore" value="${scoring.score || 0}">
+      </div>
+      <div style="background:var(--border);border-radius:4px;height:6px;margin-bottom:20px;overflow:hidden;">
+        <div id="scoreBar" style="height:100%;width:${scoring.score || 0}%;background:var(--green);border-radius:4px;transition:all 0.3s;"></div>
+      </div>
     </div>
+
     <div class="form-group">
-      <label>Fortalezas</label>
-      <textarea id="scoringFortalezas" placeholder="Liste las fortalezas detectadas...">${scoring.fortalezas}</textarea>
+      <label>Fortalezas <small style="color:var(--ink4);font-weight:300;">(suman al score)</small></label>
+      <div class="chip-group" id="fortChips">${fortChips}</div>
+      <textarea id="scoringFortalezas" placeholder="Detalle adicional o fortalezas libres..." style="margin-top:10px;">${scoring.fortalezas || ''}</textarea>
     </div>
+
     <div class="form-group">
-      <label>Debilidades</label>
-      <textarea id="scoringDebilidades" placeholder="Liste las debilidades o áreas de mejora...">${scoring.debilidades}</textarea>
+      <label>Debilidades <small style="color:var(--ink4);font-weight:300;">(restan al score)</small></label>
+      <div class="chip-group" id="debChips">${debChips}</div>
+      <textarea id="scoringDebilidades" placeholder="Detalle adicional o debilidades libres..." style="margin-top:10px;">${scoring.debilidades || ''}</textarea>
     </div>
+
     <div class="form-group">
       <label>Recomendación</label>
-      <textarea id="scoringRecomendacion" placeholder="Recomendación final sobre el candidato...">${scoring.recomendacion}</textarea>
+      <div class="chip-group" style="margin-bottom:10px;">
+        <button type="button" class="chip-btn" onclick="setRecomendacion('Candidato altamente recomendado para el puesto.')">✅ Apto</button>
+        <button type="button" class="chip-btn" onclick="setRecomendacion('Candidato apto con reservas. Requiere seguimiento.')">⚠️ Apto con reservas</button>
+        <button type="button" class="chip-btn chip-neg" onclick="setRecomendacion('Candidato no recomendado para el puesto en este momento.')">❌ No apto</button>
+      </div>
+      <textarea id="scoringRecomendacion" placeholder="Recomendación final sobre el candidato...">${scoring.recomendacion || ''}</textarea>
     </div>
   `;
+
+  // Restaurar chips si hay scoring previo
+  if (scoring.fortalezas) {
+    document.querySelectorAll('#fortChips .chip-btn').forEach(btn => {
+      if (scoring.fortalezas.includes(btn.textContent.replace(/[+\-\d]+$/, '').trim())) btn.classList.add('active');
+    });
+  }
+  if (scoring.debilidades) {
+    document.querySelectorAll('#debChips .chip-btn').forEach(btn => {
+      if (scoring.debilidades.includes(btn.textContent.replace(/[+\-\d]+$/, '').trim())) btn.classList.add('active');
+    });
+  }
+  recalcScore();
   document.getElementById('modalScoring').classList.add('active');
+}
+
+function toggleChip(btn) {
+  btn.classList.toggle('active');
+  recalcScore();
+}
+
+function setRecomendacion(texto) {
+  document.getElementById('scoringRecomendacion').value = texto;
+}
+
+function recalcScore() {
+  let base = 50;
+  document.querySelectorAll('#fortChips .chip-btn.active, #debChips .chip-btn.active').forEach(btn => {
+    base += parseInt(btn.dataset.pts || 0);
+  });
+  base = Math.max(0, Math.min(100, base));
+  document.getElementById('scoringScore').value = base;
+  const meter = document.getElementById('scoreMeter');
+  const bar = document.getElementById('scoreBar');
+  const tip = document.getElementById('scoreTip');
+  if (meter) meter.textContent = base;
+  if (bar) {
+    bar.style.width = base + '%';
+    bar.style.background = base >= 70 ? 'var(--green)' : base >= 50 ? 'var(--orange)' : 'var(--red)';
+  }
+  if (meter) meter.style.color = base >= 70 ? 'var(--green)' : base >= 50 ? 'var(--orange)' : 'var(--red)';
+  if (tip) tip.textContent = base >= 70 ? 'Recomendado' : base >= 50 ? 'Con reservas' : 'No recomendado';
 }
 
 async function guardarScoring() {
   const score = parseInt(document.getElementById('scoringScore').value);
-  const fortalezas = document.getElementById('scoringFortalezas').value;
-  const debilidades = document.getElementById('scoringDebilidades').value;
+
+  // Fortalezas: chips activos + texto libre
+  const fortChipsActivos = Array.from(document.querySelectorAll('#fortChips .chip-btn.active'))
+    .map(b => '• ' + b.textContent.replace(/[\+\-]?\d+$/, '').trim()).join('\n');
+  const fortLibre = document.getElementById('scoringFortalezas').value.trim();
+  const fortalezas = [fortChipsActivos, fortLibre].filter(Boolean).join('\n') || '';
+
+  // Debilidades: chips activos + texto libre
+  const debChipsActivos = Array.from(document.querySelectorAll('#debChips .chip-btn.active'))
+    .map(b => '• ' + b.textContent.replace(/[\+\-]?\d+$/, '').trim()).join('\n');
+  const debLibre = document.getElementById('scoringDebilidades').value.trim();
+  const debilidades = [debChipsActivos, debLibre].filter(Boolean).join('\n') || '';
+
   const recomendacion = document.getElementById('scoringRecomendacion').value;
 
   await fetch(`/api/candidatos/${candidatoActualId}/scoring`, {
@@ -954,6 +1058,16 @@ async function guardarScoring() {
 function eliminarCandidatoConfirm() {
   if (!confirm('¿Eliminar este candidato?')) return;
   eliminarCandidatoAPI(candidatoActualId);
+}
+
+function confirmarEliminarCandidato(id, nombre) {
+  if (!confirm('¿Eliminar a "' + nombre + '" de la base de datos?\nEsta acción no se puede deshacer.')) return;
+  eliminarCandidatoDesdeTabla(id);
+}
+
+async function eliminarCandidatoDesdeTabla(id) {
+  await fetch('/api/candidatos/' + id, { method: 'DELETE' });
+  cargarCandidatos();
 }
 
 async function eliminarCandidatoAPI(id) {
