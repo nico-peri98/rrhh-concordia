@@ -1,0 +1,30 @@
+{
+  "admin": {
+    "username": "admin",
+    "password": "peri657098"
+  },
+  "vacantes": [
+    {
+      "id": 1,
+      "titulo": "Trade Marketing Manager",
+      "empresa": "Ejemplo",
+      "descripcion": "Descripción de la vacante",
+      "requisitos": "Requisitos de la posición",
+      "ofrecimientos": "Beneficios y compensación",
+      "estado": "activa",
+      "fechaCreacion": "2026-06-17",
+      "imagen": null,
+      "aplicantes": 0
+    }
+  ],
+  "aplicantes": [],
+  "usuarios": [
+    {
+      "id": 1,
+      "username": "admin",
+      "password": "peri657098",
+      "rol": "admin",
+      "fechaCreacion": "2026-06-17"
+    }
+  ]
+}

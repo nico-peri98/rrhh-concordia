@@ -1,0 +1,1157 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Panel — RRHH Concordia</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+
+:root{
+  --cream: #F6F1EA;
+  --cream2: #EEE8DF;
+  --cream3: #E8E0D4;
+  --ink: #111111;
+  --ink2: #3A3832;
+  --ink3: #5C564F;
+  --ink4: #8A8178;
+  --blue: #4260C0;
+  --blue-muted: rgba(66,96,192,0.12);
+  --blue-line: rgba(66,96,192,0.22);
+  --orange: #FC9738;
+  --orange-muted: rgba(252,151,56,0.15);
+  --red: #FF5E57;
+  --red-muted: rgba(255,94,87,0.12);
+  --green: #39A05A;
+  --green-muted: rgba(57,160,90,0.15);
+  --border: rgba(17,17,17,0.09);
+  --border-mid: rgba(17,17,17,0.14);
+  --font-d: 'DM Serif Display', Georgia, serif;
+  --font-b: 'Inter Tight', sans-serif;
+  --r-sm: 10px;
+  --r-md: 14px;
+  --r-lg: 20px;
+  --r-xl: 28px;
+}
+
+body{
+  background:var(--cream);
+  color:var(--ink);
+  font-family:var(--font-b);
+  font-size:15px;
+  line-height:1.6;
+  min-height:100vh;
+  -webkit-font-smoothing:antialiased;
+}
+
+body::before{
+  content:'';
+  position:fixed; inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.72' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
+  opacity:0.035;
+  pointer-events:none;
+  z-index:999;
+}
+
+/* ─── LOGIN ─── */
+.login-container{
+  display:flex; justify-content:center; align-items:center; min-height:100vh; padding:24px;
+}
+.login-box{
+  background:var(--cream2);
+  border:1px solid var(--border);
+  padding:56px 48px;
+  width:100%; max-width:440px;
+  border-radius:var(--r-xl);
+  box-shadow:0 4px 24px rgba(17,17,17,0.04);
+}
+.login-tag{
+  font-size:11px; letter-spacing:0.2em; text-transform:uppercase;
+  color:var(--blue); font-weight:500; margin-bottom:10px;
+}
+.login-title{
+  font-family:var(--font-d); font-size:34px; line-height:1.1;
+  margin-bottom:32px;
+}
+.login-title em{ color:var(--blue); font-style:italic; font-weight:400; }
+
+/* ─── HEADER ─── */
+.header{
+  background:rgba(246,241,234,0.92);
+  border-bottom:1px solid var(--border);
+  padding:22px 40px;
+  display:flex; justify-content:space-between; align-items:center;
+  position:sticky; top:0; z-index:50;
+  backdrop-filter:blur(12px);
+}
+.brand{ display:flex; flex-direction:column; gap:2px; }
+.brand-tag{
+  font-size:10px; letter-spacing:0.2em; text-transform:uppercase;
+  color:var(--blue); font-weight:500;
+}
+.brand-title{
+  font-family:var(--font-d); font-size:22px; line-height:1.1;
+}
+.brand-title em{ color:var(--blue); font-style:italic; font-weight:400; }
+
+/* ─── CONTAINER ─── */
+.container{
+  max-width:1400px;
+  margin:32px auto;
+  padding:0 40px;
+}
+
+/* ─── BUTTONS ─── */
+.btn{
+  background:var(--ink);
+  color:var(--cream);
+  padding:11px 22px;
+  border:none;
+  font-family:var(--font-b);
+  font-size:13px;
+  font-weight:500;
+  letter-spacing:0.02em;
+  cursor:pointer;
+  border-radius:999px;
+  transition:all 0.18s ease;
+  display:inline-flex; align-items:center; gap:8px;
+}
+.btn:hover{ background:var(--ink2); transform:translateY(-1px); }
+.btn-primary{ background:var(--blue); color:#fff; }
+.btn-primary:hover{ background:#3651a8; }
+.btn-success{ background:var(--green); color:#fff; }
+.btn-success:hover{ background:#2e8848; }
+.btn-warning{ background:var(--orange); color:#fff; }
+.btn-warning:hover{ background:#e88420; }
+.btn-danger{ background:transparent; color:var(--red); border:1px solid var(--red); }
+.btn-danger:hover{ background:var(--red); color:#fff; }
+.btn-ghost{ background:transparent; color:var(--ink2); border:1px solid var(--border-mid); }
+.btn-ghost:hover{ background:var(--cream3); border-color:var(--ink3); }
+.btn-sm{ padding:6px 14px; font-size:11px; }
+
+/* ─── TABS ─── */
+.tabs{
+  display:flex; gap:6px;
+  margin-bottom:32px;
+  background:var(--cream2);
+  padding:6px;
+  border-radius:999px;
+  width:fit-content;
+}
+.tab{
+  padding:10px 24px;
+  cursor:pointer;
+  background:transparent;
+  border:none;
+  font-family:var(--font-b);
+  color:var(--ink4);
+  font-size:13px;
+  font-weight:500;
+  letter-spacing:0.02em;
+  border-radius:999px;
+  transition:all 0.18s;
+}
+.tab:hover{ color:var(--ink2); }
+.tab.active{ color:#fff; background:var(--ink); }
+.tab-content{ display:none; }
+.tab-content.active{ display:block; }
+
+/* ─── CARDS ─── */
+.card{
+  background:var(--cream2);
+  border:1px solid var(--border);
+  padding:32px;
+  margin-bottom:20px;
+  border-radius:var(--r-lg);
+}
+.card h3{
+  font-family:var(--font-d);
+  font-size:22px;
+  margin-bottom:20px;
+}
+
+/* ─── FORM ─── */
+.form-group{ margin-bottom:20px; }
+.form-group label{
+  display:block;
+  margin-bottom:8px;
+  font-size:11px;
+  letter-spacing:0.12em;
+  text-transform:uppercase;
+  color:var(--ink3);
+  font-weight:500;
+}
+.form-group input,
+.form-group textarea,
+.form-group select{
+  width:100%;
+  padding:13px 16px;
+  border:1px solid var(--border-mid);
+  background:var(--cream);
+  color:var(--ink);
+  font-family:var(--font-b);
+  font-size:14px;
+  border-radius:var(--r-md);
+  transition:border 0.15s;
+}
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus{
+  outline:none;
+  border-color:var(--blue);
+  background:#fff;
+}
+textarea{ min-height:90px; resize:vertical; }
+
+/* ─── FILTERS ─── */
+.filters{
+  background:var(--cream2);
+  border:1px solid var(--border);
+  padding:24px;
+  margin-bottom:24px;
+  display:flex; gap:20px; flex-wrap:wrap;
+  border-radius:var(--r-lg);
+}
+.filters > div{ flex:1; min-width:220px; }
+
+/* ─── TABLES ─── */
+.table-wrapper{
+  background:var(--cream2);
+  border:1px solid var(--border);
+  overflow:hidden;
+  border-radius:var(--r-lg);
+}
+.table-scroll{ overflow-x:auto; }
+.table{
+  width:100%;
+  border-collapse:collapse;
+  font-size:13px;
+}
+.table thead{
+  background:var(--cream3);
+  border-bottom:1px solid var(--border-mid);
+}
+.table th{
+  padding:14px 18px;
+  text-align:left;
+  font-size:10px;
+  letter-spacing:0.15em;
+  text-transform:uppercase;
+  color:var(--ink3);
+  font-weight:600;
+  white-space:nowrap;
+}
+.table td{
+  padding:16px 18px;
+  border-bottom:1px solid var(--border);
+  vertical-align:middle;
+}
+.table tbody tr{ transition:background 0.12s; }
+.table tbody tr:hover{ background:var(--cream3); }
+.table tbody tr:last-child td{ border-bottom:none; }
+
+.candidate-name{
+  font-family:var(--font-d);
+  font-size:16px;
+  color:var(--ink);
+}
+
+/* ─── BADGES ─── */
+.score-badge{
+  display:inline-flex; align-items:center; gap:6px;
+  padding:5px 12px;
+  font-size:11px;
+  font-weight:600;
+  letter-spacing:0.04em;
+  border-radius:999px;
+}
+.score-high{ background:var(--green-muted); color:var(--green); border:1px solid rgba(57,160,90,0.3); }
+.score-medium{ background:var(--orange-muted); color:#d97a18; border:1px solid rgba(252,151,56,0.3); }
+.score-low{ background:var(--red-muted); color:#d94840; border:1px solid rgba(255,94,87,0.3); }
+.score-none{
+  background:transparent; color:var(--ink4);
+  border:1px solid var(--border-mid);
+  font-style:italic; font-weight:500;
+}
+
+.rubro-tag{
+  display:inline-block;
+  font-size:11px;
+  padding:4px 10px;
+  background:var(--blue-muted);
+  color:var(--blue);
+  border-radius:999px;
+  font-weight:500;
+}
+
+/* ─── MODAL ─── */
+.modal{
+  display:none; position:fixed; inset:0;
+  background:rgba(17,17,17,0.5);
+  backdrop-filter:blur(8px);
+  z-index:1000;
+  justify-content:center; align-items:flex-start;
+  padding:40px 20px;
+  overflow-y:auto;
+}
+.modal.active{ display:flex; }
+.modal-content{
+  background:var(--cream);
+  border:1px solid var(--border-mid);
+  padding:40px;
+  width:100%; max-width:760px;
+  margin:auto;
+  border-radius:var(--r-xl);
+  box-shadow:0 16px 48px rgba(17,17,17,0.12);
+}
+.modal-content h2{
+  font-family:var(--font-d);
+  font-size:30px;
+  margin-bottom:28px;
+  line-height:1.15;
+}
+.modal-content h2 em{ color:var(--blue); font-style:italic; font-weight:400; }
+.modal-section{
+  margin-bottom:28px;
+  padding-bottom:24px;
+  border-bottom:1px solid var(--border);
+}
+.modal-section:last-of-type{ border-bottom:none; }
+.modal-section h4{
+  font-size:10px;
+  letter-spacing:0.18em;
+  text-transform:uppercase;
+  color:var(--ink4);
+  font-weight:600;
+  margin-bottom:14px;
+}
+.modal-section p{ margin-bottom:6px; }
+.modal-section strong{ color:var(--ink); font-weight:500; }
+
+.btn-group{
+  display:flex; gap:10px; margin-top:24px; flex-wrap:wrap;
+}
+
+.action-buttons{ display:flex; gap:6px; flex-wrap:wrap; }
+
+.hidden{ display:none; }
+
+.empty{
+  padding:60px 20px;
+  text-align:center;
+  color:var(--ink4);
+}
+.empty p{ font-family:var(--font-d); font-size:20px; font-style:italic; }
+
+.section-head{
+  display:flex; justify-content:space-between; align-items:center;
+  margin-bottom:24px; flex-wrap:wrap; gap:14px;
+}
+.section-title{
+  font-family:var(--font-d);
+  font-size:26px;
+}
+.section-title em{ color:var(--blue); font-style:italic; font-weight:400; }
+
+@media (max-width: 768px){
+  .container{ padding:0 20px; margin:20px auto; }
+  .header{ padding:20px; }
+  .login-box{ padding:40px 28px; }
+  .login-title{ font-size:28px; }
+  .modal-content{ padding:28px 24px; }
+  .modal-content h2{ font-size:24px; }
+  .tab{ padding:9px 16px; font-size:11px; }
+}
+
+/* ── CHIPS SCORING ── */
+.chip-group { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:4px; }
+.chip-btn { font-family:var(--font-b); font-size:12px; padding:5px 12px; border:1.5px solid var(--border-mid); border-radius:100px; background:transparent; color:var(--ink3); cursor:pointer; transition:all 0.2s; }
+.chip-btn.active { background:var(--green); border-color:var(--green); color:#fff; }
+.chip-btn.chip-neg.active { background:var(--red); border-color:var(--red); color:#fff; }
+.chip-pts { font-size:10px; opacity:0.7; margin-left:2px; }
+</style>
+</head>
+<body>
+
+<div id="loginScreen" class="login-container">
+<div class="login-box">
+<div class="login-tag">RRHH Concordia</div>
+<h2 class="login-title">Panel de <em>administración</em></h2>
+<form id="loginForm">
+<div class="form-group">
+<label>Contraseña</label>
+<input type="password" id="password" required>
+</div>
+<button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;">Acceder</button>
+</form>
+</div>
+</div>
+
+<div id="adminPanel" class="hidden">
+<div class="header">
+<div class="brand">
+<div class="brand-tag">Panel interno</div>
+<div class="brand-title"><em>RRHH</em> Concordia</div>
+</div>
+<button class="btn btn-ghost" onclick="logout()">Cerrar sesión</button>
+</div>
+
+<div class="container">
+
+<div class="tabs">
+<button class="tab active" onclick="cambiarTab('vacantes', event)">Vacantes</button>
+<button class="tab" onclick="cambiarTab('candidatos', event)">Candidatos</button>
+<button class="tab" onclick="cambiarTab('config', event)">Configuración</button>
+</div>
+
+<div id="tabVacantes" class="tab-content active">
+<div class="section-head">
+<h2 class="section-title">Tus <em>vacantes</em> activas</h2>
+<button class="btn btn-success" onclick="abrirModalVacante()">+ Nueva vacante</button>
+</div>
+<div class="table-wrapper">
+<div class="table-scroll">
+<table class="table">
+<thead>
+<tr>
+<th>Título</th>
+<th>Ubicación</th>
+<th>Tipo</th>
+<th>Rubro</th>
+<th>Fecha</th>
+<th>Imagen</th>
+<th>Acciones</th>
+</tr>
+</thead>
+<tbody id="listaVacantes"></tbody>
+</table>
+</div>
+</div>
+</div>
+
+<div id="tabCandidatos" class="tab-content">
+<div class="section-head">
+<h2 class="section-title">Base de <em>candidatos</em></h2>
+</div>
+<div class="filters">
+<div>
+<label>Filtrar por rubro</label>
+<select id="filtroRubro" onchange="cargarCandidatos()">
+<option value="">— Todos los rubros —</option>
+<option value="Trade Marketing">Trade Marketing</option>
+<option value="Operario Polivalente">Operario Polivalente</option>
+<option value="Administrativo">Administrativo</option>
+<option value="Otro">Otro</option>
+</select>
+</div>
+<div>
+<label>Filtrar por vacante</label>
+<select id="filtroVacante" onchange="cargarCandidatos()">
+<option value="">— Todas las vacantes —</option>
+</select>
+</div>
+</div>
+
+<div class="table-wrapper">
+<div class="table-scroll">
+<table class="table">
+<thead>
+<tr>
+<th>Nombre</th>
+<th>Email</th>
+<th>Teléfono</th>
+<th>Rubro</th>
+<th>Vacante</th>
+<th>Score</th>
+<th>Fecha</th>
+<th>Acciones</th>
+</tr>
+</thead>
+<tbody id="listaCandidatos"></tbody>
+</table>
+</div>
+</div>
+</div>
+
+<div id="tabConfig" class="tab-content">
+<div class="card">
+<h3>Cambiar contraseña</h3>
+<form id="formPassword">
+<div class="form-group">
+<label>Nueva contraseña</label>
+<input type="password" id="newPassword" required minlength="6">
+</div>
+<button type="submit" class="btn btn-primary">Actualizar</button>
+</form>
+</div>
+
+<div class="card">
+<h3>Gestionar <em>rubros</em></h3>
+<div style="margin-bottom:20px;">
+<button class="btn btn-success" onclick="abrirModalNuevoRubro()">+ Nuevo rubro</button>
+</div>
+<div id="listaRubros" style="display:grid;gap:10px;"></div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- Modal Vacante (crear/editar) -->
+<div class="modal" id="modalVacante">
+<div class="modal-content">
+<h2 id="modalVacanteTitulo">Nueva <em>vacante</em></h2>
+<form id="formVacante" enctype="multipart/form-data">
+<input type="hidden" name="id" id="vacanteEditId">
+<div class="form-group">
+<label>Imagen de la vacante</label>
+<input type="file" name="imagen" id="vacanteImagen" accept="image/*">
+<small style="color:var(--ink4);">Formato: JPG, PNG. Tamaño recomendado: 600x400px</small>
+</div>
+<div class="form-group">
+<label>Título del puesto</label>
+<input type="text" name="titulo" id="vacanteTitulo" required>
+</div>
+<div class="form-group">
+<label>Ubicación</label>
+<input type="text" name="ubicacion" id="vacanteUbicacion" required>
+</div>
+<div class="form-group">
+<label>Rubro</label>
+<select name="rubro" id="vacanteRubro" required>
+<option value="">Cargando...</option>
+</select>
+</div>
+<div class="form-group">
+<label>Tipo de contrato</label>
+<select name="tipo" id="vacanteTipo" required>
+<option value="Full-time">Full-time</option>
+<option value="Part-time">Part-time</option>
+<option value="Contrato">Contrato</option>
+<option value="Pasantía">Pasantía</option>
+</select>
+</div>
+<div class="form-group">
+<label>Descripción</label>
+<textarea name="descripcion" id="vacanteDescripcion" required rows="5"></textarea>
+</div>
+<div class="btn-group">
+<button type="submit" class="btn btn-success" id="vacanteSubmitBtn">Publicar</button>
+<button type="button" class="btn btn-ghost" onclick="cerrarModal('modalVacante')">Cancelar</button>
+</div>
+</form>
+</div>
+</div>
+
+<!-- Modal Detalle Candidato -->
+<div class="modal" id="modalCandidato">
+<div class="modal-content">
+<h2 id="modalCandidatoNombre"></h2>
+<div id="modalCandidatoBody"></div>
+<div class="btn-group">
+<button type="button" class="btn btn-warning" onclick="abrirEditarCandidato(candidatoActualId)">Editar datos</button>
+<button type="button" class="btn btn-primary" onclick="abrirScoring(candidatoActualId)">Evaluar</button>
+<button type="button" class="btn btn-danger" onclick="eliminarCandidatoConfirm()">Eliminar</button>
+<button type="button" class="btn btn-ghost" onclick="cerrarModal('modalCandidato')">Cerrar</button>
+</div>
+</div>
+</div>
+
+<!-- Modal Editar Candidato -->
+<div class="modal" id="modalEditarCandidato">
+<div class="modal-content">
+<h2>Editar <em>candidato</em></h2>
+<div id="modalEditarCandidatoBody"></div>
+<div class="btn-group">
+<button type="button" class="btn btn-success" onclick="guardarEdicionCandidato()">Guardar cambios</button>
+<button type="button" class="btn btn-ghost" onclick="cerrarModal('modalEditarCandidato')">Cancelar</button>
+</div>
+</div>
+</div>
+
+<!-- Modal Scoring -->
+<div class="modal" id="modalScoring">
+<div class="modal-content">
+<h2>Evaluación del <em>candidato</em></h2>
+<div id="modalScoringBody"></div>
+<div class="btn-group">
+<button type="button" class="btn btn-success" onclick="guardarScoring()">Guardar evaluación</button>
+<button type="button" class="btn btn-ghost" onclick="cerrarModal('modalScoring')">Cancelar</button>
+</div>
+</div>
+</div>
+
+<!-- Modal Rubro -->
+<div class="modal" id="modalRubro">
+<div class="modal-content">
+<h2 id="modalRubroTitulo">Nuevo <em>rubro</em></h2>
+<form id="formRubro">
+<div class="form-group">
+<label>Nombre del rubro</label>
+<input type="text" id="rubroNombre" required>
+</div>
+<div class="btn-group">
+<button type="submit" class="btn btn-success" id="rubroSubmitBtn">Guardar</button>
+<button type="button" class="btn btn-ghost" onclick="cerrarModal('modalRubro')">Cancelar</button>
+</div>
+</form>
+</div>
+</div>
+
+<script>
+let candidatoActualId = null;
+let vacanteEditandoId = null;
+
+document.getElementById('loginForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const password = document.getElementById('password').value;
+  const res = await fetch('/api/login', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ username: 'admin', password })
+  });
+  if (res.ok) {
+    document.getElementById('loginScreen').classList.add('hidden');
+    document.getElementById('adminPanel').classList.remove('hidden');
+    cargarDatos();
+  } else {
+    alert('Contraseña incorrecta');
+  }
+});
+
+async function logout() {
+  await fetch('/api/logout', { method: 'POST' });
+  location.reload();
+}
+
+function cambiarTab(tab, event) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+  event.target.classList.add('active');
+  const tabName = 'tab' + tab.charAt(0).toUpperCase() + tab.slice(1);
+  document.getElementById(tabName).classList.add('active');
+}
+
+function abrirModalVacante() {
+  vacanteEditandoId = null;
+  document.getElementById('modalVacanteTitulo').innerHTML = 'Nueva <em>vacante</em>';
+  document.getElementById('vacanteSubmitBtn').textContent = 'Publicar';
+  document.getElementById('formVacante').reset();
+  cargarRubrosEnSelect('vacanteRubro');
+  document.getElementById('modalVacante').classList.add('active');
+}
+
+async function cargarRubrosEnSelect(selectId) {
+  try {
+    const res = await fetch('/api/rubros');
+    const rubros = await res.json();
+    const select = document.getElementById(selectId);
+    select.innerHTML = rubros.map(r => `<option value="${r.nombre}">${r.nombre}</option>`).join('');
+  } catch (err) {
+    console.error('Error cargando rubros:', err);
+  }
+}
+
+async function abrirEditarVacante(id) {
+  const res = await fetch('/api/vacantes');
+  const vacantes = await res.json();
+  const v = vacantes.find(x => x.id == id);
+  if (!v) return;
+  vacanteEditandoId = id;
+  document.getElementById('modalVacanteTitulo').innerHTML = 'Editar <em>vacante</em>';
+  document.getElementById('vacanteSubmitBtn').textContent = 'Guardar cambios';
+  document.getElementById('vacanteTitulo').value = v.titulo || '';
+  document.getElementById('vacanteUbicacion').value = v.ubicacion || '';
+  document.getElementById('vacanteTipo').value = v.tipo || 'Full-time';
+  document.getElementById('vacanteDescripcion').value = v.descripcion || '';
+  await cargarRubrosEnSelect('vacanteRubro');
+  document.getElementById('vacanteRubro').value = v.rubro || 'Otro';
+  document.getElementById('modalVacante').classList.add('active');
+}
+
+function cerrarModal(id) {
+  document.getElementById(id).classList.remove('active');
+}
+
+document.getElementById('formVacante').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const formData = new FormData(e.target);
+  formData.delete('id');
+
+  if (vacanteEditandoId) {
+    const response = await fetch('/api/vacantes/' + vacanteEditandoId, {
+      method: 'PUT',
+      body: formData
+    });
+    if (!response.ok) {
+      alert('Error al actualizar vacante');
+      return;
+    }
+  } else {
+    const response = await fetch('/api/vacantes', {
+      method: 'POST',
+      body: formData
+    });
+    if (!response.ok) {
+      alert('Error al crear vacante');
+      return;
+    }
+  }
+  cerrarModal('modalVacante');
+  e.target.reset();
+  vacanteEditandoId = null;
+  cargarVacantes();
+});
+
+document.getElementById('formPassword').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const newPassword = document.getElementById('newPassword').value;
+  await fetch('/api/change-password', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ newPassword })
+  });
+  alert('Contraseña actualizada');
+  document.getElementById('newPassword').value = '';
+});
+
+async function cargarVacantes() {
+  const res = await fetch('/api/vacantes');
+  const vacantes = await res.json();
+  const tbody = document.getElementById('listaVacantes');
+  const select = document.getElementById('filtroVacante');
+
+  if (vacantes.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="6" class="empty"><p>Sin vacantes activas</p></td></tr>';
+  } else {
+    tbody.innerHTML = vacantes.map(v => `
+      <tr>
+        <td><span class="candidate-name">${v.titulo}</span></td>
+        <td>${v.ubicacion}</td>
+        <td>${v.tipo}</td>
+        <td>${v.rubro ? '<span class="rubro-tag">' + v.rubro + '</span>' : '—'}</td>
+        <td>${new Date(v.fecha).toLocaleDateString('es-AR')}</td>
+        <td>
+          ${v.imagenpath ? '<img src="' + v.imagenpath + '" style="width:40px;height:40px;object-fit:cover;border-radius:4px;">' : '—'}
+        </td>
+        <td>
+          <div class="action-buttons">
+            <button class="btn btn-warning btn-sm" onclick="abrirEditarVacante(${v.id})">Editar</button>
+            <button class="btn btn-danger btn-sm" onclick="eliminarVacante(${v.id})">Eliminar</button>
+          </div>
+        </td>
+      </tr>
+    `).join('');
+  }
+
+  select.innerHTML = '<option value="">— Todas las vacantes —</option>' + vacantes.map(v => `<option value="${v.id}">${v.titulo}</option>`).join('');
+}
+
+async function eliminarVacante(id) {
+  if (!confirm('¿Eliminar esta vacante?')) return;
+  await fetch('/api/vacantes/' + id, { method: 'DELETE' });
+  cargarVacantes();
+}
+
+async function cargarCandidatos() {
+  const filtroRubro = document.getElementById('filtroRubro').value;
+  const filtroVacante = document.getElementById('filtroVacante').value;
+  const url = new URL('/api/candidatos', window.location.origin);
+  if (filtroRubro) url.searchParams.append('rubro', filtroRubro);
+
+  const res = await fetch(url);
+  let candidatos = await res.json();
+
+  if (filtroVacante) {
+    candidatos = candidatos.filter(c => c.vacanteId == filtroVacante);
+  }
+
+  const resVacantes = await fetch('/api/vacantes');
+  const vacantes = await resVacantes.json();
+  const tbody = document.getElementById('listaCandidatos');
+
+  if (candidatos.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="8" class="empty"><p>Sin candidatos para mostrar</p></td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = candidatos.map(c => {
+    const vacante = vacantes.find(v => v.id == c.vacanteId);
+    const score = c.scoring ? c.scoring.score : null;
+    let scoreBadge = '<span class="score-badge score-none">Sin evaluar</span>';
+    if (score !== null && !isNaN(score)) {
+      if (score >= 70) {
+        scoreBadge = '<span class="score-badge score-high">' + score + '</span>';
+      } else if (score >= 50) {
+        scoreBadge = '<span class="score-badge score-medium">' + score + '</span>';
+      } else {
+        scoreBadge = '<span class="score-badge score-low">' + score + '</span>';
+      }
+    }
+
+    return `
+      <tr>
+        <td><span class="candidate-name">${c.nombre}</span></td>
+        <td>${c.email}</td>
+        <td>${c.telefono}</td>
+        <td>${c.rubro ? '<span class="rubro-tag">' + c.rubro + '</span>' : '—'}</td>
+        <td>${vacante ? vacante.titulo : '<em style="color:var(--ink4);">—</em>'}</td>
+        <td>${scoreBadge}</td>
+        <td>${new Date(c.fecha).toLocaleDateString('es-AR')}</td>
+        <td>
+          <div class="action-buttons">
+            <button class="btn btn-ghost btn-sm" onclick="abrirDetalleCandidato(${c.id})">Ver</button>
+            <button class="btn btn-primary btn-sm" onclick="abrirScoring(${c.id})">Evaluar</button>
+            <button class="btn btn-sm" style="background:var(--red);color:#fff;" onclick="confirmarEliminarCandidato(${c.id}, '${c.nombre.replace(/'/g, '\\&#39;')}')">🗑</button>
+          </div>
+        </td>
+      </tr>
+    `;
+  }).join('');
+}
+
+async function abrirDetalleCandidato(id) {
+  const res = await fetch('/api/candidatos');
+  const candidatos = await res.json();
+  const c = candidatos.find(x => x.id == id);
+  candidatoActualId = id;
+
+  let scoringHTML = '';
+  if (c.scoring) {
+    let scoreColor = c.scoring.score >= 70 ? 'var(--green)' : c.scoring.score >= 50 ? 'var(--orange)' : 'var(--red)';
+    scoringHTML = `
+      <div class="modal-section">
+        <h4>Evaluación</h4>
+        <p style="margin-bottom:14px;"><strong>Score:</strong> <span style="font-family:var(--font-d);font-size:28px;color:${scoreColor};">${c.scoring.score}</span><span style="color:var(--ink4);">/100</span></p>
+        <p style="margin-top:16px;"><strong>Fortalezas:</strong></p>
+        <p style="white-space:pre-wrap;color:var(--ink2);">${c.scoring.fortalezas || '—'}</p>
+        <p style="margin-top:14px;"><strong>Debilidades:</strong></p>
+        <p style="white-space:pre-wrap;color:var(--ink2);">${c.scoring.debilidades || '—'}</p>
+        <p style="margin-top:14px;"><strong>Recomendación:</strong></p>
+        <p style="white-space:pre-wrap;color:var(--ink2);">${c.scoring.recomendacion || '—'}</p>
+        <p style="font-size:11px;color:var(--ink4);margin-top:14px;">Evaluado el ${new Date(c.scoring.fechaEvaluacion).toLocaleString('es-AR')}</p>
+      </div>
+    `;
+  }
+
+  document.getElementById('modalCandidatoNombre').innerHTML = c.nombre;
+  document.getElementById('modalCandidatoBody').innerHTML = `
+    <div class="modal-section">
+      <h4>Información personal</h4>
+      <p><strong>Email:</strong> ${c.email}</p>
+      <p><strong>Teléfono:</strong> ${c.telefono}</p>
+      <p><strong>Rubro:</strong> ${c.rubro || '—'}</p>
+      <p><strong>Postulación:</strong> ${new Date(c.fecha).toLocaleString('es-AR')}</p>
+    </div>
+    <div class="modal-section">
+      <h4>Curriculum Vitae</h4>
+      <a href="/${c.cvPath}" target="_blank" class="btn btn-primary btn-sm">Descargar CV</a>
+    </div>
+    ${scoringHTML}
+  `;
+  document.getElementById('modalCandidato').classList.add('active');
+}
+
+async function abrirEditarCandidato(id) {
+  cerrarModal('modalCandidato');
+  const res = await fetch('/api/candidatos');
+  const candidatos = await res.json();
+  const c = candidatos.find(x => x.id == id);
+  candidatoActualId = id;
+
+  const resV = await fetch('/api/vacantes');
+  const vacantes = await resV.json();
+  const vacOpts = vacantes.map(v => `<option value="${v.id}" ${v.id == c.vacanteId ? 'selected' : ''}>${v.titulo}</option>`).join('');
+
+  document.getElementById('modalEditarCandidatoBody').innerHTML = `
+    <div class="form-group">
+      <label>Nombre completo</label>
+      <input type="text" id="editNombre" value="${c.nombre || ''}">
+    </div>
+    <div class="form-group">
+      <label>Email</label>
+      <input type="email" id="editEmail" value="${c.email || ''}">
+    </div>
+    <div class="form-group">
+      <label>Teléfono</label>
+      <input type="text" id="editTelefono" value="${c.telefono || ''}">
+    </div>
+    <div class="form-group">
+      <label>Rubro</label>
+      <select id="editRubro">
+        <option value="">Cargando...</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Vacante asociada</label>
+      <select id="editVacanteId">
+        <option value="">— Sin asociar —</option>
+        ${vacOpts}
+      </select>
+    </div>
+  `;
+  document.getElementById('modalEditarCandidato').classList.add('active');
+}
+
+async function guardarEdicionCandidato() {
+  const data = {
+    nombre: document.getElementById('editNombre').value,
+    email: document.getElementById('editEmail').value,
+    telefono: document.getElementById('editTelefono').value,
+    rubro: document.getElementById('editRubro').value,
+    vacanteId: document.getElementById('editVacanteId').value || null
+  };
+  await fetch('/api/candidatos/' + candidatoActualId, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data)
+  });
+  cerrarModal('modalEditarCandidato');
+  cargarCandidatos();
+}
+
+async function abrirScoring(id) {
+  cerrarModal('modalCandidato');
+  const res = await fetch('/api/candidatos');
+  const candidatos = await res.json();
+  const c = candidatos.find(x => x.id == id);
+  candidatoActualId = id;
+
+  const scoring = c.scoring || { score: 0, fortalezas: '', debilidades: '', recomendacion: '' };
+
+  const fortOpts = [
+    { label: 'Excelente experiencia del sector', pts: 20 },
+    { label: 'Muy buena formación académica', pts: 15 },
+    { label: 'Alta disponibilidad horaria', pts: 10 },
+    { label: 'Buena presentación personal', pts: 10 },
+    { label: 'Conocimiento del mercado local', pts: 10 },
+    { label: 'Dominio de herramientas digitales', pts: 10 },
+    { label: 'Habilidades de liderazgo', pts: 15 },
+    { label: 'Trabajo en equipo comprobado', pts: 10 },
+  ];
+  const debOpts = [
+    { label: 'Poca experiencia en el rubro', pts: -20 },
+    { label: 'Formación incompleta', pts: -15 },
+    { label: 'Disponibilidad reducida', pts: -10 },
+    { label: 'Sin referencias verificables', pts: -10 },
+    { label: 'Brecha laboral prolongada', pts: -15 },
+    { label: 'Perfil no alineado al puesto', pts: -20 },
+    { label: 'Escasa capacidad de comunicación', pts: -10 },
+  ];
+  const fortChips = fortOpts.map(o =>
+    `<button type="button" class="chip-btn" data-pts="${o.pts}" onclick="toggleChip(this)">${o.label} <span class="chip-pts">+${o.pts}</span></button>`
+  ).join('');
+  const debChips = debOpts.map(o =>
+    `<button type="button" class="chip-btn chip-neg" data-pts="${o.pts}" onclick="toggleChip(this)">${o.label} <span class="chip-pts">${o.pts}</span></button>`
+  ).join('');
+
+  document.getElementById('modalScoringBody').innerHTML = `
+    <div style="font-family:var(--font-d);font-size:22px;margin-bottom:24px;color:var(--ink2);">${c.nombre}</div>
+
+    <div class="form-group">
+      <label>Score calculado</label>
+      <div style="display:flex;align-items:center;gap:16px;margin-bottom:8px;">
+        <div id="scoreMeter" style="font-family:var(--font-d);font-size:52px;color:var(--green);line-height:1;">${scoring.score || 0}</div>
+        <div style="color:var(--ink4);font-size:13px;">/100<br><span id="scoreTip" style="font-size:11px;"></span></div>
+        <input type="hidden" id="scoringScore" value="${scoring.score || 0}">
+      </div>
+      <div style="background:var(--border);border-radius:4px;height:6px;margin-bottom:20px;overflow:hidden;">
+        <div id="scoreBar" style="height:100%;width:${scoring.score || 0}%;background:var(--green);border-radius:4px;transition:all 0.3s;"></div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Fortalezas <small style="color:var(--ink4);font-weight:300;">(suman al score)</small></label>
+      <div class="chip-group" id="fortChips">${fortChips}</div>
+      <textarea id="scoringFortalezas" placeholder="Detalle adicional o fortalezas libres..." style="margin-top:10px;">${scoring.fortalezas || ''}</textarea>
+    </div>
+
+    <div class="form-group">
+      <label>Debilidades <small style="color:var(--ink4);font-weight:300;">(restan al score)</small></label>
+      <div class="chip-group" id="debChips">${debChips}</div>
+      <textarea id="scoringDebilidades" placeholder="Detalle adicional o debilidades libres..." style="margin-top:10px;">${scoring.debilidades || ''}</textarea>
+    </div>
+
+    <div class="form-group">
+      <label>Recomendación</label>
+      <div class="chip-group" style="margin-bottom:10px;">
+        <button type="button" class="chip-btn" onclick="setRecomendacion('Candidato altamente recomendado para el puesto.')">✅ Apto</button>
+        <button type="button" class="chip-btn" onclick="setRecomendacion('Candidato apto con reservas. Requiere seguimiento.')">⚠️ Apto con reservas</button>
+        <button type="button" class="chip-btn chip-neg" onclick="setRecomendacion('Candidato no recomendado para el puesto en este momento.')">❌ No apto</button>
+      </div>
+      <textarea id="scoringRecomendacion" placeholder="Recomendación final sobre el candidato...">${scoring.recomendacion || ''}</textarea>
+    </div>
+  `;
+
+  // Restaurar chips si hay scoring previo
+  if (scoring.fortalezas) {
+    document.querySelectorAll('#fortChips .chip-btn').forEach(btn => {
+      if (scoring.fortalezas.includes(btn.textContent.replace(/[+\-\d]+$/, '').trim())) btn.classList.add('active');
+    });
+  }
+  if (scoring.debilidades) {
+    document.querySelectorAll('#debChips .chip-btn').forEach(btn => {
+      if (scoring.debilidades.includes(btn.textContent.replace(/[+\-\d]+$/, '').trim())) btn.classList.add('active');
+    });
+  }
+  recalcScore();
+  document.getElementById('modalScoring').classList.add('active');
+}
+
+function toggleChip(btn) {
+  btn.classList.toggle('active');
+  recalcScore();
+}
+
+function setRecomendacion(texto) {
+  document.getElementById('scoringRecomendacion').value = texto;
+}
+
+function recalcScore() {
+  let base = 50;
+  document.querySelectorAll('#fortChips .chip-btn.active, #debChips .chip-btn.active').forEach(btn => {
+    base += parseInt(btn.dataset.pts || 0);
+  });
+  base = Math.max(0, Math.min(100, base));
+  document.getElementById('scoringScore').value = base;
+  const meter = document.getElementById('scoreMeter');
+  const bar = document.getElementById('scoreBar');
+  const tip = document.getElementById('scoreTip');
+  if (meter) meter.textContent = base;
+  if (bar) {
+    bar.style.width = base + '%';
+    bar.style.background = base >= 70 ? 'var(--green)' : base >= 50 ? 'var(--orange)' : 'var(--red)';
+  }
+  if (meter) meter.style.color = base >= 70 ? 'var(--green)' : base >= 50 ? 'var(--orange)' : 'var(--red)';
+  if (tip) tip.textContent = base >= 70 ? 'Recomendado' : base >= 50 ? 'Con reservas' : 'No recomendado';
+}
+
+async function guardarScoring() {
+  const score = parseInt(document.getElementById('scoringScore').value);
+
+  // Fortalezas: chips activos + texto libre
+  const fortChipsActivos = Array.from(document.querySelectorAll('#fortChips .chip-btn.active'))
+    .map(b => '• ' + b.textContent.replace(/[\+\-]?\d+$/, '').trim()).join('\n');
+  const fortLibre = document.getElementById('scoringFortalezas').value.trim();
+  const fortalezas = [fortChipsActivos, fortLibre].filter(Boolean).join('\n') || '';
+
+  // Debilidades: chips activos + texto libre
+  const debChipsActivos = Array.from(document.querySelectorAll('#debChips .chip-btn.active'))
+    .map(b => '• ' + b.textContent.replace(/[\+\-]?\d+$/, '').trim()).join('\n');
+  const debLibre = document.getElementById('scoringDebilidades').value.trim();
+  const debilidades = [debChipsActivos, debLibre].filter(Boolean).join('\n') || '';
+
+  const recomendacion = document.getElementById('scoringRecomendacion').value;
+
+  await fetch(`/api/candidatos/${candidatoActualId}/scoring`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ score, fortalezas, debilidades, recomendacion })
+  });
+
+  cerrarModal('modalScoring');
+  cargarCandidatos();
+}
+
+function eliminarCandidatoConfirm() {
+  if (!confirm('¿Eliminar este candidato?')) return;
+  eliminarCandidatoAPI(candidatoActualId);
+}
+
+function confirmarEliminarCandidato(id, nombre) {
+  if (!confirm('¿Eliminar a "' + nombre + '" de la base de datos?\nEsta acción no se puede deshacer.')) return;
+  eliminarCandidatoDesdeTabla(id);
+}
+
+async function eliminarCandidatoDesdeTabla(id) {
+  await fetch('/api/candidatos/' + id, { method: 'DELETE' });
+  cargarCandidatos();
+}
+
+async function eliminarCandidatoAPI(id) {
+  await fetch('/api/candidatos/' + id, { method: 'DELETE' });
+  cerrarModal('modalCandidato');
+  cargarCandidatos();
+}
+
+function abrirModalNuevoRubro() {
+  document.getElementById('modalRubroTitulo').innerHTML = 'Nuevo <em>rubro</em>';
+  document.getElementById('rubroSubmitBtn').textContent = 'Crear';
+  document.getElementById('formRubro').reset();
+  document.getElementById('formRubro').dataset.rubroId = '';
+  document.getElementById('modalRubro').classList.add('active');
+}
+
+async function cargarRubros() {
+  try {
+    const res = await fetch('/api/rubros');
+    const rubros = await res.json();
+    const listaRubros = document.getElementById('listaRubros');
+    listaRubros.innerHTML = rubros.map(r => `
+      <div style="background:var(--cream2);border:1px solid var(--border);padding:14px;border-radius:var(--r-md);display:flex;justify-content:space-between;align-items:center;">
+        <span>${r.nombre}</span>
+        <div class="action-buttons">
+          <button class="btn btn-warning btn-sm" onclick="editarRubro(${r.id}, '${r.nombre}')">Editar</button>
+          <button class="btn btn-danger btn-sm" onclick="eliminarRubro(${r.id})">Eliminar</button>
+        </div>
+      </div>
+    `).join('');
+  } catch (err) {
+    console.error('Error cargando rubros:', err);
+  }
+}
+
+function editarRubro(id, nombre) {
+  document.getElementById('modalRubroTitulo').innerHTML = 'Editar <em>rubro</em>';
+  document.getElementById('rubroSubmitBtn').textContent = 'Guardar cambios';
+  document.getElementById('rubroNombre').value = nombre;
+  document.getElementById('formRubro').dataset.rubroId = id;
+  document.getElementById('modalRubro').classList.add('active');
+}
+
+async function eliminarRubro(id) {
+  if (!confirm('¿Eliminar este rubro?')) return;
+  try {
+    await fetch('/api/rubros/' + id, { method: 'DELETE' });
+    cargarRubros();
+  } catch (err) {
+    console.error('Error eliminando rubro:', err);
+  }
+}
+
+document.getElementById('formRubro').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const nombre = document.getElementById('rubroNombre').value;
+  const rubroId = e.target.dataset.rubroId;
+  
+  try {
+    if (rubroId) {
+      await fetch('/api/rubros/' + rubroId, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ nombre })
+      });
+    } else {
+      await fetch('/api/rubros', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ nombre })
+      });
+    }
+    cerrarModal('modalRubro');
+    cargarRubros();
+  } catch (err) {
+    console.error('Error guardando rubro:', err);
+  }
+});
+
+function cargarDatos() {
+  cargarVacantes();
+  cargarCandidatos();
+  cargarRubros();
+}
+</script>
+</body>
+</html>
