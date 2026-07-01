@@ -300,6 +300,22 @@ app.delete('/api/candidatos/:id', isAuth, async (req, res) => {
   }
 });
 
+// ── Diagnóstico schema (TEMPORAL — remover después) ────────────────────────
+app.get('/api/debug-schema', isAuth, async (req, res) => {
+  try {
+    const result = await pool.query(`
+      SELECT column_name, data_type, is_nullable, column_default, is_identity
+      FROM information_schema.columns
+      WHERE table_name = 'candidatos'
+      ORDER BY ordinal_position;
+    `);
+    res.json(result.rows);
+  } catch (err) {
+    console.error('Error consultando schema:', err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // ── Healthcheck ────────────────────────────────────────────────────────────
 app.get('/health', (req, res) => res.json({ status: 'ok' }));
 
