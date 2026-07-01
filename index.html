@@ -1032,314 +1032,6 @@ footer{
   .hero{ min-height:100svh; }
 }
 
-/* ═══════════════════════════════════════════════════════
-   MOBILE RESPONSIVE FIX v2 — Junio 2026
-   Fixes: overflow horizontal, nav buttons, hero stats,
-   nosotros facts, quote container, carousel
-   ═══════════════════════════════════════════════════════ */
-
-/* ── FIX GLOBAL: prevenir overflow horizontal en TODO ── */
-@media(max-width:960px){
-  html, body{
-    overflow-x:hidden !important;
-    max-width:100vw;
-  }
-  /* Permitir que grillas y flex containers se achiquen por debajo del contenido */
-  .nosotros-grid, .cv-inner, .contacto-grid,
-  .hero-inner, .hero-bottom, .servicios-head,
-  .valores-grid, .nos-facts, .hero-stats,
-  .footer-top, .footer-bottom{
-    min-width:0;
-  }
-  .nosotros-left, .nosotros-right,
-  .hero-left, .hero-photo,
-  .valor, .svc-item, .hstat,
-  .nos-fact-n, .nos-fact-l{
-    min-width:0;
-    max-width:100%;
-  }
-  /* Texto largo debe romper */
-  .nos-blockquote, .nosotros-left p,
-  .hero-sub, .vac-card, .valor p,
-  .nosotros-left h2, .hero-title{
-    overflow-wrap:break-word;
-    word-wrap:break-word;
-    hyphens:auto;
-  }
-  /* Imágenes responsive */
-  img, svg{ max-width:100%; height:auto; }
-}
-
-/* ── NAV: botones que NO se parten ── */
-@media(max-width:768px){
-  nav{
-    padding:0 16px;
-    height:60px;
-    gap:8px;
-  }
-  .nav-logo svg{ height:26px; }
-  .nav-links{ display:none; }
-  .nav-actions{ gap:8px; flex-shrink:0; }
-  .btn-nav-ghost, .btn-nav-solid{
-    font-size:12px;
-    padding:8px 14px;
-    white-space:nowrap;       /* CRÍTICO: no partir texto */
-    flex-shrink:0;
-  }
-}
-
-@media(max-width:480px){
-  nav{
-    padding:0 12px;
-    height:56px;
-    gap:6px;
-  }
-  .nav-logo svg{ height:22px; }
-  .btn-nav-ghost, .btn-nav-solid{
-    font-size:11px;
-    padding:7px 12px;
-    white-space:nowrap;
-  }
-}
-
-/* ── HERO: stats que apilan correctamente ── */
-@media(max-width:768px){
-  .hero-inner{
-    grid-template-columns:1fr;
-  }
-  .hero-left{
-    padding:90px 20px 48px;
-    max-width:100%;
-  }
-  .hero-photo{
-    height:260px;
-    border-left:none;
-    border-bottom:1px solid var(--border);
-    order:-1;
-  }
-  .hero-title{ font-size:clamp(36px,9vw,56px); line-height:1.05; }
-  .hero-sub{ font-size:15px; }
-  
-  /* Stats: GRID 3 columnas iguales que NO se desbordan */
-  .hero-bottom{
-    grid-template-columns:1fr;
-    gap:20px;
-  }
-  .hero-stats{
-    display:grid !important;
-    grid-template-columns:repeat(3, minmax(0, 1fr));
-    gap:0;
-    width:100%;
-  }
-  .hstat{
-    flex:none;
-    min-width:0;
-    padding:14px 8px;
-    border-right:1px solid var(--border);
-    overflow:hidden;
-  }
-  .hstat:last-child{ border-right:none; }
-  .hstat-n{
-    font-size:clamp(22px,5.5vw,30px);
-    line-height:1.1;
-    white-space:nowrap;
-    overflow:hidden;
-    text-overflow:ellipsis;
-  }
-  .hstat-l{
-    font-size:10px;
-    margin-top:6px;
-    line-height:1.3;
-  }
-}
-
-@media(max-width:480px){
-  .hero-left{ padding:80px 16px 36px; }
-  .hero-photo{ height:220px; }
-  .hstat{ padding:10px 4px; }
-  .hstat-n{ font-size:clamp(18px,5vw,24px); }
-  .hstat-l{ font-size:9px; letter-spacing:0.5px; }
-}
-
-/* ── NOSOTROS: blockquote y facts SIN overflow ── */
-@media(max-width:960px){
-  .nosotros-grid{
-    grid-template-columns:minmax(0, 1fr) !important;
-    gap:48px;
-  }
-  .nosotros-left, .nosotros-right{
-    width:100%;
-    min-width:0;
-  }
-  .nos-visual{
-    padding:32px 24px;
-  }
-  .nos-blockquote{
-    font-size:clamp(15px,3.8vw,18px) !important;
-    line-height:1.5;
-  }
-  /* FACTS: 3 columnas que CABEN */
-  .nos-facts{
-    display:grid !important;
-    grid-template-columns:repeat(3, minmax(0, 1fr));
-    gap:16px;
-  }
-  .nos-fact-n{
-    font-size:clamp(18px,5vw,24px) !important;
-    line-height:1.1;
-    overflow:hidden;
-    text-overflow:ellipsis;
-  }
-  .nos-fact-l{
-    font-size:10px;
-    letter-spacing:0.5px;
-  }
-}
-
-@media(max-width:480px){
-  .nos-visual{ padding:24px 16px; }
-  .nos-blockquote{ font-size:14px !important; }
-  .nos-facts{ gap:8px; }
-  .nos-fact-n{ font-size:clamp(15px,4vw,20px) !important; }
-  .nos-fact-l{ font-size:9px; }
-  /* "Confidencial" es demasiado largo, mostrar más corto */
-  .nos-fact-n[data-short]::after{ content:attr(data-short); }
-}
-
-/* ── VALORES QUOTE: línea azul que cabe ── */
-@media(max-width:768px){
-  .valores-quote{
-    padding:24px 20px !important;
-    margin:32px 0 !important;
-  }
-  .valores-quote blockquote{
-    font-size:clamp(16px,4vw,22px) !important;
-    line-height:1.4;
-    padding-left:16px !important;
-  }
-  .valores-quote-foot{
-    flex-direction:row;
-    align-items:center;
-    gap:12px;
-    margin-top:16px;
-  }
-  .valores-quote-line{
-    width:24px !important;
-  }
-  .valores-quote-attr{
-    font-size:10px;
-  }
-}
-
-/* ── SERVICIOS ── */
-@media(max-width:768px){
-  .servicios-head{
-    grid-template-columns:1fr;
-    gap:20px;
-  }
-  .svc-item{
-    grid-template-columns:48px minmax(0, 1fr);
-    padding:32px 0;
-    gap:16px;
-  }
-  .svc-num{ font-size:clamp(24px,6vw,32px); }
-  .svc-tag{ display:none; }
-  .svc-content{ padding-right:0; min-width:0; }
-}
-
-@media(max-width:480px){
-  .svc-item{ padding:24px 0; gap:12px; }
-}
-
-/* ── CARRUSEL: contenido en bounds ── */
-@media(max-width:768px){
-  .hcar-outer{ overflow:hidden; }
-  .orb-scene{ height:480px; }
-  .hcar-card{ width:180px; }
-  .hcar-img{ height:100px; }
-  .hcar-body{ padding:10px 14px 12px; }
-  .hcar-title{ font-size:14px; }
-  .hcar-desc{ font-size:11.5px; }
-}
-
-@media(max-width:480px){
-  .orb-scene{ height:420px; }
-  .hcar-card{ width:160px; }
-  .hcar-img{ height:90px; }
-}
-
-/* ── VALORES GRID ── */
-@media(max-width:768px){
-  .valores-grid{ grid-template-columns:1fr !important; }
-  .valor{
-    border-right:none !important;
-    border-bottom:1px solid var(--border);
-    padding:32px 0;
-  }
-  .valor:last-child{ border-bottom:none; }
-}
-
-/* ── FOOTER ── */
-@media(max-width:768px){
-  footer{ padding:56px 0 32px; }
-  .footer-top{
-    grid-template-columns:1fr;
-    gap:32px;
-    padding-bottom:32px;
-  }
-  .foot-tagline{
-    text-align:left;
-    font-size:18px;
-  }
-  .foot-contact{
-    align-items:flex-start;
-    gap:10px;
-  }
-  .foot-contact a{ font-size:14px; }
-  .footer-bottom{
-    flex-direction:column;
-    align-items:flex-start;
-    gap:16px;
-  }
-  .foot-links{
-    flex-wrap:wrap;
-    gap:18px;
-  }
-  .foot-links a{ font-size:12px; }
-}
-
-/* ── DECORATIVAS ── */
-@media(max-width:768px){
-  .deco-corner{ display:none; }
-  .deco-blob{ opacity:0.025; }
-}
-
-@media(max-width:480px){
-  .deco-blob{ display:none; }
-  .deco-rule{ margin-bottom:32px; }
-}
-
-/* ── WHATSAPP BUBBLE: que no se monte sobre contenido ── */
-@media(max-width:768px){
-  .wa-bubble{
-    bottom:16px !important;
-    right:16px !important;
-  }
-  .wa-btn{
-    width:48px !important;
-    height:48px !important;
-  }
-}
-
-/* ── WRAP general ── */
-@media(max-width:768px){
-  .wrap{ padding:0 20px; }
-}
-
-@media(max-width:480px){
-  .wrap{ padding:0 16px; }
-}
-
 /* ── CARRUSEL ORBITAL ── */
 .hcar-outer{position:relative;width:100%;overflow:visible}
 .orb-scene{position:relative;width:100%;height:580px;cursor:grab;user-select:none;touch-action:pan-y;overflow:visible}
@@ -1616,10 +1308,10 @@ footer{
       <div class="reveal reveal-d2">
         <div class="cv-form" id="cvFormInline">
           <div class="fi-row">
-            <input class="fi" type="text" placeholder="Nombre completo" required>
-            <input class="fi" type="email" placeholder="Email" required>
+            <input class="fi" type="text" name="nombre" placeholder="Nombre completo" required>
+            <input class="fi" type="email" name="email" placeholder="Email" required>
           </div>
-          <input class="fi" type="tel" placeholder="Teléfono / WhatsApp">
+          <input class="fi" type="tel" name="telefono" placeholder="Teléfono / WhatsApp">
           <select class="fi">
             <option value="">Área de interés...</option>
             <option>Administración y contabilidad</option>
@@ -1632,7 +1324,7 @@ footer{
             <option>Otro</option>
           </select>
           <div class="file-drop">
-            <input type="file" accept=".pdf,.doc,.docx,.jpg,.jpeg" onchange="handleFile(this,'cvFile')">
+            <input type="file" name="cv" accept=".pdf,.doc,.docx,.jpg,.jpeg" onchange="handleFile(this,'cvFile')">
             <p><strong id="cvFile">Hacé clic para adjuntar CV</strong>PDF, Word, JPG · Máx. 5MB</p>
           </div>
           <button class="btn-submit" onclick="submitCV(this)">Enviar mi CV</button>
@@ -1758,12 +1450,13 @@ footer{
     <span class="modal-tag" id="jobModalTag">Vacante</span>
     <h2 id="jobModalTitle">Puesto</h2>
     <p class="modal-sub" id="jobModalSub">Postulaciones confidenciales. Tus datos solo serán vistos por nuestro equipo.</p>
+    <div id="jobModalDetalle" style="display:none; margin-bottom: 20px;"></div>
     <div class="modal-form" id="jobForm">
-      <input class="fi" type="text" placeholder="Nombre completo" required>
-      <input class="fi" type="email" placeholder="Email" required>
-      <input class="fi" type="tel" placeholder="Teléfono / WhatsApp">
+      <input class="fi" type="text" name="nombre" placeholder="Nombre completo" required>
+      <input class="fi" type="email" name="email" placeholder="Email" required>
+      <input class="fi" type="tel" name="telefono" placeholder="Teléfono / WhatsApp">
       <div class="file-drop">
-        <input type="file" accept=".pdf,.doc,.docx,.jpg,.jpeg" onchange="handleFile(this,'jobFile')">
+        <input type="file" name="cv" accept=".pdf,.doc,.docx,.jpg,.jpeg" onchange="handleFile(this,'jobFile')">
         <p><strong id="jobFile">Hacé clic para adjuntar CV</strong>PDF, Word, JPG · Máx. 5MB</p>
       </div>
       <div class="confid"><span>🔒</span><span>Tus datos son confidenciales y solo los verá nuestro equipo de selección.</span></div>
@@ -1785,9 +1478,9 @@ footer{
     <h2>No hay una vacante hoy.<br>Hay una oportunidad mañana.</h2>
     <p class="modal-sub">Dejá tu CV y te contactamos en cuanto aparezca una posición que se adapte a tu perfil.</p>
     <div class="modal-form" id="cvModalForm">
-      <input class="fi" type="text" placeholder="Nombre completo" required>
-      <input class="fi" type="email" placeholder="Email" required>
-      <input class="fi" type="tel" placeholder="Teléfono / WhatsApp">
+      <input class="fi" type="text" name="nombre" placeholder="Nombre completo" required>
+      <input class="fi" type="email" name="email" placeholder="Email" required>
+      <input class="fi" type="tel" name="telefono" placeholder="Teléfono / WhatsApp">
       <select class="fi">
         <option value="">Área de interés...</option>
         <option>Administración y contabilidad</option>
@@ -1800,7 +1493,7 @@ footer{
         <option>Otro</option>
       </select>
       <div class="file-drop">
-        <input type="file" accept=".pdf,.doc,.docx,.jpg,.jpeg" onchange="handleFile(this,'cvModalFile')">
+        <input type="file" name="cv" accept=".pdf,.doc,.docx,.jpg,.jpeg" onchange="handleFile(this,'cvModalFile')">
         <p><strong id="cvModalFile">Hacé clic para adjuntar CV</strong>PDF, Word, JPG · Máx. 5MB</p>
       </div>
       <div class="confid"><span>🔒</span><span>Tus datos son confidenciales y solo los verá nuestro equipo.</span></div>
@@ -1828,11 +1521,47 @@ const obs = new IntersectionObserver(entries => {
 document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
 
 /* ── Modals ── */
-function openJobModal(title, sub){
+function openJobModal(title, sub, detalle){
   document.getElementById('jobModalTitle').textContent = title;
   document.getElementById('jobModalSub').textContent = sub + ' · Postulaciones confidenciales.';
   document.getElementById('jobForm').style.display = 'flex';
   document.getElementById('jobSuccess').style.display = 'none';
+
+  // Mostrar detalle de la vacante si existe
+  var detalleDiv = document.getElementById('jobModalDetalle');
+  if (detalle && (detalle.descripcion || detalle.responsabilidades || detalle.requisitos || detalle.seValora || detalle.beneficios)) {
+    var html = '<div style="font-family:var(--font-b,sans-serif);font-size:14px;color:var(--ink,#111);border-top:1px solid var(--border,#ddd);padding-top:16px;">';
+    if (detalle.descripcion) {
+      html += '<p style="margin:0 0 14px;line-height:1.65;">' + detalle.descripcion + '</p>';
+    }
+    if (detalle.responsabilidades) {
+      html += '<p style="font-weight:600;margin:0 0 6px;">Responsabilidades</p><ul style="margin:0 0 14px;padding-left:18px;line-height:1.7;">';
+      detalle.responsabilidades.split(/\n/).filter(function(l){return l.trim();}).forEach(function(l){ html += '<li>' + l.trim().replace(/^[-•·]\s*/,'') + '</li>'; });
+      html += '</ul>';
+    }
+    if (detalle.requisitos) {
+      html += '<p style="font-weight:600;margin:0 0 6px;">Requisitos</p><ul style="margin:0 0 14px;padding-left:18px;line-height:1.7;">';
+      detalle.requisitos.split(/\n/).filter(function(l){return l.trim();}).forEach(function(l){ html += '<li>' + l.trim().replace(/^[-•·]\s*/,'') + '</li>'; });
+      html += '</ul>';
+    }
+    if (detalle.seValora) {
+      html += '<p style="font-weight:600;margin:0 0 6px;">Se valora</p><ul style="margin:0 0 14px;padding-left:18px;line-height:1.7;">';
+      detalle.seValora.split(/\n/).filter(function(l){return l.trim();}).forEach(function(l){ html += '<li>' + l.trim().replace(/^[-•·]\s*/,'') + '</li>'; });
+      html += '</ul>';
+    }
+    if (detalle.beneficios) {
+      html += '<p style="font-weight:600;margin:0 0 6px;">Beneficios</p><ul style="margin:0 0 14px;padding-left:18px;line-height:1.7;">';
+      detalle.beneficios.split(/\n/).filter(function(l){return l.trim();}).forEach(function(l){ html += '<li>' + l.trim().replace(/^[-•·]\s*/,'') + '</li>'; });
+      html += '</ul>';
+    }
+    html += '</div>';
+    detalleDiv.innerHTML = html;
+    detalleDiv.style.display = 'block';
+  } else {
+    detalleDiv.style.display = 'none';
+    detalleDiv.innerHTML = '';
+  }
+
   document.getElementById('jobModal').classList.add('open');
   document.body.style.overflow = 'hidden';
 }
@@ -1860,25 +1589,153 @@ function handleFile(input, targetId){
   }
 }
 function submitJob(btn){
-  btn.textContent = 'Enviando...'; btn.disabled = true;
-  setTimeout(() => {
-    document.getElementById('jobForm').style.display = 'none';
-    document.getElementById('jobSuccess').style.display = 'block';
-  }, 1000);
+  var form = document.getElementById('jobForm');
+  var fileInput = form.querySelector('input[type="file"]');
+  var nameInput = form.querySelector('input[name="nombre"]');
+  var emailInput = form.querySelector('input[name="email"]');
+  var telefonoInput = form.querySelector('input[name="telefono"]');
+  var vacanteTitle = document.getElementById('jobModalTitle').textContent;
+
+  if (!fileInput.files[0]) {
+    alert('Por favor adjuntá tu CV antes de enviar.');
+    return;
+  }
+  if (!nameInput.value.trim()) {
+    alert('Por favor ingresá tu nombre.');
+    return;
+  }
+  if (!emailInput.value.trim()) {
+    alert('Por favor ingresá tu email.');
+    return;
+  }
+
+  var formData = new FormData();
+  formData.append('cv', fileInput.files[0]);
+  formData.append('nombre', nameInput.value.trim());
+  formData.append('email', emailInput.value.trim());
+  formData.append('telefono', telefonoInput ? telefonoInput.value.trim() : '');
+  formData.append('vacante', vacanteTitle);
+
+  btn.textContent = 'Enviando...';
+  btn.disabled = true;
+
+  fetch('/api/candidatos', { method: 'POST', body: formData })
+    .then(function(res){ return res.json(); })
+    .then(function(data){
+      if (data.success) {
+        document.getElementById('jobForm').style.display = 'none';
+        document.getElementById('jobSuccess').style.display = 'block';
+      } else {
+        alert('Error: ' + (data.error || 'No se pudo enviar la postulación. Intentá nuevamente.'));
+        btn.textContent = 'Enviar postulación';
+        btn.disabled = false;
+      }
+    })
+    .catch(function(err){
+      console.error('Error de red:', err);
+      alert('Error de conexión. Verificá tu internet e intentá nuevamente.');
+      btn.textContent = 'Enviar postulación';
+      btn.disabled = false;
+    });
 }
 function submitCVModal(btn){
-  btn.textContent = 'Enviando...'; btn.disabled = true;
-  setTimeout(() => {
-    document.getElementById('cvModalForm').style.display = 'none';
-    document.getElementById('cvModalSuccess').style.display = 'block';
-  }, 1000);
+  const form = document.getElementById('cvModalForm');
+  const fileInput = form.querySelector('input[type="file"]');
+  const nameInput = form.querySelector('input[name="nombre"]');
+  const emailInput = form.querySelector('input[name="email"]');
+  const telefonoInput = form.querySelector('input[name="telefono"]');
+  
+  if (!fileInput.files[0]) {
+    alert('Por favor adjunta tu CV');
+    return;
+  }
+  if (!nameInput.value.trim()) {
+    alert('Por favor ingresa tu nombre');
+    return;
+  }
+  if (!emailInput.value.trim()) {
+    alert('Por favor ingresa tu email');
+    return;
+  }
+  
+  const formData = new FormData();
+  formData.append('cv', fileInput.files[0]);
+  formData.append('nombre', nameInput.value);
+  formData.append('email', emailInput.value);
+  formData.append('telefono', telefonoInput.value);
+  
+  btn.textContent = 'Enviando...'; 
+  btn.disabled = true;
+  
+  fetch('/api/candidatos', { method: 'POST', body: formData })
+    .then(res => res.json())
+    .then(data => {
+      if (data.success) {
+        form.style.display = 'none';
+        document.getElementById('cvModalSuccess').style.display = 'block';
+        form.reset();
+      } else {
+        alert('Error al enviar el CV: ' + (data.error || 'Intenta nuevamente'));
+        btn.textContent = 'Enviar mi CV';
+        btn.disabled = false;
+      }
+    })
+    .catch(err => {
+      console.error('Error:', err);
+      alert('Error de conexión. Intenta nuevamente.');
+      btn.textContent = 'Enviar mi CV';
+      btn.disabled = false;
+    });
 }
+
 function submitCV(btn){
-  btn.textContent = 'Enviando...'; btn.disabled = true;
-  setTimeout(() => {
-    document.getElementById('cvFormInline').style.display = 'none';
-    document.getElementById('cvSuccessInline').style.display = 'block';
-  }, 1000);
+  const form = document.getElementById('cvFormInline');
+  const fileInput = form.querySelector('input[type="file"]');
+  const nameInput = form.querySelector('input[name="nombre"]');
+  const emailInput = form.querySelector('input[name="email"]');
+  const telefonoInput = form.querySelector('input[name="telefono"]');
+  
+  if (!fileInput.files[0]) {
+    alert('Por favor adjunta tu CV');
+    return;
+  }
+  if (!nameInput.value.trim()) {
+    alert('Por favor ingresa tu nombre');
+    return;
+  }
+  if (!emailInput.value.trim()) {
+    alert('Por favor ingresa tu email');
+    return;
+  }
+  
+  const formData = new FormData();
+  formData.append('cv', fileInput.files[0]);
+  formData.append('nombre', nameInput.value);
+  formData.append('email', emailInput.value);
+  formData.append('telefono', telefonoInput.value);
+  
+  btn.textContent = 'Enviando...'; 
+  btn.disabled = true;
+  
+  fetch('/api/candidatos', { method: 'POST', body: formData })
+    .then(res => res.json())
+    .then(data => {
+      if (data.success) {
+        form.style.display = 'none';
+        document.getElementById('cvSuccessInline').style.display = 'block';
+        form.reset();
+      } else {
+        alert('Error al enviar el CV: ' + (data.error || 'Intenta nuevamente'));
+        btn.textContent = 'Enviar mi CV';
+        btn.disabled = false;
+      }
+    })
+    .catch(err => {
+      console.error('Error:', err);
+      alert('Error de conexión. Intenta nuevamente.');
+      btn.textContent = 'Enviar mi CV';
+      btn.disabled = false;
+    });
 }
 function submitContact(btn){
   btn.textContent = 'Enviando...'; btn.disabled = true;
@@ -1918,7 +1775,7 @@ function orbBuild(id, data, isV) {
     var el = document.createElement('div');
     el.className = 'hcar-card';
     var ctaHtml = isV
-      ? '<button class="hcar-cta" onclick="event.stopPropagation();openJobModal(\'' + d.m0 + '\',\'' + d.m1 + '\')">' + 'Ver vacante</button>'
+      ? '<button class="hcar-cta" onclick="event.stopPropagation();openJobModal(\'' + d.m0 + '\',\'' + d.m1 + '\',(' + JSON.stringify(d.detalle || {}) + '))">' + 'Ver vacante</button>'
       : '';
     el.innerHTML =
       '<div class="hcar-img"><img src="'+d.i+'" alt="'+d.t+'" loading="lazy"></div>' +
@@ -2102,7 +1959,14 @@ orbBuild('svc', SVC_ITEMS, false);
       d: v.ubicacion || 'Concordia, Entre Ríos',
       i: v.imagenpath || 'https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=600&q=80&fit=crop',
       m0: v.titulo || 'Vacante',
-      m1: v.ubicacion || 'Concordia, Entre Ríos'
+      m1: v.ubicacion || 'Concordia, Entre Ríos',
+      detalle: {
+        descripcion: v.descripcion || '',
+        responsabilidades: v.responsabilidades || '',
+        requisitos: v.requisitos || '',
+        seValora: v.se_valora || v.seValora || '',
+        beneficios: v.beneficios || ''
+      }
     }));
     orbBuild('vac', VAC_ITEMS, true);
   } catch(e) {

@@ -1,95 +1,137 @@
 const express = require('express');
 const session = require('express-session');
-const bcryptjs = require('bcryptjs');
+const bcrypt = require('bcryptjs');
 const multer = require('multer');
-const fs = require('fs');
-const path = require('path');
+const { v2: cloudinary } = require('cloudinary');
+const { CloudinaryStorage } = require('multer-storage-cloudinary');
 const { Pool } = require('pg');
-const cloudinary = require('cloudinary').v2;
+const path = require('path');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// ── Cloudinary config ──────────────────────────────────────────────────────
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key:    process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET
+});
+
+// ── PostgreSQL ─────────────────────────────────────────────────────────────
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
-  ssl: { rejectUnauthorized: false }
+  ssl: process.env.DATABASE_URL ? { rejectUnauthorized: false } : false
 });
-
-pool.on('error', (err) => console.error('Error en BD:', err));
-
-// Configurar Cloudinary
-cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME || 'dzkksmoa5',
-  api_key: process.env.CLOUDINARY_API_KEY || '254636728317521',
-  api_secret: process.env.CLOUDINARY_API_SECRET || 'uWXEqv56LjxuSs_iu9N17O9tZRc'
-});
-
-if (!fs.existsSync('uploads')) fs.mkdirSync('uploads');
-
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => cb(null, 'uploads/'),
-  filename: (req, file, cb) => cb(null, Date.now() + '-' + file.originalname)
-});
-const upload = multer({ storage });
-
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(express.static('.'));
-app.use(session({ secret: 'rrhh', resave: false, saveUninitialized: false }));
-
-const isAuth = (req, res, next) => {
-  if (!req.session.authenticated) return res.status(401).json({ error: 'No autorizado' });
-  next();
-};
 
 async function initDB() {
-  try {
-    await pool.query(`CREATE TABLE IF NOT EXISTS users (id SERIAL PRIMARY KEY, username VARCHAR(50), password VARCHAR(255))`);
-    await pool.query(`CREATE TABLE IF NOT EXISTS vacantes (id BIGINT PRIMARY KEY, titulo VARCHAR(255), ubicacion VARCHAR(255), tipo VARCHAR(50), rubro VARCHAR(100), descripcion TEXT, imagenPath VARCHAR(255), fecha TIMESTAMP)`);
-    await pool.query(`CREATE TABLE IF NOT EXISTS candidatos (id BIGINT PRIMARY KEY, nombre VARCHAR(255), email VARCHAR(255), telefono VARCHAR(20), rubro VARCHAR(100), vacanteId BIGINT, cvPath VARCHAR(255), cvOriginal VARCHAR(255), fecha TIMESTAMP, scoring JSONB)`);
-    await pool.query(`CREATE TABLE IF NOT EXISTS rubros (id SERIAL PRIMARY KEY, nombre VARCHAR(100) UNIQUE)`);
-
-    const user = await pool.query('SELECT * FROM users WHERE username = $1', ['admin']);
-    const hashedPassword = bcryptjs.hashSync('peri657098', 10);
-    if (user.rows.length === 0) {
-      await pool.query('INSERT INTO users (username, password) VALUES ($1, $2)', ['admin', hashedPassword]);
-    } else {
-      await pool.query('UPDATE users SET password = $1 WHERE username = $2', [hashedPassword, 'admin']);
-    }
-    console.log('✓ Contraseña admin establecida');
-
-    const rubrosCount = await pool.query('SELECT COUNT(*) FROM rubros');
-    if (parseInt(rubrosCount.rows[0].count) === 0) {
-      const rubrosDefault = ['Administración y contabilidad', 'Comercial y ventas', 'Logística y operaciones', 'Recursos humanos', 'Tecnología e informática', 'Producción e industria', 'Salud y educación', 'Otro'];
-      for (const rubro of rubrosDefault) {
-        await pool.query('INSERT INTO rubros (nombre) VALUES ($1)', [rubro]);
-      }
-    }
-    console.log('✓ BD inicializada');
-  } catch (err) {
-    console.error('Error inicializando BD:', err);
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS users (
+      id SERIAL PRIMARY KEY,
+      username TEXT UNIQUE NOT NULL,
+      password TEXT NOT NULL
+    );
+  `);
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS vacantes (
+      id SERIAL PRIMARY KEY,
+      titulo TEXT NOT NULL,
+      ubicacion TEXT,
+      tipo TEXT,
+      descripcion TEXT,
+      responsabilidades TEXT,
+      requisitos TEXT,
+      se_valora TEXT,
+      beneficios TEXT,
+      activa BOOLEAN DEFAULT TRUE,
+      fecha TIMESTAMPTZ DEFAULT NOW()
+    );
+  `);
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS candidatos (
+      id SERIAL PRIMARY KEY,
+      nombre TEXT NOT NULL,
+      email TEXT NOT NULL,
+      telefono TEXT,
+      area TEXT,
+      vacante_titulo TEXT,
+      cv_url TEXT NOT NULL,
+      cv_public_id TEXT NOT NULL,
+      cv_original TEXT NOT NULL,
+      fecha TIMESTAMPTZ DEFAULT NOW()
+    );
+  `);
+  // Usuario admin por defecto si no existe
+  const exists = await pool.query("SELECT 1 FROM users WHERE username = 'admin'");
+  if (exists.rowCount === 0) {
+    const hash = bcrypt.hashSync(process.env.ADMIN_PASSWORD || 'admin123', 10);
+    await pool.query("INSERT INTO users (username, password) VALUES ('admin', $1)", [hash]);
   }
+  console.log('Base de datos inicializada correctamente');
 }
 
-initDB();
-
-app.get('/admin', (req, res) => {
-  res.sendFile(path.join(__dirname, 'admin.html'));
+// ── Multer → Cloudinary (guardar como raw para PDFs/docs) ──────────────────
+const cvStorage = new CloudinaryStorage({
+  cloudinary,
+  params: async (req, file) => {
+    const ext = path.extname(file.originalname).toLowerCase().replace('.', '');
+    const isPdf = ext === 'pdf';
+    return {
+      folder: 'rrhh_concordia/cvs',
+      resource_type: isPdf ? 'raw' : 'raw',   // raw funciona para PDF, DOC, DOCX
+      public_id: Date.now() + '_' + file.originalname.replace(/\s+/g, '_'),
+      format: ext
+    };
+  }
 });
 
+const uploadCV = multer({
+  storage: cvStorage,
+  limits: { fileSize: 5 * 1024 * 1024 },  // 5 MB
+  fileFilter: (req, file, cb) => {
+    const allowed = ['.pdf', '.doc', '.docx', '.jpg', '.jpeg'];
+    const ext = path.extname(file.originalname).toLowerCase();
+    if (allowed.includes(ext)) {
+      cb(null, true);
+    } else {
+      cb(new Error('Tipo de archivo no permitido. Solo PDF, DOC, DOCX o JPG.'));
+    }
+  }
+});
+
+// ── Middlewares ────────────────────────────────────────────────────────────
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(session({
+  secret: process.env.SESSION_SECRET || 'rrhh-concordia-secret',
+  resave: false,
+  saveUninitialized: false,
+  cookie: { secure: false, maxAge: 8 * 60 * 60 * 1000 }  // 8 horas
+}));
+
+function isAuth(req, res, next) {
+  if (req.session.user) return next();
+  res.status(401).json({ error: 'No autorizado' });
+}
+
+// ── Páginas estáticas ──────────────────────────────────────────────────────
+app.get('/',      (req, res) => res.sendFile(__dirname + '/index.html'));
+app.get('/admin', (req, res) => res.sendFile(__dirname + '/admin.html'));
+
+// ── Auth ───────────────────────────────────────────────────────────────────
 app.post('/api/login', async (req, res) => {
-  const { username, password } = req.body;
   try {
+    const { username, password } = req.body;
     const result = await pool.query('SELECT * FROM users WHERE username = $1', [username]);
     const user = result.rows[0];
-    if (user && bcryptjs.compareSync(password, user.password)) {
-      req.session.authenticated = true;
+    if (user && bcrypt.compareSync(password, user.password)) {
+      req.session.user = username;
       res.json({ success: true });
     } else {
       res.status(401).json({ error: 'Credenciales inválidas' });
     }
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error('Error en login:', err);
+    res.status(500).json({ error: 'Error interno del servidor' });
   }
 });
 
@@ -99,191 +141,168 @@ app.post('/api/logout', (req, res) => {
 });
 
 app.post('/api/change-password', isAuth, async (req, res) => {
-  const { newPassword } = req.body;
-  const hashedPassword = bcryptjs.hashSync(newPassword, 10);
   try {
-    await pool.query('UPDATE users SET password = $1', [hashedPassword]);
+    const { newPassword } = req.body;
+    if (!newPassword || newPassword.length < 6) {
+      return res.status(400).json({ error: 'La contraseña debe tener al menos 6 caracteres' });
+    }
+    const hash = bcrypt.hashSync(newPassword, 10);
+    await pool.query('UPDATE users SET password = $1 WHERE username = $2', [hash, req.session.user]);
     res.json({ success: true });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error('Error cambiando contraseña:', err);
+    res.status(500).json({ error: 'Error interno del servidor' });
   }
 });
 
-app.post('/api/set-admin-password', async (req, res) => {
-  const { password } = req.body;
-  if (!password) return res.status(400).json({ error: 'Password required' });
-  const hashedPassword = bcryptjs.hashSync(password, 10);
-  try {
-    await pool.query('UPDATE users SET password = $1 WHERE username = $2', [hashedPassword, 'admin']);
-    res.json({ success: true });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
-
+// ── Vacantes ───────────────────────────────────────────────────────────────
 app.get('/api/vacantes', async (req, res) => {
   try {
     const result = await pool.query('SELECT * FROM vacantes ORDER BY fecha DESC');
     res.json(result.rows);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error('Error obteniendo vacantes:', err);
+    res.status(500).json({ error: 'Error interno del servidor' });
   }
 });
 
-app.post('/api/vacantes', isAuth, upload.single('imagen'), async (req, res) => {
-  const { titulo, ubicacion, tipo, rubro, descripcion } = req.body;
-  const id = Date.now();
-  const fecha = new Date().toISOString();
-  let imagenPath = null;
+app.post('/api/vacantes', isAuth, async (req, res) => {
   try {
-    if (req.file) {
-      const result = await cloudinary.uploader.upload(req.file.path, { folder: 'rrhh-vacantes' });
-      imagenPath = result.secure_url;
-      fs.unlinkSync(req.file.path);
-    }
-    await pool.query('INSERT INTO vacantes (id, titulo, ubicacion, tipo, rubro, descripcion, imagenPath, fecha) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)', [id, titulo, ubicacion, tipo, rubro, descripcion, imagenPath, fecha]);
-    res.json({ id, titulo, ubicacion, tipo, rubro, descripcion, imagenPath, fecha });
+    const { titulo, ubicacion, tipo, descripcion, responsabilidades, requisitos, se_valora, beneficios } = req.body;
+    if (!titulo) return res.status(400).json({ error: 'El título es obligatorio' });
+    const result = await pool.query(
+      `INSERT INTO vacantes (titulo, ubicacion, tipo, descripcion, responsabilidades, requisitos, se_valora, beneficios)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8) RETURNING *`,
+      [titulo, ubicacion, tipo, descripcion, responsabilidades, requisitos, se_valora, beneficios]
+    );
+    res.json(result.rows[0]);
   } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
-
-app.put('/api/vacantes/:id', isAuth, upload.single('imagen'), async (req, res) => {
-  const { id } = req.params;
-  const { titulo, ubicacion, tipo, rubro, descripcion } = req.body;
-  let imagenPath = undefined;
-  try {
-    if (req.file) {
-      const result = await cloudinary.uploader.upload(req.file.path, { folder: 'rrhh-vacantes' });
-      imagenPath = result.secure_url;
-      fs.unlinkSync(req.file.path);
-    }
-    if (imagenPath) {
-      await pool.query('UPDATE vacantes SET titulo = $1, ubicacion = $2, tipo = $3, rubro = $4, descripcion = $5, imagenPath = $6 WHERE id = $7', [titulo, ubicacion, tipo, rubro, descripcion, imagenPath, id]);
-    } else {
-      await pool.query('UPDATE vacantes SET titulo = $1, ubicacion = $2, tipo = $3, rubro = $4, descripcion = $5 WHERE id = $6', [titulo, ubicacion, tipo, rubro, descripcion, id]);
-    }
-    res.json({ success: true });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error('Error creando vacante:', err);
+    res.status(500).json({ error: 'Error interno del servidor' });
   }
 });
 
 app.delete('/api/vacantes/:id', isAuth, async (req, res) => {
-  const { id } = req.params;
   try {
-    await pool.query('DELETE FROM vacantes WHERE id = $1', [id]);
+    await pool.query('DELETE FROM vacantes WHERE id = $1', [req.params.id]);
     res.json({ success: true });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error('Error eliminando vacante:', err);
+    res.status(500).json({ error: 'Error interno del servidor' });
   }
 });
 
-app.post('/api/candidatos', upload.single('cv'), async (req, res) => {
-  const { nombre, email, telefono, rubro, vacanteId } = req.body;
-  const id = Date.now();
-  const fecha = new Date().toISOString();
-  const cvPath = req.file ? req.file.path : null;
-  const cvOriginal = req.file ? req.file.originalname : null;
-  try {
-    await pool.query('INSERT INTO candidatos (id, nombre, email, telefono, rubro, vacanteId, cvPath, cvOriginal, fecha, scoring) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)', [id, nombre, email, telefono, rubro, vacanteId || null, cvPath, cvOriginal, fecha, null]);
-    res.json({ success: true });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
+// ── Candidatos / CVs ───────────────────────────────────────────────────────
+app.post('/api/candidatos', (req, res) => {
+  uploadCV.single('cv')(req, res, async (err) => {
+    // Error de multer/cloudinary (tipo inválido, tamaño, etc.)
+    if (err) {
+      console.error('Error de multer/cloudinary:', err.message);
+      return res.status(400).json({
+        success: false,
+        error: err.message || 'Error al procesar el archivo'
+      });
+    }
+
+    // El archivo no llegó
+    if (!req.file) {
+      console.error('No se recibió archivo CV en la request');
+      return res.status(400).json({
+        success: false,
+        error: 'No se recibió el archivo CV. Por favor adjuntá tu CV antes de enviar.'
+      });
+    }
+
+    // Validar campos obligatorios
+    const nombre  = (req.body.nombre  || '').trim();
+    const email   = (req.body.email   || '').trim();
+    if (!nombre || !email) {
+      // Si el archivo ya subió a Cloudinary, eliminarlo para no dejar huérfanos
+      if (req.file.public_id) {
+        cloudinary.uploader.destroy(req.file.public_id, { resource_type: 'raw' }).catch(() => {});
+      }
+      return res.status(400).json({
+        success: false,
+        error: 'Nombre y email son obligatorios'
+      });
+    }
+
+    try {
+      const cv_url       = req.file.path || req.file.secure_url || '';
+      const cv_public_id = req.file.filename || req.file.public_id || '';
+      const cv_original  = req.file.originalname || '';
+
+      if (!cv_url) {
+        throw new Error('Cloudinary no devolvió una URL válida para el archivo');
+      }
+
+      await pool.query(
+        `INSERT INTO candidatos (nombre, email, telefono, area, vacante_titulo, cv_url, cv_public_id, cv_original)
+         VALUES ($1,$2,$3,$4,$5,$6,$7,$8)`,
+        [
+          nombre,
+          email,
+          (req.body.telefono || '').trim(),
+          (req.body.area     || '').trim(),
+          (req.body.vacante  || '').trim(),
+          cv_url,
+          cv_public_id,
+          cv_original
+        ]
+      );
+
+      console.log('CV guardado correctamente:', { nombre, email, cv_url });
+      res.json({ success: true, message: 'Postulación recibida correctamente' });
+
+    } catch (dbErr) {
+      console.error('Error guardando candidato en DB:', dbErr.message);
+      // Intentar eliminar el archivo de Cloudinary para no dejar huérfanos
+      if (req.file && req.file.filename) {
+        cloudinary.uploader.destroy(req.file.filename, { resource_type: 'raw' }).catch(() => {});
+      }
+      res.status(500).json({
+        success: false,
+        error: 'Hubo un error al guardar tu postulación. Por favor intentá nuevamente.'
+      });
+    }
+  });
 });
 
 app.get('/api/candidatos', isAuth, async (req, res) => {
-  const { rubro } = req.query;
   try {
-    let query = 'SELECT * FROM candidatos ORDER BY fecha DESC';
-    let params = [];
-    if (rubro) {
-      query = 'SELECT * FROM candidatos WHERE rubro = $1 ORDER BY fecha DESC';
-      params = [rubro];
-    }
-    const result = await pool.query(query, params);
+    const result = await pool.query('SELECT * FROM candidatos ORDER BY fecha DESC');
     res.json(result.rows);
   } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
-
-app.put('/api/candidatos/:id', isAuth, async (req, res) => {
-  const { id } = req.params;
-  const { nombre, email, telefono, rubro, vacanteId } = req.body;
-  try {
-    await pool.query('UPDATE candidatos SET nombre = $1, email = $2, telefono = $3, rubro = $4, vacanteId = $5 WHERE id = $6', [nombre, email, telefono, rubro, vacanteId || null, id]);
-    res.json({ success: true });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
-
-app.post('/api/candidatos/:id/scoring', isAuth, async (req, res) => {
-  const { id } = req.params;
-  const { score, fortalezas, debilidades, recomendacion } = req.body;
-  const scoring = { score, fortalezas, debilidades, recomendacion, fechaEvaluacion: new Date().toISOString() };
-  try {
-    await pool.query('UPDATE candidatos SET scoring = $1 WHERE id = $2', [JSON.stringify(scoring), id]);
-    res.json({ success: true });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error('Error obteniendo candidatos:', err);
+    res.status(500).json({ error: 'Error interno del servidor' });
   }
 });
 
 app.delete('/api/candidatos/:id', isAuth, async (req, res) => {
-  const { id } = req.params;
   try {
-    const result = await pool.query('SELECT cvPath FROM candidatos WHERE id = $1', [id]);
-    if (result.rows.length > 0 && result.rows[0].cvpath) {
-      if (fs.existsSync(result.rows[0].cvpath)) fs.unlinkSync(result.rows[0].cvpath);
+    const result = await pool.query('SELECT * FROM candidatos WHERE id = $1', [req.params.id]);
+    const candidato = result.rows[0];
+    if (candidato && candidato.cv_public_id) {
+      // Eliminar de Cloudinary también
+      await cloudinary.uploader.destroy(candidato.cv_public_id, { resource_type: 'raw' }).catch(() => {});
     }
-    await pool.query('DELETE FROM candidatos WHERE id = $1', [id]);
+    await pool.query('DELETE FROM candidatos WHERE id = $1', [req.params.id]);
     res.json({ success: true });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error('Error eliminando candidato:', err);
+    res.status(500).json({ error: 'Error interno del servidor' });
   }
 });
 
-app.get('/api/rubros', async (req, res) => {
-  try {
-    const result = await pool.query('SELECT * FROM rubros ORDER BY id');
-    res.json(result.rows);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
+// ── Healthcheck ────────────────────────────────────────────────────────────
+app.get('/health', (req, res) => res.json({ status: 'ok' }));
 
-app.post('/api/rubros', isAuth, async (req, res) => {
-  const { nombre } = req.body;
-  try {
-    const result = await pool.query('INSERT INTO rubros (nombre) VALUES ($1) RETURNING *', [nombre]);
-    res.json(result.rows[0]);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
-
-app.put('/api/rubros/:id', isAuth, async (req, res) => {
-  const { id } = req.params;
-  const { nombre } = req.body;
-  try {
-    await pool.query('UPDATE rubros SET nombre = $1 WHERE id = $2', [nombre, id]);
-    res.json({ success: true });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
-
-app.delete('/api/rubros/:id', isAuth, async (req, res) => {
-  const { id } = req.params;
-  try {
-    await pool.query('DELETE FROM rubros WHERE id = $1', [id]);
-    res.json({ success: true });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
-
-app.listen(PORT, () => console.log('Servidor en http://localhost:' + PORT));
+// ── Start ──────────────────────────────────────────────────────────────────
+initDB()
+  .then(() => {
+    app.listen(PORT, () => console.log('Servidor RRHH Concordia en puerto ' + PORT));
+  })
+  .catch(err => {
+    console.error('Error fatal iniciando servidor:', err);
+    process.exit(1);
+  });
