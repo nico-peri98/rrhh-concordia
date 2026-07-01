@@ -60,6 +60,12 @@ async function initDB() {
       fecha TIMESTAMPTZ DEFAULT NOW()
     );
   `);
+  // Asegurar que columnas existan aunque la tabla haya sido creada por una version anterior sin ellas
+  await pool.query(`ALTER TABLE candidatos ADD COLUMN IF NOT EXISTS area TEXT;`);
+  await pool.query(`ALTER TABLE candidatos ADD COLUMN IF NOT EXISTS vacante_titulo TEXT;`);
+  await pool.query(`ALTER TABLE candidatos ADD COLUMN IF NOT EXISTS cv_url TEXT;`);
+  await pool.query(`ALTER TABLE candidatos ADD COLUMN IF NOT EXISTS cv_public_id TEXT;`);
+  await pool.query(`ALTER TABLE candidatos ADD COLUMN IF NOT EXISTS cv_original TEXT;`);
   // Usuario admin por defecto si no existe
   const exists = await pool.query("SELECT 1 FROM users WHERE username = 'admin'");
   if (exists.rowCount === 0) {
