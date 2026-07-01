@@ -227,21 +227,18 @@ document.getElementById('newPassword').value = '';
 });
 
 async function cargarVacantes() {
-try {
 const res = await fetch('/api/vacantes');
-if (!res.ok) throw new Error('Error ' + res.status);
 const vacantes = await res.json();
 const tbody = document.getElementById('listaVacantes');
-tbody.innerHTML = vacantes.length ? vacantes.map(v => `
+tbody.innerHTML = vacantes.map(v => `
 <tr>
-<td>${v.titulo || '-'}</td>
-<td>${v.ubicacion || '-'}</td>
-<td>${v.tipo || '-'}</td>
-<td>${v.fecha ? new Date(v.fecha).toLocaleDateString('es-AR') : '-'}</td>
+<td>${v.titulo}</td>
+<td>${v.ubicacion}</td>
+<td>${v.tipo}</td>
+<td>${new Date(v.fecha).toLocaleDateString()}</td>
 <td><button class="btn btn-danger" onclick="eliminarVacante(${v.id})">Eliminar</button></td>
 </tr>
-`).join('') : '<tr><td colspan="5" style="text-align:center;padding:20px;color:#999;">No hay vacantes cargadas</td></tr>';
-} catch(e) { console.error('Error cargando vacantes:', e); }
+`).join('');
 }
 
 async function eliminarVacante(id) {
@@ -251,25 +248,24 @@ cargarVacantes();
 }
 
 async function cargarCandidatos() {
-try {
 const res = await fetch('/api/candidatos');
-if (!res.ok) throw new Error('Error ' + res.status);
 const candidatos = await res.json();
 const tbody = document.getElementById('listaCandidatos');
-tbody.innerHTML = candidatos.length ? candidatos.map(c => `
+tbody.innerHTML = candidatos.map(c => {
+return `
 <tr>
-<td>${c.nombre || '-'}</td>
-<td>${c.email || '-'}</td>
+<td>${c.nombre}</td>
+<td>${c.email}</td>
 <td>${c.telefono || '-'}</td>
 <td>${c.vacante_titulo || 'Espontánea'}</td>
-<td>${c.fecha ? new Date(c.fecha).toLocaleDateString('es-AR') : '-'}</td>
+<td>${new Date(c.fecha).toLocaleDateString('es-AR')}</td>
 <td>
-${c.cv_url ? `<a href="${c.cv_url}" target="_blank" class="btn btn-success" title="${c.cv_original || 'Ver CV'}">⬇ CV</a>` : '<span style="color:#999">Sin CV</span>'}
+<a href="${c.cv_url}" target="_blank" class="btn btn-success" title="${c.cv_original || 'Ver CV'}">⬇ CV</a>
 <button class="btn btn-danger" onclick="eliminarCandidato(${c.id})">Eliminar</button>
 </td>
 </tr>
-`).join('') : '<tr><td colspan="6" style="text-align:center;padding:20px;color:#999;">No hay candidatos registrados</td></tr>';
-} catch(e) { console.error('Error cargando candidatos:', e); }
+`;
+}).join('');
 }
 
 async function eliminarCandidato(id) {
