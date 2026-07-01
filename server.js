@@ -72,6 +72,56 @@ async function initDB() {
     const hash = bcrypt.hashSync(process.env.ADMIN_PASSWORD || 'admin123', 10);
     await pool.query("INSERT INTO users (username, password) VALUES ('admin', $1)", [hash]);
   }
+
+  // ── Migración condicional: asegurar que candidatos.id tenga autogeneración ─
+  const idInfo = await pool.query(`
+    SELECT column_default, is_identity
+    FROM information_schema.columns
+    WHERE table_name = 'candidatos' AND column_name = 'id';
+  `);
+  const idBefore = idInfo.rows[0] || {};
+  console.log('[migración id] Estado actual de candidatos.id:', {
+    column_default: idBefore.column_default,
+    is_identity: idBefore.is_identity
+  });
+
+  const needsMigration = !idBefore.column_default && idBefore.is_identity !== 'YES';
+  if (needsMigration) {
+    console.log('[migración id] Aplicando migración transaccional...');
+    const client = await pool.connect();
+    try {
+      await client.query('BEGIN');
+      await client.query('CREATE SEQUENCE IF NOT EXISTS candidatos_id_seq;');
+      await client.query(`SELECT setval('candidatos_id_seq', COALESCE((SELECT MAX(id) FROM candidatos), 0) + 1, false);`);
+      await client.query(`ALTER TABLE candidatos ALTER COLUMN id SET DEFAULT nextval('candidatos_id_seq');`);
+      await client.query('ALTER SEQUENCE candidatos_id_seq OWNED BY candidatos.id;');
+      await client.query('COMMIT');
+
+      const idAfterRes = await pool.query(`
+        SELECT column_default, is_identity
+        FROM information_schema.columns
+        WHERE table_name = 'candidatos' AND column_name = 'id';
+      `);
+      const idAfter = idAfterRes.rows[0] || {};
+      if (idAfter.column_default && idAfter.column_default.includes('nextval')) {
+        console.log('[migración id] Migración exitosa. Nuevo estado:', {
+          column_default: idAfter.column_default,
+          is_identity: idAfter.is_identity
+        });
+      } else {
+        console.error('[migración id] ADVERTENCIA: column_default no quedó apuntando a nextval:', idAfter);
+      }
+    } catch (err) {
+      await client.query('ROLLBACK');
+      console.error('[migración id] Error durante la migración, rollback ejecutado:', err.message);
+      throw err;
+    } finally {
+      client.release();
+    }
+  } else {
+    console.log('[migración id] Sin cambios necesarios: id ya tiene autogeneración.');
+  }
+
   console.log('Base de datos inicializada correctamente');
 }
 
