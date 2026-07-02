@@ -250,8 +250,6 @@ cargarVacantes();
 async function cargarCandidatos() {
 const res = await fetch('/api/candidatos');
 const candidatos = await res.json();
-const resVacantes = await fetch('/api/vacantes');
-const vacantes = await resVacantes.json();
 const tbody = document.getElementById('listaCandidatos');
 tbody.innerHTML = candidatos.map(c => {
 return `
