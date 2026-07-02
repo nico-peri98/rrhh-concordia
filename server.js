@@ -66,6 +66,9 @@ async function initDB() {
   await pool.query(`ALTER TABLE candidatos ADD COLUMN IF NOT EXISTS cv_url TEXT;`);
   await pool.query(`ALTER TABLE candidatos ADD COLUMN IF NOT EXISTS cv_public_id TEXT;`);
   await pool.query(`ALTER TABLE candidatos ADD COLUMN IF NOT EXISTS cv_original TEXT;`);
+  await pool.query(`ALTER TABLE candidatos ADD COLUMN IF NOT EXISTS estado TEXT DEFAULT 'nuevo';`);
+  // Backfill: candidatos existentes sin estado
+  await pool.query(`UPDATE candidatos SET estado = 'nuevo' WHERE estado IS NULL;`);
   // Usuario admin por defecto si no existe
   const exists = await pool.query("SELECT 1 FROM users WHERE username = 'admin'");
   if (exists.rowCount === 0) {
@@ -248,6 +251,24 @@ app.delete('/api/vacantes/:id', isAuth, async (req, res) => {
   }
 });
 
+app.put('/api/vacantes/:id', isAuth, async (req, res) => {
+  try {
+    const { titulo, ubicacion, tipo, descripcion, responsabilidades, requisitos, se_valora, beneficios } = req.body;
+    if (!titulo) return res.status(400).json({ error: 'El titulo es obligatorio' });
+    const result = await pool.query(
+      `UPDATE vacantes SET titulo=$1, ubicacion=$2, tipo=$3, descripcion=$4,
+       responsabilidades=$5, requisitos=$6, se_valora=$7, beneficios=$8
+       WHERE id=$9 RETURNING *`,
+      [titulo, ubicacion, tipo, descripcion, responsabilidades, requisitos, se_valora, beneficios, req.params.id]
+    );
+    if (result.rowCount === 0) return res.status(404).json({ error: 'Vacante no encontrada' });
+    res.json(result.rows[0]);
+  } catch (err) {
+    console.error('Error editando vacante:', err);
+    res.status(500).json({ error: 'Error interno del servidor' });
+  }
+});
+
 // ── Candidatos / CVs ───────────────────────────────────────────────────────
 app.post('/api/candidatos', (req, res) => {
   uploadCV.single('cv')(req, res, async (err) => {
@@ -346,6 +367,25 @@ app.delete('/api/candidatos/:id', isAuth, async (req, res) => {
     res.json({ success: true });
   } catch (err) {
     console.error('Error eliminando candidato:', err);
+    res.status(500).json({ error: 'Error interno del servidor' });
+  }
+});
+
+app.patch('/api/candidatos/:id/estado', isAuth, async (req, res) => {
+  try {
+    const estadosValidos = ['nuevo','en_revision','entrevista','terna_final','descartado','contratado'];
+    const { estado } = req.body;
+    if (!estadosValidos.includes(estado)) {
+      return res.status(400).json({ error: 'Estado invalido' });
+    }
+    const result = await pool.query(
+      'UPDATE candidatos SET estado = $1 WHERE id = $2 RETURNING *',
+      [estado, req.params.id]
+    );
+    if (result.rowCount === 0) return res.status(404).json({ error: 'Candidato no encontrado' });
+    res.json(result.rows[0]);
+  } catch (err) {
+    console.error('Error cambiando estado:', err);
     res.status(500).json({ error: 'Error interno del servidor' });
   }
 });

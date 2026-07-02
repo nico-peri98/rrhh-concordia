@@ -1528,33 +1528,47 @@ function openJobModal(title, sub, detalle){
   document.getElementById('jobForm').style.display = 'flex';
   document.getElementById('jobSuccess').style.display = 'none';
 
-  // Mostrar detalle de la vacante si existe
+  // Parser robusto de listas: acepta array o string separado por saltos, viñetas Word y listas numeradas
+  function parseLista(input) {
+    if (!input) return [];
+    var arr = Array.isArray(input) ? input : String(input).split(/\r?\n|(?:\s*\u2022\s*)|(?:\s\-\s)/);
+    var out = [];
+    for (var i = 0; i < arr.length; i++) {
+      var line = String(arr[i] || '')
+        .replace(/^\s*[\u2022\u25E6\u2043\u2219\u00b7\-\u2013\u2014\*]+\s*/, '')
+        .replace(/^\s*\d+[\.\)]\s*/, '')
+        .replace(/^\s*[a-zA-Z][\.\)]\s*/, '')
+        .replace(/\s+/g, ' ')
+        .trim();
+      if (line) out.push(line);
+    }
+    return out;
+  }
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, function(c){
+      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+    });
+  }
+  function renderLista(titulo, contenido) {
+    var items = parseLista(contenido);
+    if (!items.length) return '';
+    var h = '<p style="font-weight:600;margin:0 0 6px;">' + titulo + '</p>';
+    h += '<ul style="margin:0 0 14px;padding-left:18px;line-height:1.7;">';
+    for (var i = 0; i < items.length; i++) h += '<li>' + escapeHtml(items[i]) + '</li>';
+    h += '</ul>';
+    return h;
+  }
+
   var detalleDiv = document.getElementById('jobModalDetalle');
   if (detalle && (detalle.descripcion || detalle.responsabilidades || detalle.requisitos || detalle.seValora || detalle.beneficios)) {
     var html = '<div style="font-family:var(--font-b,sans-serif);font-size:14px;color:var(--ink,#111);border-top:1px solid var(--border,#ddd);padding-top:16px;">';
     if (detalle.descripcion) {
-      html += '<p style="margin:0 0 14px;line-height:1.65;">' + detalle.descripcion + '</p>';
+      html += '<p style="margin:0 0 14px;line-height:1.65;">' + escapeHtml(detalle.descripcion) + '</p>';
     }
-    if (detalle.responsabilidades) {
-      html += '<p style="font-weight:600;margin:0 0 6px;">Responsabilidades</p><ul style="margin:0 0 14px;padding-left:18px;line-height:1.7;">';
-      detalle.responsabilidades.split(/\n/).filter(function(l){return l.trim();}).forEach(function(l){ html += '<li>' + l.trim().replace(/^[-•·]\s*/,'') + '</li>'; });
-      html += '</ul>';
-    }
-    if (detalle.requisitos) {
-      html += '<p style="font-weight:600;margin:0 0 6px;">Requisitos</p><ul style="margin:0 0 14px;padding-left:18px;line-height:1.7;">';
-      detalle.requisitos.split(/\n/).filter(function(l){return l.trim();}).forEach(function(l){ html += '<li>' + l.trim().replace(/^[-•·]\s*/,'') + '</li>'; });
-      html += '</ul>';
-    }
-    if (detalle.seValora) {
-      html += '<p style="font-weight:600;margin:0 0 6px;">Se valora</p><ul style="margin:0 0 14px;padding-left:18px;line-height:1.7;">';
-      detalle.seValora.split(/\n/).filter(function(l){return l.trim();}).forEach(function(l){ html += '<li>' + l.trim().replace(/^[-•·]\s*/,'') + '</li>'; });
-      html += '</ul>';
-    }
-    if (detalle.beneficios) {
-      html += '<p style="font-weight:600;margin:0 0 6px;">Beneficios</p><ul style="margin:0 0 14px;padding-left:18px;line-height:1.7;">';
-      detalle.beneficios.split(/\n/).filter(function(l){return l.trim();}).forEach(function(l){ html += '<li>' + l.trim().replace(/^[-•·]\s*/,'') + '</li>'; });
-      html += '</ul>';
-    }
+    html += renderLista('Responsabilidades', detalle.responsabilidades);
+    html += renderLista('Requisitos', detalle.requisitos);
+    html += renderLista('Se valora', detalle.seValora);
+    html += renderLista('Beneficios', detalle.beneficios);
     html += '</div>';
     detalleDiv.innerHTML = html;
     detalleDiv.style.display = 'block';
