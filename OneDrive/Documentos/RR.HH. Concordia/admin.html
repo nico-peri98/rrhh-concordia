@@ -3,282 +3,691 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Panel Admin - RRHH Concordia</title>
+<title>Panel Admin — RRHH Concordia</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Jost:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
-* { margin: 0; padding: 0; box-sizing: border-box; }
-body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #1a1a1a; color: #fff; }
-.header { background: #2c3e50; padding: 20px; display: flex; justify-content: space-between; align-items: center; }
-.container { max-width: 1400px; margin: 20px auto; padding: 20px; }
-.login-container { display: flex; justify-content: center; align-items: center; height: 100vh; }
-.login-box { background: #2c3e50; padding: 40px; border-radius: 10px; width: 100%; max-width: 400px; }
-.login-box h2 { margin-bottom: 20px; text-align: center; }
-.form-group { margin-bottom: 20px; }
-.form-group label { display: block; margin-bottom: 8px; }
-.form-group input, .form-group textarea, .form-group select { width: 100%; padding: 12px; border: 1px solid #444; border-radius: 5px; background: #333; color: #fff; }
-.btn { background: #3498db; color: white; padding: 12px 24px; border: none; border-radius: 5px; cursor: pointer; font-size: 14px; }
-.btn:hover { background: #2980b9; }
-.btn-danger { background: #e74c3c; }
-.btn-danger:hover { background: #c0392b; }
-.btn-success { background: #27ae60; }
-.btn-success:hover { background: #229954; }
-.tabs { display: flex; gap: 10px; margin-bottom: 30px; border-bottom: 2px solid #444; }
-.tab { padding: 15px 30px; cursor: pointer; background: transparent; border: none; color: #999; font-size: 16px; }
-.tab.active { color: #3498db; border-bottom: 3px solid #3498db; }
-.tab-content { display: none; }
-.tab-content.active { display: block; }
-.card { background: #2c3e50; padding: 20px; border-radius: 8px; margin-bottom: 20px; }
-.card h3 { margin-bottom: 15px; }
-.table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-.table th, .table td { padding: 12px; text-align: left; border-bottom: 1px solid #444; }
-.table th { background: #34495e; }
-.table tr:hover { background: #34495e; }
-.modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); justify-content: center; align-items: center; z-index: 1000; }
-.modal.active { display: flex; }
-.modal-content { background: #2c3e50; padding: 30px; border-radius: 10px; width: 90%; max-width: 600px; max-height: 90vh; overflow-y: auto; }
-.btn-group { display: flex; gap: 10px; }
-.hidden { display: none; }
+:root{
+  --ink:#0F172A;
+  --ink-2:#1E293B;
+  --muted:#64748B;
+  --muted-2:#94A3B8;
+  --line:#E2E8F0;
+  --line-2:#EEF2F6;
+  --bg:#F8FAFC;
+  --surface:#FFFFFF;
+  --brand:#4260C0;
+  --brand-dark:#33499A;
+  --brand-soft:#EEF1FB;
+  --ok:#39A05A;
+  --ok-soft:#E7F4EC;
+  --warn:#FC9738;
+  --warn-soft:#FEEFDD;
+  --danger:#FF5E57;
+  --danger-soft:#FFE9E8;
+  --info:#4260C0;
+  --info-soft:#EEF1FB;
+  --amber:#F0B429;
+  --amber-soft:#FDF3D8;
+  --violet:#7C5FBE;
+  --violet-soft:#EFEAF7;
+  --slate:#2A2A2A;
+  --slate-soft:#E5E7EB;
+  --radius:12px;
+  --radius-sm:8px;
+  --shadow-xs:0 1px 2px rgba(15,23,42,.04);
+  --shadow-sm:0 1px 3px rgba(15,23,42,.06), 0 1px 2px rgba(15,23,42,.04);
+  --shadow-md:0 4px 12px rgba(15,23,42,.06), 0 2px 4px rgba(15,23,42,.04);
+  --shadow-lg:0 12px 32px rgba(15,23,42,.10);
+  --font-h:'Cormorant Garamond',Georgia,serif;
+  --font-b:'Jost',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%}
+body{font-family:var(--font-b);background:var(--bg);color:var(--ink);font-size:14px;line-height:1.55;-webkit-font-smoothing:antialiased}
+button,input,select,textarea{font-family:inherit;font-size:inherit;color:inherit}
+a{color:inherit;text-decoration:none}
+
+/* ── Login ───────────────────────────────────────────────────────── */
+.login-container{display:flex;justify-content:center;align-items:center;min-height:100vh;padding:24px;background:linear-gradient(180deg,#F8FAFC 0%,#EEF1FB 100%)}
+.login-box{background:var(--surface);padding:40px;border-radius:var(--radius);width:100%;max-width:400px;box-shadow:var(--shadow-lg);border:1px solid var(--line)}
+.login-box h2{font-family:var(--font-h);font-weight:600;font-size:28px;letter-spacing:-.01em;margin-bottom:6px;color:var(--ink)}
+.login-box .subtitle{color:var(--muted);margin-bottom:24px;font-size:13px}
+
+/* ── Header ──────────────────────────────────────────────────────── */
+.header{background:var(--surface);border-bottom:1px solid var(--line);padding:14px 32px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:10}
+.header-brand{display:flex;align-items:baseline;gap:12px}
+.header-brand h1{font-family:var(--font-h);font-weight:600;font-size:22px;letter-spacing:-.01em;color:var(--ink)}
+.header-brand .badge{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.12em;padding:3px 8px;background:var(--brand-soft);color:var(--brand);border-radius:999px;font-weight:500}
+.container{max-width:1400px;margin:0 auto;padding:32px}
+
+/* ── Botones ─────────────────────────────────────────────────────── */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;background:var(--brand);color:#fff;padding:9px 16px;border:1px solid var(--brand);border-radius:var(--radius-sm);cursor:pointer;font-size:13px;font-weight:500;transition:all .15s ease;line-height:1;text-decoration:none;white-space:nowrap}
+.btn:hover{background:var(--brand-dark);border-color:var(--brand-dark);box-shadow:var(--shadow-sm)}
+.btn:active{transform:translateY(1px)}
+.btn-ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
+.btn-ghost:hover{background:var(--line-2);border-color:var(--line);box-shadow:none}
+.btn-success{background:var(--ok);border-color:var(--ok)}
+.btn-success:hover{background:#2F8A4C;border-color:#2F8A4C}
+.btn-warn{background:var(--warn);border-color:var(--warn)}
+.btn-warn:hover{background:#E88424;border-color:#E88424}
+.btn-danger{background:var(--surface);color:var(--danger);border:1px solid var(--danger-soft)}
+.btn-danger:hover{background:var(--danger-soft);border-color:var(--danger)}
+.btn-sm{padding:6px 10px;font-size:12px;border-radius:6px}
+.btn-icon{padding:6px 8px;font-size:13px;border-radius:6px;background:transparent;color:var(--muted);border:1px solid transparent}
+.btn-icon:hover{background:var(--line-2);color:var(--ink)}
+.btn-block{width:100%}
+.btn-group{display:flex;gap:10px}
+
+/* ── Tabs ────────────────────────────────────────────────────────── */
+.tabs{display:flex;gap:2px;margin-bottom:28px;border-bottom:1px solid var(--line);padding:0}
+.tab{padding:12px 20px;cursor:pointer;background:transparent;border:none;color:var(--muted);font-size:14px;font-weight:500;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .15s ease}
+.tab:hover{color:var(--ink)}
+.tab.active{color:var(--brand);border-bottom-color:var(--brand)}
+.tab-content{display:none}
+.tab-content.active{display:block;animation:fadeIn .25s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+
+/* ── Cards / Surfaces ────────────────────────────────────────────── */
+.card{background:var(--surface);padding:24px;border-radius:var(--radius);margin-bottom:20px;border:1px solid var(--line);box-shadow:var(--shadow-xs)}
+.card h3{font-family:var(--font-h);font-weight:600;font-size:20px;letter-spacing:-.01em;margin-bottom:6px;color:var(--ink)}
+.card .card-sub{color:var(--muted);font-size:13px;margin-bottom:20px}
+.section-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;gap:16px;flex-wrap:wrap}
+.section-header h2{font-family:var(--font-h);font-weight:600;font-size:24px;letter-spacing:-.01em;color:var(--ink)}
+.section-header .sub{color:var(--muted);font-size:13px;margin-top:2px}
+
+/* ── Dashboard ───────────────────────────────────────────────────── */
+.metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-bottom:32px}
+.metric{background:var(--surface);padding:22px;border-radius:var(--radius);border:1px solid var(--line);box-shadow:var(--shadow-xs);position:relative;overflow:hidden}
+.metric-label{color:var(--muted);font-size:12px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.metric-label .dot{width:6px;height:6px;border-radius:999px;background:var(--brand)}
+.metric-value{font-family:var(--font-h);font-weight:600;font-size:36px;line-height:1.1;color:var(--ink);letter-spacing:-.02em}
+.metric-hint{color:var(--muted);font-size:12px;margin-top:6px}
+.metric.metric-brand .dot{background:var(--brand)}
+.metric.metric-ok .dot{background:var(--ok)}
+.metric.metric-warn .dot{background:var(--warn)}
+.metric.metric-info .dot{background:var(--info)}
+.dashboard-grid{display:grid;grid-template-columns:2fr 1fr;gap:20px}
+@media (max-width:900px){.dashboard-grid{grid-template-columns:1fr}}
+.recent-list{list-style:none;padding:0;margin:0}
+.recent-list li{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--line-2);gap:12px}
+.recent-list li:last-child{border-bottom:none}
+.recent-list .r-name{font-weight:500;color:var(--ink);font-size:13px}
+.recent-list .r-meta{color:var(--muted);font-size:12px;margin-top:2px}
+.recent-list .r-date{color:var(--muted-2);font-size:11px;white-space:nowrap}
+.empty{color:var(--muted);text-align:center;padding:40px 20px;font-size:13px}
+
+/* ── Toolbar de filtros ──────────────────────────────────────────── */
+.toolbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:16px}
+.toolbar .field{position:relative;flex:1;min-width:200px}
+.toolbar input[type=text],.toolbar select{width:100%;padding:9px 12px;border:1px solid var(--line);border-radius:var(--radius-sm);background:var(--surface);font-size:13px;transition:border-color .15s;color:var(--ink)}
+.toolbar input[type=text]:focus,.toolbar select:focus{outline:none;border-color:var(--brand);box-shadow:0 0 0 3px var(--brand-soft)}
+.toolbar select{min-width:180px;cursor:pointer}
+
+/* ── Tabla ───────────────────────────────────────────────────────── */
+.table-wrap{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow-xs)}
+.table{width:100%;border-collapse:collapse}
+.table th,.table td{padding:14px 18px;text-align:left;font-size:13px;vertical-align:middle}
+.table thead th{background:var(--bg);color:var(--muted);font-weight:500;font-size:11px;text-transform:uppercase;letter-spacing:.08em;border-bottom:1px solid var(--line)}
+.table tbody tr{border-bottom:1px solid var(--line-2);transition:background .1s}
+.table tbody tr:last-child{border-bottom:none}
+.table tbody tr:hover{background:var(--bg)}
+.table td.actions{text-align:right;white-space:nowrap}
+.table td.actions .btn{margin-left:6px}
+.table .primary-cell{font-weight:500;color:var(--ink)}
+.table .muted-cell{color:var(--muted)}
+
+/* ── Estado del candidato ────────────────────────────────────────── */
+.estado-select{padding:5px 10px;border:1px solid var(--line);border-radius:999px;font-size:12px;font-weight:500;cursor:pointer;background:var(--surface);color:var(--ink);transition:all .15s;min-width:130px}
+.estado-select:focus{outline:none;box-shadow:0 0 0 3px var(--brand-soft)}
+.estado-nuevo{background:var(--ok-soft);color:var(--ok);border-color:transparent}
+.estado-en_revision{background:var(--info-soft);color:var(--info);border-color:transparent}
+.estado-entrevista{background:var(--amber-soft);color:#B87F0F;border-color:transparent}
+.estado-terna_final{background:var(--violet-soft);color:var(--violet);border-color:transparent}
+.estado-descartado{background:var(--danger-soft);color:var(--danger);border-color:transparent}
+.estado-contratado{background:var(--slate-soft);color:var(--slate);border-color:transparent}
+
+/* ── Formularios ─────────────────────────────────────────────────── */
+.form-group{margin-bottom:18px}
+.form-group label{display:block;margin-bottom:6px;font-size:12px;font-weight:500;color:var(--ink-2);letter-spacing:.02em}
+.form-group input,.form-group textarea,.form-group select{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:var(--radius-sm);background:var(--surface);color:var(--ink);font-size:13px;transition:all .15s;font-family:inherit}
+.form-group input:focus,.form-group textarea:focus,.form-group select:focus{outline:none;border-color:var(--brand);box-shadow:0 0 0 3px var(--brand-soft)}
+.form-group textarea{resize:vertical;min-height:80px;line-height:1.5}
+.form-group .hint{color:var(--muted);font-size:11px;margin-top:4px}
+
+/* ── Modal ───────────────────────────────────────────────────────── */
+.modal{display:none;position:fixed;inset:0;background:rgba(15,23,42,.5);backdrop-filter:blur(3px);justify-content:center;align-items:flex-start;z-index:1000;padding:40px 20px;overflow-y:auto}
+.modal.active{display:flex}
+.modal-content{background:var(--surface);padding:32px;border-radius:var(--radius);width:100%;max-width:640px;box-shadow:var(--shadow-lg);border:1px solid var(--line);position:relative;animation:modalIn .2s ease}
+@keyframes modalIn{from{opacity:0;transform:translateY(8px) scale(.98)}to{opacity:1;transform:none}}
+.modal-content h2{font-family:var(--font-h);font-weight:600;font-size:26px;letter-spacing:-.01em;margin-bottom:6px;color:var(--ink)}
+.modal-content .modal-sub{color:var(--muted);font-size:13px;margin-bottom:22px}
+
+.hidden{display:none !important}
+
+/* ── Responsive ──────────────────────────────────────────────────── */
+@media (max-width:768px){
+  .container{padding:20px 16px}
+  .header{padding:12px 16px}
+  .header-brand h1{font-size:18px}
+  .section-header{flex-direction:column;align-items:flex-start}
+  .table th,.table td{padding:10px 12px;font-size:12px}
+  .table td.actions{text-align:left}
+  .modal-content{padding:22px}
+  .metric{padding:18px}
+  .metric-value{font-size:28px}
+  .toolbar .field{min-width:100%}
+}
 </style>
 </head>
 <body>
+
 <div id="loginScreen" class="login-container">
-<div class="login-box">
-<h2>Panel de Administracion</h2>
-<p style="text-align: center; margin-bottom: 20px; color: #999;">Ingresa tu contrasena</p>
-<form id="loginForm">
-<div class="form-group">
-<label>Contrasena</label>
-<input type="password" id="password" required>
-</div>
-<button type="submit" class="btn" style="width: 100%;">Acceder</button>
-</form>
-</div>
+  <div class="login-box">
+    <h2>Panel de Administración</h2>
+    <p class="subtitle">Ingresá tu contraseña para acceder al sistema.</p>
+    <form id="loginForm">
+      <div class="form-group">
+        <label>Contraseña</label>
+        <input type="password" id="password" required autocomplete="current-password">
+      </div>
+      <button type="submit" class="btn btn-block">Acceder</button>
+    </form>
+  </div>
 </div>
 
 <div id="adminPanel" class="hidden">
-<div class="header">
-<h1>Panel de Administracion</h1>
-<button class="btn btn-danger" onclick="logout()">Cerrar sesion</button>
-</div>
-<div class="container">
-<div class="tabs">
-<button class="tab active" onclick="cambiarTab('vacantes')">Vacantes</button>
-<button class="tab" onclick="cambiarTab('candidatos')">Candidatos</button>
-<button class="tab" onclick="cambiarTab('config')">Configuracion</button>
+  <div class="header">
+    <div class="header-brand">
+      <h1>RRHH Concordia</h1>
+      <span class="badge">Panel Admin</span>
+    </div>
+    <button class="btn btn-ghost" onclick="logout()">Cerrar sesión</button>
+  </div>
+
+  <div class="container">
+    <div class="tabs" role="tablist">
+      <button class="tab active" onclick="cambiarTab('dashboard')">Dashboard</button>
+      <button class="tab" onclick="cambiarTab('vacantes')">Vacantes</button>
+      <button class="tab" onclick="cambiarTab('candidatos')">Candidatos</button>
+      <button class="tab" onclick="cambiarTab('config')">Configuración</button>
+    </div>
+
+    <!-- Dashboard -->
+    <div id="tabDashboard" class="tab-content active">
+      <div class="section-header">
+        <div>
+          <h2>Resumen del sistema</h2>
+          <div class="sub">Estado actual de vacantes y postulaciones.</div>
+        </div>
+      </div>
+
+      <div class="metrics">
+        <div class="metric metric-brand">
+          <div class="metric-label"><span class="dot"></span>Vacantes publicadas</div>
+          <div class="metric-value" id="mVacantes">—</div>
+          <div class="metric-hint" id="mVacantesHint">Vacantes disponibles en el sitio</div>
+        </div>
+        <div class="metric metric-ok">
+          <div class="metric-label"><span class="dot"></span>Total de candidatos</div>
+          <div class="metric-value" id="mCandidatos">—</div>
+          <div class="metric-hint" id="mCandidatosHint">Postulaciones acumuladas</div>
+        </div>
+        <div class="metric metric-warn">
+          <div class="metric-label"><span class="dot"></span>Últimos 7 días</div>
+          <div class="metric-value" id="m7dias">—</div>
+          <div class="metric-hint">Postulaciones recibidas esta semana</div>
+        </div>
+        <div class="metric metric-info">
+          <div class="metric-label"><span class="dot"></span>Última postulación</div>
+          <div class="metric-value" id="mUltima" style="font-size:18px">—</div>
+          <div class="metric-hint" id="mUltimaFecha">—</div>
+        </div>
+      </div>
+
+      <div class="dashboard-grid">
+        <div class="card">
+          <h3>Postulaciones recientes</h3>
+          <div class="card-sub">Las últimas 5 postulaciones recibidas.</div>
+          <ul class="recent-list" id="recientes"></ul>
+        </div>
+        <div class="card">
+          <h3>Vacantes activas</h3>
+          <div class="card-sub">Últimas publicaciones cargadas.</div>
+          <ul class="recent-list" id="vacantesRecientes"></ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Vacantes -->
+    <div id="tabVacantes" class="tab-content">
+      <div class="section-header">
+        <div>
+          <h2>Gestión de vacantes</h2>
+          <div class="sub">Publicá, editá o retirá búsquedas del sitio.</div>
+        </div>
+        <button class="btn" onclick="abrirModalVacante()">+ Nueva vacante</button>
+      </div>
+      <div class="table-wrap">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Título</th>
+              <th>Ubicación</th>
+              <th>Tipo</th>
+              <th>Fecha</th>
+              <th style="text-align:right">Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="listaVacantes"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Candidatos -->
+    <div id="tabCandidatos" class="tab-content">
+      <div class="section-header">
+        <div>
+          <h2>Gestión de candidatos</h2>
+          <div class="sub">Base completa de postulantes con CV adjunto.</div>
+        </div>
+      </div>
+
+      <div class="toolbar">
+        <div class="field">
+          <input type="text" id="filtroBusqueda" placeholder="Buscar por nombre o email..." oninput="renderCandidatos()">
+        </div>
+        <select id="filtroVacante" onchange="renderCandidatos()">
+          <option value="">Todas las vacantes</option>
+        </select>
+        <select id="filtroOrden" onchange="renderCandidatos()">
+          <option value="fecha_desc">Más recientes primero</option>
+          <option value="fecha_asc">Más antiguas primero</option>
+        </select>
+      </div>
+
+      <div class="table-wrap">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Candidato</th>
+              <th>Contacto</th>
+              <th>Vacante</th>
+              <th>Estado</th>
+              <th>Fecha</th>
+              <th style="text-align:right">Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="listaCandidatos"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Configuración -->
+    <div id="tabConfig" class="tab-content">
+      <div class="card" style="max-width:520px">
+        <h3>Cambiar contraseña</h3>
+        <div class="card-sub">Elegí una contraseña de al menos 6 caracteres.</div>
+        <form id="formPassword">
+          <div class="form-group">
+            <label>Nueva contraseña</label>
+            <input type="password" id="newPassword" required minlength="6" autocomplete="new-password">
+          </div>
+          <button type="submit" class="btn">Actualizar</button>
+        </form>
+      </div>
+    </div>
+  </div>
 </div>
 
-<div id="tabVacantes" class="tab-content active">
-<button class="btn btn-success" onclick="abrirModalVacante()">+ Nueva Vacante</button>
-<table class="table">
-<thead>
-<tr>
-<th>Titulo</th>
-<th>Ubicacion</th>
-<th>Tipo</th>
-<th>Fecha</th>
-<th>Acciones</th>
-</tr>
-</thead>
-<tbody id="listaVacantes"></tbody>
-</table>
-</div>
-
-<div id="tabCandidatos" class="tab-content">
-<table class="table">
-<thead>
-<tr>
-<th>Nombre</th>
-<th>Email</th>
-<th>Telefono</th>
-<th>Vacante</th>
-<th>Fecha</th>
-<th>Acciones</th>
-</tr>
-</thead>
-<tbody id="listaCandidatos"></tbody>
-</table>
-</div>
-
-<div id="tabConfig" class="tab-content">
-<div class="card">
-<h3>Cambiar Contrasena</h3>
-<form id="formPassword">
-<div class="form-group">
-<label>Nueva contrasena</label>
-<input type="password" id="newPassword" required minlength="6">
-</div>
-<button type="submit" class="btn">Actualizar</button>
-</form>
-</div>
-</div>
-</div>
-</div>
-
+<!-- Modal vacante (creación y edición) -->
 <div class="modal" id="modalVacante">
-<div class="modal-content">
-<h2>Nueva Vacante</h2>
-<form id="formVacante">
-<div class="form-group">
-<label>Titulo del puesto</label>
-<input type="text" name="titulo" required>
-</div>
-<div class="form-group">
-<label>Ubicacion</label>
-<input type="text" name="ubicacion" required>
-</div>
-<div class="form-group">
-<label>Tipo de contrato</label>
-<select name="tipo" required>
-<option value="Full-time">Full-time</option>
-<option value="Part-time">Part-time</option>
-<option value="Contrato">Contrato</option>
-<option value="Pasantia">Pasantia</option>
-</select>
-</div>
-<div class="form-group">
-<label>Descripcion del puesto</label>
-<textarea name="descripcion" rows="4" placeholder="Breve descripcion general del puesto..."></textarea>
-</div>
-<div class="form-group">
-<label>Responsabilidades (una por linea)</label>
-<textarea name="responsabilidades" rows="4" placeholder="Ej: Atender clientes&#10;Gestionar stock&#10;Reportar a gerencia"></textarea>
-</div>
-<div class="form-group">
-<label>Requisitos (uno por linea)</label>
-<textarea name="requisitos" rows="4" placeholder="Ej: Secundario completo&#10;Experiencia en ventas&#10;Disponibilidad full-time"></textarea>
-</div>
-<div class="form-group">
-<label>Se valora (opcional, uno por linea)</label>
-<textarea name="se_valora" rows="3" placeholder="Ej: Manejo de Excel&#10;Experiencia en retail"></textarea>
-</div>
-<div class="form-group">
-<label>Beneficios (opcional, uno por linea)</label>
-<textarea name="beneficios" rows="3" placeholder="Ej: Obra social&#10;Bonos por desempeno&#10;Comidas en planta"></textarea>
-</div>
-<div class="btn-group">
-<button type="submit" class="btn btn-success">Publicar</button>
-<button type="button" class="btn btn-danger" onclick="cerrarModal('modalVacante')">Cancelar</button>
-</div>
-</form>
-</div>
+  <div class="modal-content">
+    <h2 id="modalVacanteTitle">Nueva vacante</h2>
+    <p class="modal-sub" id="modalVacanteSub">Completá los datos que verán los candidatos.</p>
+    <form id="formVacante">
+      <input type="hidden" name="id" id="vacanteId">
+      <div class="form-group">
+        <label>Título del puesto</label>
+        <input type="text" name="titulo" required>
+      </div>
+      <div class="form-group">
+        <label>Ubicación</label>
+        <input type="text" name="ubicacion" required>
+      </div>
+      <div class="form-group">
+        <label>Tipo de contrato</label>
+        <select name="tipo" required>
+          <option value="Full-time">Full-time</option>
+          <option value="Part-time">Part-time</option>
+          <option value="Contrato">Contrato</option>
+          <option value="Pasantía">Pasantía</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Descripción del puesto</label>
+        <textarea name="descripcion" rows="4" placeholder="Breve descripción general del puesto..."></textarea>
+      </div>
+      <div class="form-group">
+        <label>Responsabilidades</label>
+        <textarea name="responsabilidades" rows="4" placeholder="Una por línea. Ej: Atender clientes"></textarea>
+        <div class="hint">Se muestra como lista con viñetas en el sitio.</div>
+      </div>
+      <div class="form-group">
+        <label>Requisitos</label>
+        <textarea name="requisitos" rows="4" placeholder="Uno por línea. Ej: Secundario completo"></textarea>
+      </div>
+      <div class="form-group">
+        <label>Se valora (opcional)</label>
+        <textarea name="se_valora" rows="3" placeholder="Uno por línea."></textarea>
+      </div>
+      <div class="form-group">
+        <label>Beneficios (opcional)</label>
+        <textarea name="beneficios" rows="3" placeholder="Uno por línea."></textarea>
+      </div>
+      <div class="btn-group" style="justify-content:flex-end;margin-top:24px">
+        <button type="button" class="btn btn-ghost" onclick="cerrarModal('modalVacante')">Cancelar</button>
+        <button type="submit" class="btn" id="btnPublicar">Publicar</button>
+      </div>
+    </form>
+  </div>
 </div>
 
 <script>
-document.getElementById('loginForm').addEventListener('submit', async (e) => {
-e.preventDefault();
-const password = document.getElementById('password').value;
-const res = await fetch('/api/login', {
-method: 'POST',
-headers: { 'Content-Type': 'application/json' },
-body: JSON.stringify({ username: 'admin', password })
-});
-if (res.ok) {
-document.getElementById('loginScreen').classList.add('hidden');
-document.getElementById('adminPanel').classList.remove('hidden');
-cargarDatos();
-} else {
-alert('Contrasena incorrecta');
-}
-});
+// ── Estado global ────────────────────────────────────────────────────────
+var _candidatos = [];
+var _vacantes   = [];
 
-async function logout() {
-await fetch('/api/logout', { method: 'POST' });
-location.reload();
-}
+var ESTADOS = [
+  { v:'nuevo',        l:'Nuevo' },
+  { v:'en_revision',  l:'En revisión' },
+  { v:'entrevista',   l:'Entrevista' },
+  { v:'terna_final',  l:'Terna final' },
+  { v:'descartado',   l:'Descartado' },
+  { v:'contratado',   l:'Contratado' }
+];
 
-function cambiarTab(tab) {
-document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-event.target.classList.add('active');
-document.getElementById('tab' + tab.charAt(0).toUpperCase() + tab.slice(1)).classList.add('active');
-}
+function escapeHtml(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+function fmtDate(d){ if(!d) return '—'; try{ return new Date(d).toLocaleDateString('es-AR'); }catch(e){ return '—'; } }
+function fmtDateTime(d){ if(!d) return '—'; try{ return new Date(d).toLocaleString('es-AR',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'}); }catch(e){ return '—'; } }
 
-function abrirModalVacante() {
-document.getElementById('modalVacante').classList.add('active');
-}
-
-function cerrarModal(id) {
-document.getElementById(id).classList.remove('active');
-}
-
-document.getElementById('formVacante').addEventListener('submit', async (e) => {
-e.preventDefault();
-const formData = new FormData(e.target);
-const data = Object.fromEntries(formData);
-await fetch('/api/vacantes', {
-method: 'POST',
-headers: { 'Content-Type': 'application/json' },
-body: JSON.stringify(data)
-});
-cerrarModal('modalVacante');
-e.target.reset();
-cargarVacantes();
+// ── Auth ─────────────────────────────────────────────────────────────────
+document.getElementById('loginForm').addEventListener('submit', async function(e){
+  e.preventDefault();
+  var password = document.getElementById('password').value;
+  var res = await fetch('/api/login', {
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({ username:'admin', password: password })
+  });
+  if (res.ok){
+    document.getElementById('loginScreen').classList.add('hidden');
+    document.getElementById('adminPanel').classList.remove('hidden');
+    cargarDatos();
+  } else {
+    alert('Contraseña incorrecta');
+  }
 });
 
-document.getElementById('formPassword').addEventListener('submit', async (e) => {
-e.preventDefault();
-const newPassword = document.getElementById('newPassword').value;
-await fetch('/api/change-password', {
-method: 'POST',
-headers: { 'Content-Type': 'application/json' },
-body: JSON.stringify({ newPassword })
+async function logout(){ await fetch('/api/logout', { method:'POST' }); location.reload(); }
+
+// ── Tabs ─────────────────────────────────────────────────────────────────
+function cambiarTab(tab){
+  document.querySelectorAll('.tab').forEach(function(t){ t.classList.remove('active'); });
+  document.querySelectorAll('.tab-content').forEach(function(c){ c.classList.remove('active'); });
+  if (event && event.target) event.target.classList.add('active');
+  document.getElementById('tab' + tab.charAt(0).toUpperCase() + tab.slice(1)).classList.add('active');
+  if (tab === 'dashboard') renderDashboard();
+}
+
+// ── Modal ────────────────────────────────────────────────────────────────
+function abrirModalVacante(){
+  document.getElementById('modalVacanteTitle').textContent = 'Nueva vacante';
+  document.getElementById('modalVacanteSub').textContent = 'Completá los datos que verán los candidatos.';
+  document.getElementById('btnPublicar').textContent = 'Publicar';
+  document.getElementById('formVacante').reset();
+  document.getElementById('vacanteId').value = '';
+  document.getElementById('modalVacante').classList.add('active');
+}
+
+function editarVacante(id){
+  var v = _vacantes.find(function(x){ return x.id === id; });
+  if (!v) return;
+  document.getElementById('modalVacanteTitle').textContent = 'Editar vacante';
+  document.getElementById('modalVacanteSub').textContent = 'Modificá los datos y guardá los cambios.';
+  document.getElementById('btnPublicar').textContent = 'Guardar cambios';
+  var f = document.getElementById('formVacante');
+  document.getElementById('vacanteId').value = v.id;
+  f.titulo.value             = v.titulo || '';
+  f.ubicacion.value          = v.ubicacion || '';
+  f.tipo.value               = v.tipo || 'Full-time';
+  f.descripcion.value        = v.descripcion || '';
+  f.responsabilidades.value  = v.responsabilidades || '';
+  f.requisitos.value         = v.requisitos || '';
+  f.se_valora.value          = v.se_valora || '';
+  f.beneficios.value         = v.beneficios || '';
+  document.getElementById('modalVacante').classList.add('active');
+}
+
+function cerrarModal(id){ document.getElementById(id).classList.remove('active'); }
+
+// ── Vacantes: crear / editar ─────────────────────────────────────────────
+document.getElementById('formVacante').addEventListener('submit', async function(e){
+  e.preventDefault();
+  var formData = new FormData(e.target);
+  var data = Object.fromEntries(formData);
+  var id = data.id;
+  delete data.id;
+  var url = id ? ('/api/vacantes/' + id) : '/api/vacantes';
+  var method = id ? 'PUT' : 'POST';
+  var res = await fetch(url, {
+    method: method,
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify(data)
+  });
+  if (!res.ok){ alert('No se pudo guardar la vacante'); return; }
+  cerrarModal('modalVacante');
+  e.target.reset();
+  cargarVacantes();
 });
-alert('Contrasena actualizada');
-document.getElementById('newPassword').value = '';
+
+// ── Cambiar contraseña ───────────────────────────────────────────────────
+document.getElementById('formPassword').addEventListener('submit', async function(e){
+  e.preventDefault();
+  var newPassword = document.getElementById('newPassword').value;
+  await fetch('/api/change-password', {
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({ newPassword: newPassword })
+  });
+  alert('Contraseña actualizada');
+  document.getElementById('newPassword').value = '';
 });
 
-async function cargarVacantes() {
-const res = await fetch('/api/vacantes');
-const vacantes = await res.json();
-const tbody = document.getElementById('listaVacantes');
-tbody.innerHTML = vacantes.map(v => `
-<tr>
-<td>${v.titulo}</td>
-<td>${v.ubicacion}</td>
-<td>${v.tipo}</td>
-<td>${new Date(v.fecha).toLocaleDateString()}</td>
-<td><button class="btn btn-danger" onclick="eliminarVacante(${v.id})">Eliminar</button></td>
-</tr>
-`).join('');
+// ── Vacantes ─────────────────────────────────────────────────────────────
+async function cargarVacantes(){
+  var res = await fetch('/api/vacantes');
+  _vacantes = await res.json();
+  renderVacantes();
+  poblarFiltroVacantes();
+  renderDashboard();
 }
 
-async function eliminarVacante(id) {
-if (!confirm('Eliminar esta vacante?')) return;
-await fetch('/api/vacantes/' + id, { method: 'DELETE' });
-cargarVacantes();
+function renderVacantes(){
+  var tbody = document.getElementById('listaVacantes');
+  if (!_vacantes.length){
+    tbody.innerHTML = '<tr><td colspan="5" class="empty">No hay vacantes cargadas todavía.</td></tr>';
+    return;
+  }
+  tbody.innerHTML = _vacantes.map(function(v){
+    return ''
+      + '<tr>'
+      + '<td class="primary-cell">' + escapeHtml(v.titulo) + '</td>'
+      + '<td class="muted-cell">' + escapeHtml(v.ubicacion || '—') + '</td>'
+      + '<td class="muted-cell">' + escapeHtml(v.tipo || '—') + '</td>'
+      + '<td class="muted-cell">' + fmtDate(v.fecha) + '</td>'
+      + '<td class="actions">'
+        + '<button class="btn btn-ghost btn-sm" onclick="editarVacante(' + v.id + ')">Editar</button>'
+        + '<button class="btn btn-danger btn-sm" onclick="eliminarVacante(' + v.id + ')">Eliminar</button>'
+      + '</td>'
+      + '</tr>';
+  }).join('');
 }
 
-async function cargarCandidatos() {
-const res = await fetch('/api/candidatos');
-const candidatos = await res.json();
-const resVacantes = await fetch('/api/vacantes');
-const vacantes = await resVacantes.json();
-const tbody = document.getElementById('listaCandidatos');
-tbody.innerHTML = candidatos.map(c => {
-return `
-<tr>
-<td>${c.nombre}</td>
-<td>${c.email}</td>
-<td>${c.telefono || '-'}</td>
-<td>${c.vacante_titulo || 'Espontánea'}</td>
-<td>${new Date(c.fecha).toLocaleDateString('es-AR')}</td>
-<td>
-<a href="${c.cv_url}" target="_blank" class="btn btn-success" title="${c.cv_original || 'Ver CV'}">⬇ CV</a>
-<button class="btn btn-danger" onclick="eliminarCandidato(${c.id})">Eliminar</button>
-</td>
-</tr>
-`;
-}).join('');
+async function eliminarVacante(id){
+  if (!confirm('¿Eliminar esta vacante? Esta acción no se puede deshacer.')) return;
+  await fetch('/api/vacantes/' + id, { method:'DELETE' });
+  cargarVacantes();
 }
 
-async function eliminarCandidato(id) {
-if (!confirm('Eliminar este candidato?')) return;
-await fetch('/api/candidatos/' + id, { method: 'DELETE' });
-cargarCandidatos();
+// ── Candidatos ───────────────────────────────────────────────────────────
+async function cargarCandidatos(){
+  var res = await fetch('/api/candidatos');
+  _candidatos = await res.json();
+  renderCandidatos();
+  renderDashboard();
 }
 
-function cargarDatos() {
-cargarVacantes();
-cargarCandidatos();
+function renderCandidatos(){
+  var q = (document.getElementById('filtroBusqueda').value || '').toLowerCase().trim();
+  var vf = document.getElementById('filtroVacante').value;
+  var orden = document.getElementById('filtroOrden').value;
+
+  var list = _candidatos.slice();
+  if (q){
+    list = list.filter(function(c){
+      return (c.nombre || '').toLowerCase().indexOf(q) >= 0
+          || (c.email  || '').toLowerCase().indexOf(q) >= 0;
+    });
+  }
+  if (vf){
+    list = list.filter(function(c){ return (c.vacante_titulo || '') === vf; });
+  }
+  list.sort(function(a,b){
+    var da = new Date(a.fecha).getTime() || 0;
+    var db = new Date(b.fecha).getTime() || 0;
+    return orden === 'fecha_asc' ? da - db : db - da;
+  });
+
+  var tbody = document.getElementById('listaCandidatos');
+  if (!list.length){
+    tbody.innerHTML = '<tr><td colspan="6" class="empty">No hay candidatos que coincidan con los filtros.</td></tr>';
+    return;
+  }
+  tbody.innerHTML = list.map(function(c){
+    var estadoActual = c.estado || 'nuevo';
+    var opciones = ESTADOS.map(function(e){
+      return '<option value="' + e.v + '"' + (e.v === estadoActual ? ' selected' : '') + '>' + e.l + '</option>';
+    }).join('');
+    var cvBtn = c.cv_url
+      ? '<a href="' + escapeHtml(c.cv_url) + '" target="_blank" rel="noopener" class="btn btn-ghost btn-sm" title="' + escapeHtml(c.cv_original || 'Ver CV') + '">Descargar CV</a>'
+      : '<span class="muted-cell">Sin CV</span>';
+    return ''
+      + '<tr>'
+      + '<td class="primary-cell">' + escapeHtml(c.nombre) + '</td>'
+      + '<td class="muted-cell">' + escapeHtml(c.email) + (c.telefono ? '<br><span style="font-size:11px">' + escapeHtml(c.telefono) + '</span>' : '') + '</td>'
+      + '<td class="muted-cell">' + escapeHtml(c.vacante_titulo || 'Espontánea') + '</td>'
+      + '<td><select class="estado-select estado-' + estadoActual + '" onchange="cambiarEstado(' + c.id + ', this.value, this)">' + opciones + '</select></td>'
+      + '<td class="muted-cell">' + fmtDate(c.fecha) + '</td>'
+      + '<td class="actions">'
+        + cvBtn
+        + '<button class="btn btn-danger btn-sm" onclick="eliminarCandidato(' + c.id + ')">Eliminar</button>'
+      + '</td>'
+      + '</tr>';
+  }).join('');
+}
+
+async function cambiarEstado(id, estado, selectEl){
+  var res = await fetch('/api/candidatos/' + id + '/estado', {
+    method:'PATCH',
+    headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({ estado: estado })
+  });
+  if (!res.ok){ alert('No se pudo actualizar el estado'); return; }
+  // Actualizar el color del select localmente
+  selectEl.className = 'estado-select estado-' + estado;
+  var c = _candidatos.find(function(x){ return x.id === id; });
+  if (c) c.estado = estado;
+}
+
+async function eliminarCandidato(id){
+  if (!confirm('¿Eliminar este candidato? También se eliminará su CV.')) return;
+  await fetch('/api/candidatos/' + id, { method:'DELETE' });
+  cargarCandidatos();
+}
+
+function poblarFiltroVacantes(){
+  var sel = document.getElementById('filtroVacante');
+  var current = sel.value;
+  var opciones = '<option value="">Todas las vacantes</option>';
+  _vacantes.forEach(function(v){
+    opciones += '<option value="' + escapeHtml(v.titulo) + '">' + escapeHtml(v.titulo) + '</option>';
+  });
+  sel.innerHTML = opciones;
+  if (current) sel.value = current;
+}
+
+// ── Dashboard ────────────────────────────────────────────────────────────
+function renderDashboard(){
+  document.getElementById('mVacantes').textContent = _vacantes.length;
+  document.getElementById('mCandidatos').textContent = _candidatos.length;
+
+  var ahora = Date.now();
+  var hace7 = ahora - 7 * 24 * 60 * 60 * 1000;
+  var recientes7 = _candidatos.filter(function(c){
+    var t = new Date(c.fecha).getTime();
+    return !isNaN(t) && t >= hace7;
+  });
+  document.getElementById('m7dias').textContent = recientes7.length;
+
+  var ordenado = _candidatos.slice().sort(function(a,b){
+    return new Date(b.fecha).getTime() - new Date(a.fecha).getTime();
+  });
+  var ultima = ordenado[0];
+  document.getElementById('mUltima').textContent = ultima ? ultima.nombre : '—';
+  document.getElementById('mUltimaFecha').textContent = ultima ? fmtDateTime(ultima.fecha) : 'Sin postulaciones aún';
+
+  // Lista recientes
+  var recEl = document.getElementById('recientes');
+  if (!ordenado.length){
+    recEl.innerHTML = '<li><div class="empty" style="padding:20px 0">Sin postulaciones registradas.</div></li>';
+  } else {
+    recEl.innerHTML = ordenado.slice(0,5).map(function(c){
+      return '<li>'
+        + '<div>'
+        + '<div class="r-name">' + escapeHtml(c.nombre) + '</div>'
+        + '<div class="r-meta">' + escapeHtml(c.vacante_titulo || 'Postulación espontánea') + '</div>'
+        + '</div>'
+        + '<div class="r-date">' + fmtDateTime(c.fecha) + '</div>'
+      + '</li>';
+    }).join('');
+  }
+
+  // Vacantes recientes
+  var vacRec = document.getElementById('vacantesRecientes');
+  var vacOrdenadas = _vacantes.slice().sort(function(a,b){
+    return new Date(b.fecha).getTime() - new Date(a.fecha).getTime();
+  });
+  if (!vacOrdenadas.length){
+    vacRec.innerHTML = '<li><div class="empty" style="padding:20px 0">Sin vacantes publicadas.</div></li>';
+  } else {
+    vacRec.innerHTML = vacOrdenadas.slice(0,5).map(function(v){
+      return '<li>'
+        + '<div>'
+        + '<div class="r-name">' + escapeHtml(v.titulo) + '</div>'
+        + '<div class="r-meta">' + escapeHtml(v.ubicacion || '—') + '</div>'
+        + '</div>'
+        + '<div class="r-date">' + fmtDate(v.fecha) + '</div>'
+      + '</li>';
+    }).join('');
+  }
+}
+
+// ── Bootstrap ────────────────────────────────────────────────────────────
+function cargarDatos(){
+  cargarVacantes();
+  cargarCandidatos();
 }
 </script>
 </body>
